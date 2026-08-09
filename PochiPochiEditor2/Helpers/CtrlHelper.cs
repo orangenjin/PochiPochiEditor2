@@ -206,7 +206,7 @@ namespace PochiPochiEditor2.Helpers
             }
 
             // 変換テスト
-            if (CalcHelper.TryParseOffset(textBox.Text.Trim(), out int resultValue))
+            if (CalcHelper.TryParseValue(textBox.Text.Trim(), out int resultValue))
             {
                 // 桁数を参照
                 int digits = _showDigits[textBox];
@@ -399,6 +399,53 @@ namespace PochiPochiEditor2.Helpers
             {
                 navigator.Ctrl.Focus();
             }
+        }
+
+        /// <summary>
+        /// cmbにアイテムを追加する。初期選択指定可。
+        /// </summary>
+        public static void SetupCmbItems(
+            ComboBox cmb,
+            int defaultIndex,
+            params string[] items)
+        {
+            cmb.BeginUpdate();
+            try
+            {
+                cmb.Items.Clear();
+                cmb.Items.AddRange(items);
+                cmb.SelectedIndex = defaultIndex;
+            }
+            finally
+            {
+                cmb.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// 外部ファイルからcmbに格納する。各行の書式：[XX]ItemName（1バイト対応のみ）
+        /// </summary>
+        public static void LoadComboBoxFromFile(ComboBox cmb, string path)
+        {
+            var entries = new List<KeyValuePair<byte, string>>();
+            foreach (string line in File.ReadLines(path))
+            {
+                // 空行とコメント行をスキップ
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith(";")) continue;
+
+                // 行解析
+                int closeBracket = line.IndexOf(']');
+                string hex = line.Substring(1, closeBracket - 1); // "["を除外
+                if (CalcHelper.TryParseValue(hex, out int index))
+                {
+                    var entry = new KeyValuePair<byte, string>((byte)index, line.Trim());
+                    entries.Add(entry);
+                }
+            }
+
+            cmb.DisplayMember = nameof(KeyValuePair<byte, string>.Value);
+            cmb.ValueMember = nameof(KeyValuePair<byte, string>.Key);
+            cmb.DataSource = entries;
         }
     }
 }
