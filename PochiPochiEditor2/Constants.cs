@@ -14,8 +14,8 @@
         public const int UShortSize = 2;
         public const int UIntSize = 4;
         public const uint BaseAddr = 0x8000000U;
-        public const int InvalidOffset = -1;
-        public const string InvalidString = "null";
+        public const int InvalidOffsetValue = -1;
+        public const string InvalidOffsetString = "null";
         public const string HexPrefix = "0x";
 
         public const byte PaddingByte = 0x0;

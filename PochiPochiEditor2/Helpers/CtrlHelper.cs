@@ -118,5 +118,66 @@ namespace PochiPochiEditor2.Helpers
                    ctrl is TabControl ||
                    ctrl is TabPage;
         }
+
+        /// <summary>
+        /// テキスト自動整形機能を追加する。
+        /// </summary>
+        public static void AttachAutoFormat(int digits = 8, params TextBox[] textBoxes)
+        {
+            foreach (var textBox in textBoxes)
+            {
+                _showDigits[textBox] = digits; // 桁数を仮置き
+
+                textBox.Leave -= FormatTextBox;
+                textBox.Leave += FormatTextBox;
+            }
+        }
+
+        /// <summary>
+        /// テキスト自動整形機能を解除する。
+        /// </summary>
+        public static void DetachAutoFormat(params TextBox[] textBoxes)
+        {
+            foreach (var textBox in textBoxes)
+            {
+                textBox.Leave -= FormatTextBox;
+                _showDigits.Remove(textBox);
+            }
+        }
+
+        // コントロール別の整形桁数を保持
+        private static readonly Dictionary<TextBox, int> _showDigits = new Dictionary<TextBox, int>();
+
+        private static void FormatTextBox(object sender, EventArgs e)
+        {
+            // 型変換を兼ねる
+            if (!(sender is TextBox textBox)) return;
+
+            // 空白ならそのまま
+            if (string.IsNullOrWhiteSpace(textBox.Text)) return;
+
+            // 一応トリミング
+            var trimmedText = textBox.Text.Trim();
+
+            // 小文字の "null" に統一する
+            if (trimmedText.Equals(Constants.InvalidOffsetString, StringComparison.OrdinalIgnoreCase))
+            {
+                textBox.Text = Constants.InvalidOffsetString;
+                return;
+            }
+
+            // 変換テスト
+            if (CalcHelper.TryParseOffset(textBox.Text.Trim(), out int resultValue))
+            {
+                // tagの桁数を参照
+                int digits = _showDigits[textBox];
+
+                textBox.Text = resultValue.ToString($"X{digits}");
+            }
+            else
+            {
+                textBox.Text = string.Empty; // 空白にする
+            }
+        }
     }
 }
