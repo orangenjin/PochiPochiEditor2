@@ -10,6 +10,11 @@ namespace PochiPochiEditor2.Helpers
 {
     public static class ControlHelper
     {
+        // AttachAutoFormatの整形桁数を保持
+        private static Dictionary<TextBox, int> _showDigits = new Dictionary<TextBox, int>();
+        // AttachExternalBorderの対象コントロールを保持
+        private static Dictionary<Control, List<Control>> _drawBorders = new Dictionary<Control, List<Control>>();
+
         /// <summary>
         /// コンテナを指定して、再帰的にコントロールを有効化/無効化する。
         /// </summary>
@@ -127,8 +132,6 @@ namespace PochiPochiEditor2.Helpers
             foreach (var textBox in textBoxes)
             {
                 _showDigits[textBox] = digits; // 桁数を仮置き
-
-                textBox.Leave -= FormatTextBox;
                 textBox.Leave += FormatTextBox;
             }
         }
@@ -144,9 +147,6 @@ namespace PochiPochiEditor2.Helpers
                 _showDigits.Remove(textBox);
             }
         }
-
-        // コントロール別の整形桁数を保持
-        private static readonly Dictionary<TextBox, int> _showDigits = new Dictionary<TextBox, int>();
 
         private static void FormatTextBox(object sender, EventArgs e)
         {
@@ -177,6 +177,53 @@ namespace PochiPochiEditor2.Helpers
             else
             {
                 textBox.Text = string.Empty; // 空白にする
+            }
+        }
+
+        /// <summary>
+        /// コントロールの外側に枠を描画する。
+        /// </summary>
+        public static void AttachExternalBorder(Control parent, params Control[] targets)
+        {
+            // 対象コントロールを追加
+            var targetCtrl = new List<Control>();
+            foreach (var target in targets)
+            {
+                targetCtrl.Add(target);
+            }
+            _drawBorders[parent] = targetCtrl;
+
+            parent.Paint += BorderPaint;
+            parent.Invalidate();
+        }
+
+        /// <summary>
+        /// 親コントロールに描画されたすべての枠を削除する。
+        /// </summary>
+        public static void DetachExternalBorder(Control parent)
+        {
+            _drawBorders.Remove(parent);
+            parent.Paint -= BorderPaint;
+            parent.Invalidate();
+        }
+
+        private static void BorderPaint(object sender, PaintEventArgs e)
+        {
+            if (sender is Control parent && _drawBorders.TryGetValue(parent, out var targets))
+            {
+                using (var pen = new Pen(Color.Gray, 1))
+                {
+                    foreach (var target in targets)
+                    {
+                        var rect = new Rectangle(
+                            target.Left - 1,
+                            target.Top - 1,
+                            target.Width + 1,
+                            target.Height + 1);
+
+                        e.Graphics.DrawRectangle(pen, rect);
+                    }
+                }
             }
         }
     }
