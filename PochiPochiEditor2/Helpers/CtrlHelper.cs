@@ -12,8 +12,44 @@ namespace PochiPochiEditor2.Helpers
     {
         // AttachAutoFormatの整形桁数を保持
         private static Dictionary<TextBox, int> _showDigits = new Dictionary<TextBox, int>();
+
         // AttachExternalBorderの対象コントロールを保持
         private static Dictionary<Control, List<Control>> _drawBorders = new Dictionary<Control, List<Control>>();
+
+        // AttachBtnsToNudのコントロール対応を保持
+        private static List<NudNavigator> _nudNavigators = new List<NudNavigator>();
+        private class NudNavigator
+        {
+            public NumericUpDown Nud { get; }
+            public Button Prev { get; }
+            public Button Next { get; }
+
+            public NudNavigator(
+                NumericUpDown nud,
+                Button prev,
+                Button next)
+            {
+                Nud = nud;
+                Prev = prev;
+                Next = next;
+            }
+        }
+
+        // AttachRbToCtrlの対応を保持
+        private static List<RbLink> _rbLinks = new List<RbLink>();
+        private class RbLink
+        {
+            public RadioButton Rb { get; }
+            public Control Ctrl { get; }
+
+            public RbLink(
+                RadioButton rb,
+                Control ctrl)
+            {
+                Rb = rb;
+                Ctrl = ctrl;
+            }
+        }
 
         /// <summary>
         /// コンテナを指定して、再帰的にコントロールを有効化/無効化する。
@@ -179,14 +215,14 @@ namespace PochiPochiEditor2.Helpers
             }
             else
             {
-                textBox.Text = string.Empty; // 空白にする
+                textBox.Text = string.Empty; // ※空白にする
             }
         }
 
         /// <summary>
         /// コントロールの外側に枠を描画する。
         /// </summary>
-        public static void AttachExternalBorder(Control parent, params Control[] targets)
+        public static void AttachBorder(Control parent, params Control[] targets)
         {
             // 対象コントロールを追加
             var targetCtrl = new List<Control>();
@@ -203,7 +239,7 @@ namespace PochiPochiEditor2.Helpers
         /// <summary>
         /// 親コントロールに描画されたすべての枠を削除する。
         /// </summary>
-        public static void DetachExternalBorder(Control parent)
+        public static void DetachBorder(Control parent)
         {
             _drawBorders.Remove(parent);
             parent.Paint -= BorderPaint;
@@ -230,6 +266,138 @@ namespace PochiPochiEditor2.Helpers
                         e.Graphics.DrawRectangle(pen, rect);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// nudの増減に対応するbtnを追加する。
+        /// </summary>
+        public static void AttachBtnsToNud(
+            NumericUpDown nud,
+            Button btnPrev,
+            Button btnNext)
+        {
+            // 対応を保持する
+            var navigator = new NudNavigator(nud, btnPrev, btnNext);
+            _nudNavigators.Add(navigator);
+
+            btnPrev.Click += BtnDecrease;
+            btnNext.Click += BtnIncrease;
+            nud.ValueChanged += UpdateBtnsToNud;
+
+            // 念のため一度実行しておく
+            UpdateBtnsToNud(nud, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// nudの増減に対応するbtnの関連付けを解除する。
+        /// </summary>
+        public static void DetachBtnsToNud(
+            NumericUpDown nud,
+            Button btnPrev,
+            Button btnNext)
+        {
+            btnPrev.Click -= BtnDecrease;
+            btnNext.Click -= BtnIncrease;
+            nud.ValueChanged -= UpdateBtnsToNud;
+
+            // 辞書から削除しておく
+            var navigator = _nudNavigators.First(x => x.Nud == nud);
+            _nudNavigators.Remove(navigator);
+        }
+
+        private static void BtnDecrease(object sender, EventArgs e)
+        {
+            if (!(sender is Button btn)) return;
+
+            // senderに対応するnudを取得する
+            var navigator = _nudNavigators.First(x => x.Prev == btn);
+            var nud = navigator.Nud;
+
+            if (nud.Value > nud.Minimum)
+            {
+                nud.Value--;
+            }
+        }
+
+        private static void BtnIncrease(object sender, EventArgs e)
+        {
+            if (!(sender is Button btn)) return;
+
+            // senderに対応するnudを取得する
+            var navigator = _nudNavigators.First(x => x.Next == btn);
+            var nud = navigator.Nud;
+
+            if (nud.Value < nud.Maximum)
+            {
+                nud.Value++;
+            }
+        }
+
+        private static void UpdateBtnsToNud(object sender, EventArgs e)
+        {
+            if (!(sender is NumericUpDown nud)) return;
+
+            var navigator = _nudNavigators.First(x => x.Nud == nud);
+
+            // どこかに飛んでしまうフォーカスを制御する
+            bool canGoPrev = nud.Value > nud.Minimum;
+            if (!canGoPrev && navigator.Prev.Focused)
+            {
+                nud.Focus();
+            }
+            navigator.Prev.Enabled = canGoPrev;
+
+            bool canGoNext = nud.Value < nud.Maximum;
+            if (!canGoNext && navigator.Next.Focused)
+            {
+                nud.Focus();
+            }
+            navigator.Next.Enabled = canGoNext;
+        }
+
+        /// <summary>
+        /// rbとctrlを連動させる。
+        /// </summary>
+        public static void AttachRbToCtrl(RadioButton rb, Control ctrl)
+        {
+            // 対応を保持
+            var navigator = new RbLink(rb, ctrl);
+            _rbLinks.Add(navigator);
+
+            ctrl.Enter += CtrlEnter;
+            rb.CheckedChanged += RbChecked;
+        }
+
+        /// <summary>
+        /// rbとctrlの連動を解除する。
+        /// </summary>
+        public static void DetachRbToCtrl(RadioButton rb, Control ctrl)
+        {
+            ctrl.Enter -= CtrlEnter;
+            rb.CheckedChanged -= RbChecked;
+
+            var navigator = _rbLinks.First(x => x.Rb == rb && x.Ctrl == ctrl);
+            _rbLinks.Remove(navigator);
+        }
+
+        private static void CtrlEnter(object sender, EventArgs e)
+        {
+            if (!(sender is Control ctrl)) return;
+
+            var navigator = _rbLinks.First(x => x.Ctrl == ctrl);
+            navigator.Rb.Checked = true;
+        }
+
+        private static void RbChecked(object sender, EventArgs e)
+        {
+            if (!(sender is RadioButton rb)) return;
+
+            var navigator = _rbLinks.First(x => x.Rb == rb);
+            // checkがtrueの場合を想定
+            if (rb.Checked)
+            {
+                navigator.Ctrl.Focus();
             }
         }
     }
