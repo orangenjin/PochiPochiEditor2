@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants\CalcConstant.cs" />
     <Compile Include="Helpers\CalcHelper.cs" />
     <Compile Include="Helpers\CtrlHelper.cs" />
     <Compile Include="MainForm.cs">
