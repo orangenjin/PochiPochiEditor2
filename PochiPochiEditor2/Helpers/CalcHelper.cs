@@ -7,9 +7,9 @@ namespace PochiPochiEditor2.Helpers
         /// <summary>
         /// stringからintへ16進数を変換する。
         /// </summary>
-        public static bool TryParseValue(string offsetStr, out int offsetValue)
+        public static bool TryParseValue(string str, out int val)
         {
-            return int.TryParse(offsetStr, NumberStyles.HexNumber, null, out offsetValue);
+            return int.TryParse(str, NumberStyles.HexNumber, null, out val);
         }
     }
 }
