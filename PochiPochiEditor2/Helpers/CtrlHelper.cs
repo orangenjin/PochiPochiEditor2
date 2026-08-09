@@ -148,6 +148,9 @@ namespace PochiPochiEditor2.Helpers
             }
         }
 
+        /// <summary>
+        /// 無効な文字列なら空白にするため、追加処理が必要。
+        /// </summary>
         private static void FormatTextBox(object sender, EventArgs e)
         {
             // 型変換を兼ねる
@@ -169,7 +172,7 @@ namespace PochiPochiEditor2.Helpers
             // 変換テスト
             if (CalcHelper.TryParseOffset(textBox.Text.Trim(), out int resultValue))
             {
-                // tagの桁数を参照
+                // 桁数を参照
                 int digits = _showDigits[textBox];
 
                 textBox.Text = resultValue.ToString($"X{digits}");
@@ -207,6 +210,9 @@ namespace PochiPochiEditor2.Helpers
             parent.Invalidate();
         }
 
+        /// <summary>
+        /// 親コントロールの描画が頻発するなら要修正。
+        /// </summary>
         private static void BorderPaint(object sender, PaintEventArgs e)
         {
             if (sender is Control parent && _drawBorders.TryGetValue(parent, out var targets))
