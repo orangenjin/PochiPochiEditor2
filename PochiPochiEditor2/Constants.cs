@@ -16,11 +16,7 @@
         public const uint BaseAddr = 0x8000000U;
         public const int InvalidOffsetValue = -1;
         public const string InvalidOffsetString = "null";
-
         public const string HexPrefix = "0x";
-        public const string CommentPrefix = ";";
-        public const string OpenBracket = "[";
-        public const string CloseBracket = "]";
 
         public const byte PaddingByte = 0x0;
         public const byte FreeSpaceByte = 0xFF;

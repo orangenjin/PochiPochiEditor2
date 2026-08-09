@@ -430,11 +430,11 @@ namespace PochiPochiEditor2.Helpers
             foreach (string line in File.ReadLines(path))
             {
                 // 空行とコメント行をスキップ
-                if (string.IsNullOrWhiteSpace(line) || line.StartsWith(Constants.CommentPrefix)) continue;
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith(";")) continue;
 
                 // 行解析
-                int closeBracketPos = line.IndexOf(Constants.CloseBracket);
-                string hex = line.Substring(1, closeBracketPos - 1); // "["を除外
+                int closeBracket = line.IndexOf(']');
+                string hex = line.Substring(1, closeBracket - 1); // "["を除外
                 if (CalcHelper.TryParseValue(hex, out int index))
                 {
                     var entry = new KeyValuePair<byte, string>((byte)index, line.Trim());
