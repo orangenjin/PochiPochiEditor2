@@ -18,9 +18,13 @@
         public const string InvalidOffsetString = "null";
 
         public const string HexPrefix = "0x";
-        public const string CommentPrefix = ";";
-        public const string OpenBracket = "[";
-        public const string CloseBracket = "]";
+        public const char CommentChar = ';';
+        public const char OpenBracketChar = '[';
+        public const char CloseBracketChar = ']';
+        public const char OpenParenChar = '(';
+        public const char CloseParenChar = ')';
+        public const char CommaChar = ',';
+        public const char QuotationChar = ',';
 
         public const byte PaddingByte = 0x0;
         public const byte FreeSpaceByte = 0xFF;

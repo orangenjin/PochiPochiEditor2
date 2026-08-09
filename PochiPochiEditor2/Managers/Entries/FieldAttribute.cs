@@ -3,9 +3,9 @@
     public class FieldAttribute
     {
         public AttributeType AttributeType { get; }
-        public object[] Parameters { get; }
+        public string[] Parameters { get; }
 
-        public FieldAttribute(AttributeType attributeType, params object[] parameters)
+        public FieldAttribute(AttributeType attributeType, params string[] parameters)
         {
             AttributeType = attributeType;
             Parameters = parameters;

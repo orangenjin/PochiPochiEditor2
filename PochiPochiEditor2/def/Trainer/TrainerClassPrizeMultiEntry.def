@@ -1,0 +1,4 @@
+ClassNameIndex, Byte
+PrizeMulti, Byte
+Padding1. Byte
+Padding2, Byte
