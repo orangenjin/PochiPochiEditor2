@@ -1,1 +1,1 @@
-ClassName, String, [StringAttribute("TrainerClassNameEntryLength")]
+ClassName: String: [StringAttribute("TrainerClassNameEntryLength")]

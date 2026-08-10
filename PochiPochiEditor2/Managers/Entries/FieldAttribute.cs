@@ -2,12 +2,12 @@
 {
     public class FieldAttribute
     {
-        public AttributeType AttributeType { get; }
+        public AttributeType Type { get; }
         public string[] Parameters { get; }
 
         public FieldAttribute(AttributeType attributeType, params string[] parameters)
         {
-            AttributeType = attributeType;
+            Type = attributeType;
             Parameters = parameters;
         }
     }

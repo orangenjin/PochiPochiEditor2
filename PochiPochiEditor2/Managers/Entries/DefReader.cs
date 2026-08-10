@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PochiPochiEditor2.Managers.Entries
 {
-    public class EntryReader
+    public class DefReader
     {
         private string _defFolder = Path.Combine(Application.StartupPath, "def");
 
-        public EntryReader(string fileName)
+        public DefReader(string fileName)
         {
-            // defフォルダの1階層下のフォルダから指定したファイルを探す
+            // defフォルダ階層下から指定したファイルを探す
             var foundFiles = Directory.GetFiles(_defFolder, fileName, SearchOption.AllDirectories);
             var filePath = foundFiles[0];
             var lines = File.ReadAllLines(filePath);
@@ -28,40 +26,40 @@ namespace PochiPochiEditor2.Managers.Entries
                     trimmedLine.StartsWith(Constants.CommentChar.ToString()))
                     continue;
 
-                // カンマで分割
-                var parts = line.Split(Constants.CommaChar).Select(p => p.Trim()).ToArray();
+                // コロンで分割
+                var parts = line.Split(Constants.ColonChar).Select(p => p.Trim()).ToArray();
 
-                // enumにパースして、格納
+                // 型を読み取る
                 var kindStr = parts[1];
                 if (!Enum.TryParse<FieldKind>(kindStr, true, out var kind)) continue;
+
+                // まずクラス名と型を格納
                 var metadata = new FieldMetadata(parts[0], kind);
 
-                // コンストラクタで属性のリストが初期化された後
+                // 属性読み取り開始
                 for (int i = 2; i < parts.Length; i++)
                 {
-                    var target = parts[i];
-
-                    // 角括弧を消す
-                    var trimmed = target.Trim(Constants.OpenBracketChar, Constants.CloseBracketChar);
+                    // 角括弧を外す
+                    var target = parts[i].Trim(Constants.OpenBracketChar, Constants.CloseBracketChar);
                     // 丸括弧の位置を探す
-                    var openParenIndex = trimmed.IndexOf(Constants.OpenParenChar);
+                    var openParenIndex = target.IndexOf(Constants.OpenParenChar);
+                    var closeParenIndex = target.LastIndexOf(Constants.CloseParenChar);
 
                     // 属性名を取得
-                    var attributeName = trimmed.Substring(0, openParenIndex).Trim();
+                    var attributeName = target.Substring(0, openParenIndex);
 
                     // パラメータを取得
-                    var closeParenIndex = trimmed.LastIndexOf(Constants.CloseParenChar);
-                    var paramString = trimmed.Substring(openParenIndex + 1, closeParenIndex - openParenIndex - 1);
+                    var rawParams = target.Substring(openParenIndex + 1, closeParenIndex - openParenIndex - 1);
+                    // カンマで分割
+                    var paramParts = rawParams.Split(Constants.CommaChar).Select(p => p.Trim()).ToArray();
 
-                    // パース処理
                     if (Enum.TryParse<AttributeType>(attributeName, true, out var attrType))
                     {
                         var paramList = new List<string>();
-                        var rawParams = paramString.Split(Constants.CommaChar);
 
-                        foreach (var p in rawParams)
+                        foreach (var param in paramParts)
                         {
-                            var cleaned = p.Trim().Trim(Constants.QuotationChar);
+                            var cleaned = param.Trim().Trim(Constants.QuotationChar);
                             paramList.Add(cleaned);
                         }
 

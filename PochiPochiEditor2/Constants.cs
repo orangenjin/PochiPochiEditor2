@@ -24,7 +24,8 @@
         public const char OpenParenChar = '(';
         public const char CloseParenChar = ')';
         public const char CommaChar = ',';
-        public const char QuotationChar = ',';
+        public const char QuotationChar = '"';
+        public const char ColonChar = ':';
 
         public const byte PaddingByte = 0x0;
         public const byte FreeSpaceByte = 0xFF;

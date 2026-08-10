@@ -13,7 +13,7 @@ namespace PochiPochiEditor2.Managers.Entries
         {
             Name = name;
             Kind = kind;
-            Attributes = new List<FieldAttribute>();
+            Attributes = new List<FieldAttribute>(); // 後付け
         }
 
         // Type取得用
