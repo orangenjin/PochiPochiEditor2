@@ -10,8 +10,19 @@ namespace PochiPochiEditor2.Managers.Entries
     {
         private string _defFolder = Path.Combine(Application.StartupPath, "def");
 
+        // 公開用
+        public List<FieldMetadata> Fields { get; }
+
         public DefReader(string fileName)
         {
+            Fields = ReadFields(fileName);
+        }
+
+        private List<FieldMetadata> ReadFields(string fileName)
+        {
+            // 戻り値用
+            var results = new List<FieldMetadata>();
+
             // defフォルダ階層下から指定したファイルを探す
             var foundFiles = Directory.GetFiles(_defFolder, fileName, SearchOption.AllDirectories);
             var filePath = foundFiles[0];
@@ -22,7 +33,7 @@ namespace PochiPochiEditor2.Managers.Entries
                 var trimmedLine = line.Trim();
 
                 // 空白やコメントをスキップ
-                if (string.IsNullOrWhiteSpace(trimmedLine) || 
+                if (string.IsNullOrWhiteSpace(trimmedLine) ||
                     trimmedLine.StartsWith(Constants.CommentChar.ToString()))
                     continue;
 
@@ -33,10 +44,8 @@ namespace PochiPochiEditor2.Managers.Entries
                 var kindStr = parts[1];
                 if (!Enum.TryParse<FieldKind>(kindStr, true, out var kind)) continue;
 
-                // まずクラス名と型を格納
-                var metadata = new FieldMetadata(parts[0], kind);
-
-                // 属性読み取り開始
+                // 属性読み取る
+                var attributes = new List<FieldAttribute>();
                 for (int i = 2; i < parts.Length; i++)
                 {
                     // 角括弧を外す
@@ -53,20 +62,22 @@ namespace PochiPochiEditor2.Managers.Entries
                     // カンマで分割
                     var paramParts = rawParams.Split(Constants.CommaChar).Select(p => p.Trim()).ToArray();
 
+                    // パラメータを格納
                     if (Enum.TryParse<AttributeType>(attributeName, true, out var attrType))
                     {
-                        var paramList = new List<string>();
+                        var paramList = paramParts
+                            .Select(p => p.Trim().Trim(Constants.QuotationChar))
+                            .ToArray();
 
-                        foreach (var param in paramParts)
-                        {
-                            var cleaned = param.Trim().Trim(Constants.QuotationChar);
-                            paramList.Add(cleaned);
-                        }
-
-                        metadata.Attributes.Add(new FieldAttribute(attrType, paramList.ToArray()));
+                        attributes.Add(new FieldAttribute(attrType, paramList));
                     }
                 }
+
+                // 単一フィールド定義を格納
+                results.Add(new FieldMetadata(parts[0], kind, attributes));
             }
+
+            return results;
         }
     }
 }

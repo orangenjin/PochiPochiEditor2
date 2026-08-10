@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PochiPochiEditor2.Managers.Entries
 {
     public class FieldMetadata
     {
-        public string Name { get; set; }
-        public FieldKind Kind { get; set; }
-        public List<FieldAttribute> Attributes { get; set; }
+        public string Name { get; }
+        public FieldKind Kind { get; }
+        public List<FieldAttribute> Attributes { get; }
 
-        public FieldMetadata(string name, FieldKind kind)
+        public FieldMetadata(string name, FieldKind kind, List<FieldAttribute> attributes = null)
         {
             Name = name;
             Kind = kind;
-            Attributes = new List<FieldAttribute>(); // 後付け
+            Attributes = attributes?.ToList();
         }
 
         // Type取得用
