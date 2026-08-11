@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Managers.Fields
@@ -10,34 +9,41 @@ namespace PochiPochiEditor2.Managers.Fields
     {
         public string Name { get; }
         public int EntryLength { get; }
-        public int AllowedLength { get; } // string用
+        public int AllowedLength { get; } // ほぼstring用
         public byte[] BinaryData { get; set; } // 可変長の場合のValueの長さは.Lengthで
 
+        // DefReaderで読み込んだ定義情報から作成
         public FieldValue(FieldMetaData metaData, SharedData sharedData)
         {
             // フィールド名を格納
             Name = metaData.Name;
 
-            // 長さを計算
-            foreach (var attribute in metaData.Attributes)
-            {
-                // 現状stringだけ動的長さなので
-                if(attribute.Kind != AttributeKind.StringAttribute) continue;
+            // StringAttributeを確認
+            var stringAttr = metaData.Attributes
+                .FirstOrDefault(a => a.Kind == AttributeKind.StringAttribute);
 
+            // 現状stringだけ動的長さ
+            if (stringAttr != null)
+            {
                 // 要素数
-                int maxCount = Math.Min(attribute.Parameters.Length, (int)AttributeKind.StringAttribute);
+                int maxCount = Math.Min(stringAttr.Parameters.Length, (int)AttributeKind.StringAttribute);
 
                 int[] lengths = new int[maxCount];
                 for (int i = 0; i < maxCount; i++)
                 {
-                    lengths[i] = sharedData.Config.ReadInt(attribute.Parameters[i]);
+                    lengths[i] = sharedData.Config.ReadInt(stringAttr.Parameters[i]);
                 }
 
                 // 存在しない場合も考慮
                 EntryLength = lengths[0];
-                AllowedLength = lengths.Length > 1 
+                AllowedLength = lengths.Length > 1
                     ? lengths[1] :
                     -1;
+            }
+            else
+            {
+                EntryLength = (int)metaData.Kind;
+                AllowedLength = -1;
             }
         }
 

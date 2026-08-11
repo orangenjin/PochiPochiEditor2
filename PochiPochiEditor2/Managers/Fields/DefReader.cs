@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
+using PochiPochiEditor2.Utilities;
+
 namespace PochiPochiEditor2.Managers.Fields
 {
     public class DefReader
@@ -11,17 +13,17 @@ namespace PochiPochiEditor2.Managers.Fields
         private string _defFolder = Path.Combine(Application.StartupPath, "def");
 
         // 公開用
-        public List<FieldValue> FieldValues { get; }
+        public List<FieldMetaData> FieldDefs { get; }
 
         public DefReader(string fileName)
         {
-            FieldValues = ReadFields(fileName);
+            FieldDefs = ReadFields(fileName);
         }
 
-        private List<FieldValue> ReadFields(string fileName)
+        private List<FieldMetaData> ReadFields(string fileName)
         {
             // 戻り値用
-            var results = new List<FieldMetadata>();
+            var results = new List<FieldMetaData>();
 
             // defフォルダ階層下から指定したファイルを探す
             var foundFiles = Directory.GetFiles(_defFolder, fileName, SearchOption.AllDirectories);
@@ -61,7 +63,7 @@ namespace PochiPochiEditor2.Managers.Fields
                     var paramParts = rawParams.Split(Constants.CommaChar).Select(p => p.Trim()).ToArray();
 
                     // パラメータを格納
-                    if (Enum.TryParse<AttributeType>(attributeName, true, out var attrType))
+                    if (Enum.TryParse<AttributeKind>(attributeName, true, out var attrType))
                     {
                         var paramList = paramParts
                             .Select(p => p.Trim().Trim(Constants.QuotationChar))
@@ -72,7 +74,7 @@ namespace PochiPochiEditor2.Managers.Fields
                 }
 
                 // フィールド定義を格納
-                results.Add(new FieldMetadata(parts[0], kind, attributes));
+                results.Add(new FieldMetaData(parts[0], kind, attributes));
             }
 
             return results;

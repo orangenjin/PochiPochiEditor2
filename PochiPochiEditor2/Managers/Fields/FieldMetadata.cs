@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace PochiPochiEditor2.Managers.Fields
@@ -18,14 +17,15 @@ namespace PochiPochiEditor2.Managers.Fields
         }
     }
 
+    // 右辺はバイトサイズ
     public enum FieldKind
     {
-        Byte,
-        SByte,
-        UInt16,
-        Int16,
-        UInt32,
-        Int32,
-        String
+        Byte = 1,
+        SByte = 1,
+        UInt16 = 2,
+        Int16 = 2,
+        UInt32 = 4,
+        Int32 = 4,
+        String = -1 // 適当
     }
 }
