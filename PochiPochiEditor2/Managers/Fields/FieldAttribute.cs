@@ -1,4 +1,4 @@
-﻿namespace PochiPochiEditor2.Managers.Entries
+﻿namespace PochiPochiEditor2.Managers.Fields
 {
     public class FieldAttribute
     {

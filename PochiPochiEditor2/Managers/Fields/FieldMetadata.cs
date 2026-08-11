@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PochiPochiEditor2.Managers.Entries
+namespace PochiPochiEditor2.Managers.Fields
 {
     public class FieldMetadata
     {

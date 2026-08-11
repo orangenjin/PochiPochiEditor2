@@ -58,9 +58,9 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Managers\Entries\DefReader.cs" />
-    <Compile Include="Managers\Entries\FieldAttribute.cs" />
-    <Compile Include="Managers\Entries\FieldMetadata.cs" />
+    <Compile Include="Managers\Fields\FieldReader.cs" />
+    <Compile Include="Managers\Fields\FieldAttribute.cs" />
+    <Compile Include="Managers\Fields\FieldMetadata.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
@@ -89,12 +89,24 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="def\Trainer\TrainerClassBaseIVEntry.def" />
-    <Content Include="def\Trainer\TrainerClassBattleMusicEntry.def" />
-    <Content Include="def\Trainer\TrainerClassEncounterMusicEntry.def" />
-    <Content Include="def\Trainer\TrainerClassNameEntry.def" />
-    <Content Include="def\Trainer\TrainerClassPokeBallEntry.def" />
-    <Content Include="def\Trainer\TrainerClassPrizeMultiEntry.def" />
+    <Content Include="def\Trainer\TrainerClassBaseIVEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Trainer\TrainerClassBattleMusicEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Trainer\TrainerClassEncounterMusicEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Trainer\TrainerClassNameEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Trainer\TrainerClassPokeBallEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Trainer\TrainerClassPrizeMultiEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="img\poochyena.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

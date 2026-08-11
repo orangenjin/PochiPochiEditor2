@@ -4,16 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace PochiPochiEditor2.Managers.Entries
+namespace PochiPochiEditor2.Managers.Fields
 {
-    public class DefReader
+    public class FieldReader
     {
         private string _defFolder = Path.Combine(Application.StartupPath, "def");
 
         // 公開用
         public List<FieldMetadata> Fields { get; }
 
-        public DefReader(string fileName)
+        public FieldReader(string fileName)
         {
             Fields = ReadFields(fileName);
         }
@@ -32,10 +32,8 @@ namespace PochiPochiEditor2.Managers.Entries
             {
                 var trimmedLine = line.Trim();
 
-                // 空白やコメントをスキップ
-                if (string.IsNullOrWhiteSpace(trimmedLine) ||
-                    trimmedLine.StartsWith(Constants.CommentChar.ToString()))
-                    continue;
+                // 空行をスキップ
+                if (string.IsNullOrWhiteSpace(trimmedLine)) continue;
 
                 // コロンで分割
                 var parts = line.Split(Constants.ColonChar).Select(p => p.Trim()).ToArray();
