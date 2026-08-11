@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 
 using PochiPochiEditor2.Helpers;
+using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Managers
 {
