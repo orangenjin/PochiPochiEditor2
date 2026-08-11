@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using PochiPochiEditor2.Utilities;
 
@@ -10,6 +9,7 @@ namespace PochiPochiEditor2.Managers.Fields
         public string Name { get; }
         public int EntryLength { get; }
         public int AllowedLength { get; } // ほぼstring用
+        public bool IsSigned { get; }
         public byte[] BinaryData { get; set; } // 可変長の場合のValueの長さは.Lengthで
 
         // DefReaderで読み込んだ定義情報から作成
@@ -45,6 +45,11 @@ namespace PochiPochiEditor2.Managers.Fields
                 EntryLength = (int)metaData.Kind;
                 AllowedLength = -1;
             }
+
+            // 符号ありかどうかを判定
+            IsSigned = metaData.Kind is FieldKind.SByte || 
+                metaData.Kind is FieldKind.Int16 ||
+                metaData.Kind is FieldKind.Int32;
         }
 
         public void SetData<T>(T rawData)
@@ -52,6 +57,8 @@ namespace PochiPochiEditor2.Managers.Fields
             // T の型から自動的に処理を選択
 
             // 自動選択されたテンプレートでセット
+
+            // むしろ事前に詰め込むほうがよいか？
         }
 
         public void SetData<T>(T rawData, Func<T, byte[]> processor)
