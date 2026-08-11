@@ -2,6 +2,8 @@
 using System.IO;
 using System.Text;
 
+using PochiPochiEditor2.Helpers;
+
 namespace PochiPochiEditor2.Managers
 {
     public class IniManager
@@ -83,7 +85,7 @@ namespace PochiPochiEditor2.Managers
                     }
                 }
 
-                // number (hex, dec)
+                // 数字かどうか
                 if (TryParseNumber(rawString, out int numValue))
                 {
                     _iniCacheInt[key] = numValue;
@@ -118,10 +120,10 @@ namespace PochiPochiEditor2.Managers
             if (rawString.StartsWith(Constants.HexPrefix)) // 0x
             {
                 string hexPart = rawString.Substring(Constants.HexPrefix.Length);
-                return ControlHelper.TryParseOffset(hexPart, out parsedValue);
+                return CalcHelper.TryParseValue(hexPart, out parsedValue);
             }
 
-            return int.TryParse(rawString, out parsedValue); // decimal
+            return int.TryParse(rawString, out parsedValue); // 10進数
         }
     }
 }
