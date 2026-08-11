@@ -16,39 +16,6 @@ namespace PochiPochiEditor2.Managers.Fields
             Kind = kind;
             Attributes = attributes?.ToList();
         }
-
-        // サイズ取得用
-        public int Length
-        {
-            get
-            {
-                switch (Kind)
-                {
-                    case FieldKind.Byte:
-                        return sizeof(byte);
-                    case FieldKind.SByte:
-                        return sizeof(sbyte);
-                    case FieldKind.UInt16:
-                        return sizeof(ushort);
-                    case FieldKind.Int16:
-                        return sizeof(short);
-                    case FieldKind.UInt32:
-                        return sizeof(uint);
-                    case FieldKind.Int32:
-                        return sizeof(int);
-                    case FieldKind.String:
-
-
-                        return sizeof(int);
-                    default:
-                        return default;
-                }
-            }
-        }
-
-        // 符号ありかどうかを判定
-        public bool IsSigned =>
-            Kind is FieldKind.SByte || Kind is FieldKind.Int16 || Kind is FieldKind.Int32;
     }
 
     public enum FieldKind

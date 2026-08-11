@@ -2,17 +2,17 @@
 {
     public class FieldAttribute
     {
-        public AttributeType Type { get; }
+        public AttributeKind Kind { get; }
         public string[] Parameters { get; }
 
-        public FieldAttribute(AttributeType attributeType, params string[] parameters)
+        public FieldAttribute(AttributeKind attributeKind, params string[] parameters)
         {
-            Type = attributeType;
+            Kind = attributeKind;
             Parameters = parameters;
         }
     }
 
-    public enum AttributeType
+    public enum AttributeKind
     {
         StringAttribute,
         NibbleAttribute,
