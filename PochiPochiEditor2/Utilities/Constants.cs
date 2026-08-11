@@ -1,4 +1,4 @@
-﻿namespace PochiPochiEditor2
+﻿namespace PochiPochiEditor2.Utilities
 {
     public static class Constants
     {

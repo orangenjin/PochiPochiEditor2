@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Helpers
 {

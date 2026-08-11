@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
+using PochiPochiEditor2.Utilities;
+
 namespace PochiPochiEditor2.Helpers
 {
     public static class ControlHelper
