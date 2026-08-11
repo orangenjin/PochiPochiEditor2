@@ -12,10 +12,13 @@
         }
     }
 
+    // 右辺は最大パラメータ数
     public enum AttributeKind
     {
-        StringAttribute,
-        NibbleAttribute,
-        BitAttribute
+        StringAttribute = 2,
+
+        // byte想定
+        NibbleAttribute = 2,
+        BitAttribute = 8
     }
 }

@@ -5,9 +5,9 @@ using System.Text;
 
 using PochiPochiEditor2.Utilities;
 
-namespace PochiPochiEditor2.FileReaders
+namespace PochiPochiEditor2.Managers
 {
-    public class TblFileReader
+    public class TblManager
     {
         // 対応探索用
         private readonly ByteTrieNode _byteTrieRoot = new ByteTrieNode();
@@ -16,7 +16,7 @@ namespace PochiPochiEditor2.FileReaders
         /// <summary>
         /// ファイルパスを指定して、charmapを作成する。
         /// </summary>
-        public TblFileReader(string filePath)
+        public TblManager(string filePath)
         {
             if (!File.Exists(filePath)) return;
 

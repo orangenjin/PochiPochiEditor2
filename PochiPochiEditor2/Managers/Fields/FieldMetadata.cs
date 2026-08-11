@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace PochiPochiEditor2.Managers.Fields
 {
-    public class FieldMetadata
+    public class FieldMetaData
     {
         public string Name { get; }
         public FieldKind Kind { get; }
         public List<FieldAttribute> Attributes { get; }
 
-        public FieldMetadata(string name, FieldKind kind, List<FieldAttribute> attributes = null)
+        public FieldMetaData(string name, FieldKind kind, List<FieldAttribute> attributes = null)
         {
             Name = name;
             Kind = kind;
