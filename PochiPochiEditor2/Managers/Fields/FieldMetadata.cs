@@ -17,27 +17,31 @@ namespace PochiPochiEditor2.Managers.Fields
             Attributes = attributes?.ToList();
         }
 
-        // Type取得用
-        public Type Type
+        // サイズ取得用
+        public int Length
         {
             get
             {
                 switch (Kind)
                 {
                     case FieldKind.Byte:
-                        return typeof(byte);
+                        return sizeof(byte);
                     case FieldKind.SByte:
-                        return typeof(sbyte);
+                        return sizeof(sbyte);
                     case FieldKind.UInt16:
-                        return typeof(ushort);
+                        return sizeof(ushort);
                     case FieldKind.Int16:
-                        return typeof(short);
+                        return sizeof(short);
                     case FieldKind.UInt32:
-                        return typeof(uint);
+                        return sizeof(uint);
                     case FieldKind.Int32:
-                        return typeof(int);
+                        return sizeof(int);
+                    case FieldKind.String:
+
+
+                        return sizeof(int);
                     default:
-                        return typeof(string); // FieldKind.String
+                        return default;
                 }
             }
         }

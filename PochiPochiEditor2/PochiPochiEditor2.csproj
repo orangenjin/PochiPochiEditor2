@@ -58,7 +58,7 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Managers\Fields\FieldReader.cs" />
+    <Compile Include="Managers\Fields\DefReader.cs" />
     <Compile Include="Managers\Fields\FieldAttribute.cs" />
     <Compile Include="Managers\Fields\FieldMetadata.cs" />
     <Compile Include="Program.cs" />

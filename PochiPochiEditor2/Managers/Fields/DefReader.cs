@@ -6,16 +6,17 @@ using System.Windows.Forms;
 
 namespace PochiPochiEditor2.Managers.Fields
 {
-    public class FieldReader
+    // 定義情報を読み取るだけにする
+    public class DefReader
     {
         private string _defFolder = Path.Combine(Application.StartupPath, "def");
 
         // 公開用
-        public List<FieldMetadata> Fields { get; }
+        public List<FieldMetadata> FieldDefs { get; }
 
-        public FieldReader(string fileName)
+        public DefReader(string fileName)
         {
-            Fields = ReadFields(fileName);
+            FieldDefs = ReadFields(fileName);
         }
 
         private List<FieldMetadata> ReadFields(string fileName)
@@ -71,7 +72,7 @@ namespace PochiPochiEditor2.Managers.Fields
                     }
                 }
 
-                // 単一フィールド定義を格納
+                // フィールド定義を格納
                 results.Add(new FieldMetadata(parts[0], kind, attributes));
             }
 
