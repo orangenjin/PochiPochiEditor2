@@ -18,6 +18,7 @@
         public const string InvalidOffsetString = "null";
 
         public const string HexPrefix = "0x";
+        public const string ButtonPrefix = "btn";
         public const char CommentChar = ';';
         public const char OpenBracketChar = '[';
         public const char CloseBracketChar = ']';
