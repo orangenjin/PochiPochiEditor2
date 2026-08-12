@@ -26,6 +26,12 @@ namespace PochiPochiEditor2.Helpers
             int nameCount = fieldValue.ControlNames.Length;
             bool isSigned = fieldValue.IsSigned;
 
+            // 文字列
+            if (fieldValue.AllowedLength > 0)
+            {
+                return (T)(object)sharedData.Charmap.BytesToString(data, startIndex, entryLength);
+            }
+
             switch(entryLength)
             {
                 // 1バイト
@@ -83,9 +89,9 @@ namespace PochiPochiEditor2.Helpers
                         ? (T)(object)(int)rawUInt
                         : (T)(object)rawUInt;
 
-                // 文字列
+                // その他
                 default:
-                    return (T)(object)sharedData.Charmap.BytesToString(data);
+                    return (T)(object)default;
             }
         }
     }

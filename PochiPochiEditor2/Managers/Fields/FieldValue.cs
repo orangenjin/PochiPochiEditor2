@@ -8,7 +8,6 @@ namespace PochiPochiEditor2.Managers.Fields
 {
     public class FieldValue
     {
-        public string Name { get; }
         public int EntryLength { get; }
         public int AllowedLength { get; } // ほぼstring用
         public bool IsSigned { get; }
@@ -23,9 +22,6 @@ namespace PochiPochiEditor2.Managers.Fields
             byte[] binaryData,
             ControlKind controlKind)
         {
-            // フィールド名を格納
-            Name = metaData.Name;
-
             // StringAttributeを確認
             var stringAttr = metaData.Attributes
                 .FirstOrDefault(a => a.Kind == AttributeKind.StringAttribute);
@@ -42,11 +38,11 @@ namespace PochiPochiEditor2.Managers.Fields
                     lengths[i] = sharedData.Config.ReadInt(stringAttr.Parameters[i]);
                 }
 
-                // 存在しない場合も考慮
+                // 存在しない場合も考慮、その場合同値
                 EntryLength = lengths[0];
                 AllowedLength = lengths.Length > 1
                     ? lengths[1]
-                    : -1;
+                    : lengths[0];
             }
             else
             {
