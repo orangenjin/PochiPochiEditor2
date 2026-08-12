@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -21,6 +22,7 @@ namespace PochiPochiEditor2
         private string _romPath = string.Empty;
         private string _iniFolder = Path.Combine(Application.StartupPath, "ini");
         private string _tblPath = Path.Combine(Application.StartupPath, "charmap.tbl");
+        private string _imagePath = Path.Combine(Application.StartupPath, "img", "poochyena.png");
 
         // フォーム同時起動用
         private FormGroupManager _formGroupManager = null;
@@ -43,6 +45,10 @@ namespace PochiPochiEditor2
             btnSaveOver.Tag = SaveMode.SaveOver;
             btnSaveAs.Tag = SaveMode.SaveAs;
 
+            // 画像表示
+            picPoke.Image = Image.FromFile(_imagePath);
+
+            // UI状態の更新
             MainFormUIUpdate();
         }
 
@@ -200,8 +206,9 @@ namespace PochiPochiEditor2
             CtrlHelper.SetControlsEnabled(grpSelectEditor, canOpenEditor);
             CtrlHelper.SetControlsEnabled(grpSaveRom, canOpenEditor);
 
-            // 読み込み後の編集履歴
+            // 読み込み後、エディタ起動後
             CtrlHelper.SetControlsEnabled(grpHistory, isRomLoaded);
+            CtrlHelper.SetControlsEnabled(grpAssistantTool, isRomLoaded);
         }
     }
 }

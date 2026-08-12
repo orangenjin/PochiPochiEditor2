@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class EventBinder : IDisposable
+public class EventBinder
 {
     // イベント解除用
     private List<Action> _detachActions = new List<Action>();

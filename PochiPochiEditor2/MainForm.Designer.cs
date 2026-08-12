@@ -65,11 +65,22 @@ namespace PochiPochiEditor2
             this.btnRedo = new System.Windows.Forms.Button();
             this.btnUndo = new System.Windows.Forms.Button();
             this.picPoke = new System.Windows.Forms.PictureBox();
+            this.btnEditor1 = new System.Windows.Forms.Button();
+            this.btnEditor2 = new System.Windows.Forms.Button();
+            this.btnEditor3 = new System.Windows.Forms.Button();
+            this.btnFreeSpaceFinder = new System.Windows.Forms.Button();
+            this.grpAssistantTool = new System.Windows.Forms.GroupBox();
+            this.btnTool1 = new System.Windows.Forms.Button();
+            this.btnTool3 = new System.Windows.Forms.Button();
+            this.btnTool2 = new System.Windows.Forms.Button();
+            this.btnTool5 = new System.Windows.Forms.Button();
+            this.btnTool4 = new System.Windows.Forms.Button();
             this.grpLoadRom.SuspendLayout();
             this.grpSaveRom.SuspendLayout();
             this.grpSelectEditor.SuspendLayout();
             this.grpHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPoke)).BeginInit();
+            this.grpAssistantTool.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpLoadRom
@@ -162,6 +173,7 @@ namespace PochiPochiEditor2
             // 
             // grpSelectEditor
             // 
+            this.grpSelectEditor.Controls.Add(this.btnEditor3);
             this.grpSelectEditor.Controls.Add(this.btnBattleBackground);
             this.grpSelectEditor.Controls.Add(this.btnTrainerList);
             this.grpSelectEditor.Controls.Add(this.btnTrade);
@@ -169,10 +181,12 @@ namespace PochiPochiEditor2
             this.grpSelectEditor.Controls.Add(this.btnTrainerClass);
             this.grpSelectEditor.Controls.Add(this.btnMailData);
             this.grpSelectEditor.Controls.Add(this.btnItem);
+            this.grpSelectEditor.Controls.Add(this.btnEditor2);
             this.grpSelectEditor.Controls.Add(this.btnRegion);
             this.grpSelectEditor.Controls.Add(this.btnTileset);
             this.grpSelectEditor.Controls.Add(this.btnOverworld);
             this.grpSelectEditor.Controls.Add(this.btnMap);
+            this.grpSelectEditor.Controls.Add(this.btnEditor1);
             this.grpSelectEditor.Controls.Add(this.btnEggmove);
             this.grpSelectEditor.Controls.Add(this.btnDexSearch);
             this.grpSelectEditor.Controls.Add(this.btnRoaming);
@@ -187,7 +201,7 @@ namespace PochiPochiEditor2
             this.grpSelectEditor.Margin = new System.Windows.Forms.Padding(0);
             this.grpSelectEditor.Name = "grpSelectEditor";
             this.grpSelectEditor.Padding = new System.Windows.Forms.Padding(0);
-            this.grpSelectEditor.Size = new System.Drawing.Size(458, 310);
+            this.grpSelectEditor.Size = new System.Drawing.Size(458, 340);
             this.grpSelectEditor.TabIndex = 2;
             this.grpSelectEditor.TabStop = false;
             this.grpSelectEditor.Text = "編集項目を選択";
@@ -411,7 +425,7 @@ namespace PochiPochiEditor2
             this.grpHistory.Margin = new System.Windows.Forms.Padding(0);
             this.grpHistory.Name = "grpHistory";
             this.grpHistory.Padding = new System.Windows.Forms.Padding(0);
-            this.grpHistory.Size = new System.Drawing.Size(254, 212);
+            this.grpHistory.Size = new System.Drawing.Size(254, 232);
             this.grpHistory.TabIndex = 3;
             this.grpHistory.TabStop = false;
             this.grpHistory.Text = "編集履歴";
@@ -420,11 +434,11 @@ namespace PochiPochiEditor2
             // 
             this.lstHistory.FormattingEnabled = true;
             this.lstHistory.ItemHeight = 15;
-            this.lstHistory.Location = new System.Drawing.Point(20, 64);
+            this.lstHistory.Location = new System.Drawing.Point(20, 70);
             this.lstHistory.Margin = new System.Windows.Forms.Padding(0);
             this.lstHistory.Name = "lstHistory";
             this.lstHistory.ScrollAlwaysVisible = true;
-            this.lstHistory.Size = new System.Drawing.Size(212, 124);
+            this.lstHistory.Size = new System.Drawing.Size(212, 139);
             this.lstHistory.TabIndex = 1;
             // 
             // btnRedo
@@ -449,18 +463,120 @@ namespace PochiPochiEditor2
             // 
             // picPoke
             // 
-            this.picPoke.Location = new System.Drawing.Point(616, 372);
+            this.picPoke.Location = new System.Drawing.Point(616, 384);
             this.picPoke.Margin = new System.Windows.Forms.Padding(0);
             this.picPoke.Name = "picPoke";
             this.picPoke.Size = new System.Drawing.Size(136, 104);
             this.picPoke.TabIndex = 4;
             this.picPoke.TabStop = false;
             // 
+            // btnEditor1
+            // 
+            this.btnEditor1.Location = new System.Drawing.Point(20, 298);
+            this.btnEditor1.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditor1.Name = "btnEditor1";
+            this.btnEditor1.Size = new System.Drawing.Size(128, 23);
+            this.btnEditor1.TabIndex = 0;
+            this.btnEditor1.Text = "エディタ1";
+            this.btnEditor1.UseVisualStyleBackColor = true;
+            // 
+            // btnEditor2
+            // 
+            this.btnEditor2.Location = new System.Drawing.Point(164, 298);
+            this.btnEditor2.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditor2.Name = "btnEditor2";
+            this.btnEditor2.Size = new System.Drawing.Size(128, 23);
+            this.btnEditor2.TabIndex = 1;
+            this.btnEditor2.Text = "エディタ2";
+            this.btnEditor2.UseVisualStyleBackColor = true;
+            // 
+            // btnEditor3
+            // 
+            this.btnEditor3.Location = new System.Drawing.Point(308, 298);
+            this.btnEditor3.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditor3.Name = "btnEditor3";
+            this.btnEditor3.Size = new System.Drawing.Size(128, 23);
+            this.btnEditor3.TabIndex = 7;
+            this.btnEditor3.Text = "エディタ3";
+            this.btnEditor3.UseVisualStyleBackColor = true;
+            // 
+            // btnFreeSpaceFinder
+            // 
+            this.btnFreeSpaceFinder.Location = new System.Drawing.Point(20, 28);
+            this.btnFreeSpaceFinder.Name = "btnFreeSpaceFinder";
+            this.btnFreeSpaceFinder.Size = new System.Drawing.Size(128, 23);
+            this.btnFreeSpaceFinder.TabIndex = 5;
+            this.btnFreeSpaceFinder.Text = "空き領域検索";
+            this.btnFreeSpaceFinder.UseVisualStyleBackColor = true;
+            // 
+            // grpAssistantTool
+            // 
+            this.grpAssistantTool.Controls.Add(this.btnTool5);
+            this.grpAssistantTool.Controls.Add(this.btnTool4);
+            this.grpAssistantTool.Controls.Add(this.btnTool3);
+            this.grpAssistantTool.Controls.Add(this.btnTool2);
+            this.grpAssistantTool.Controls.Add(this.btnTool1);
+            this.grpAssistantTool.Controls.Add(this.btnFreeSpaceFinder);
+            this.grpAssistantTool.Location = new System.Drawing.Point(294, 366);
+            this.grpAssistantTool.Margin = new System.Windows.Forms.Padding(0);
+            this.grpAssistantTool.Name = "grpAssistantTool";
+            this.grpAssistantTool.Padding = new System.Windows.Forms.Padding(0);
+            this.grpAssistantTool.Size = new System.Drawing.Size(312, 130);
+            this.grpAssistantTool.TabIndex = 6;
+            this.grpAssistantTool.TabStop = false;
+            this.grpAssistantTool.Text = "補助ツール";
+            // 
+            // btnTool1
+            // 
+            this.btnTool1.Location = new System.Drawing.Point(164, 28);
+            this.btnTool1.Name = "btnTool1";
+            this.btnTool1.Size = new System.Drawing.Size(128, 23);
+            this.btnTool1.TabIndex = 6;
+            this.btnTool1.Text = "ツール1";
+            this.btnTool1.UseVisualStyleBackColor = true;
+            // 
+            // btnTool3
+            // 
+            this.btnTool3.Location = new System.Drawing.Point(164, 58);
+            this.btnTool3.Name = "btnTool3";
+            this.btnTool3.Size = new System.Drawing.Size(128, 23);
+            this.btnTool3.TabIndex = 8;
+            this.btnTool3.Text = "ツール3";
+            this.btnTool3.UseVisualStyleBackColor = true;
+            // 
+            // btnTool2
+            // 
+            this.btnTool2.Location = new System.Drawing.Point(20, 58);
+            this.btnTool2.Name = "btnTool2";
+            this.btnTool2.Size = new System.Drawing.Size(128, 23);
+            this.btnTool2.TabIndex = 7;
+            this.btnTool2.Text = "ツール2";
+            this.btnTool2.UseVisualStyleBackColor = true;
+            // 
+            // btnTool5
+            // 
+            this.btnTool5.Location = new System.Drawing.Point(164, 88);
+            this.btnTool5.Name = "btnTool5";
+            this.btnTool5.Size = new System.Drawing.Size(128, 23);
+            this.btnTool5.TabIndex = 10;
+            this.btnTool5.Text = "ツール5";
+            this.btnTool5.UseVisualStyleBackColor = true;
+            // 
+            // btnTool4
+            // 
+            this.btnTool4.Location = new System.Drawing.Point(20, 88);
+            this.btnTool4.Name = "btnTool4";
+            this.btnTool4.Size = new System.Drawing.Size(128, 23);
+            this.btnTool4.TabIndex = 9;
+            this.btnTool4.Text = "ツール4";
+            this.btnTool4.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(774, 495);
+            this.ClientSize = new System.Drawing.Size(774, 515);
+            this.Controls.Add(this.grpAssistantTool);
             this.Controls.Add(this.picPoke);
             this.Controls.Add(this.grpHistory);
             this.Controls.Add(this.grpSelectEditor);
@@ -478,6 +594,7 @@ namespace PochiPochiEditor2
             this.grpSelectEditor.ResumeLayout(false);
             this.grpHistory.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picPoke)).EndInit();
+            this.grpAssistantTool.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -519,6 +636,16 @@ namespace PochiPochiEditor2
         private System.Windows.Forms.Button btnUndo;
         private System.Windows.Forms.ListBox lstHistory;
         private System.Windows.Forms.PictureBox picPoke;
+        private System.Windows.Forms.Button btnEditor3;
+        private System.Windows.Forms.Button btnEditor2;
+        private System.Windows.Forms.Button btnEditor1;
+        private System.Windows.Forms.Button btnFreeSpaceFinder;
+        private System.Windows.Forms.GroupBox grpAssistantTool;
+        private System.Windows.Forms.Button btnTool5;
+        private System.Windows.Forms.Button btnTool4;
+        private System.Windows.Forms.Button btnTool3;
+        private System.Windows.Forms.Button btnTool2;
+        private System.Windows.Forms.Button btnTool1;
     }
 }
 
