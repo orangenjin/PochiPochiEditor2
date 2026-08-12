@@ -25,7 +25,19 @@ public class EventBinder : IDisposable
     }
 
     /// <summary>
-    /// 破棄タイミングを指定する。
+    /// 自身を解除する用。
+    /// </summary>
+    public void BindTrigger(Action<EventHandler> adder, Action<EventHandler> remover)
+    {
+        EventHandler handler = null;
+        handler = (s, e) => Dispose();
+
+        adder(handler);
+        _detachActions.Add(() => remover(handler));
+    }
+
+    /// <summary>
+    /// 破棄のタイミングを指定する用。
     /// </summary>
     public void Dispose()
     {
@@ -34,7 +46,6 @@ public class EventBinder : IDisposable
             detach();
         }
 
-        //　念のためクリア
         _detachActions.Clear();
     }
 }

@@ -9,7 +9,7 @@ using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Helpers
 {
-    public static class ControlHelper
+    public static class CtrlHelper
     {
         // AttachAutoFormatの整形桁数を保持
         private static Dictionary<TextBox, int> _showDigits = new Dictionary<TextBox, int>();
