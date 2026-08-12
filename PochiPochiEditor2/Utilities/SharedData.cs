@@ -1,21 +1,26 @@
-﻿using PochiPochiEditor2.Managers;
+﻿using System;
+
+using PochiPochiEditor2.Managers;
 
 namespace PochiPochiEditor2.Utilities
 {
     public class SharedData
     {
-        public byte[] RomData { get; set; }
+        public byte[] RomData { get; set; }　// 後入れ
         public IniManager Config { get; set; }
         public TblManager Charmap { get; set; }
 
         public SharedData(
-            byte[] romData,
             IniManager config,
             TblManager charmap)
         {
-            RomData = romData;
             Config = config;
             Charmap = charmap;
+        }
+
+        public void ClearRom()
+        {
+            RomData = Array.Empty<byte>();
         }
     }
 }
