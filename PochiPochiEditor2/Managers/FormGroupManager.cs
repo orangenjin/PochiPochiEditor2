@@ -24,8 +24,8 @@ namespace PochiPochiEditor2.Managers
             // グループ判定
             var formTypes = Assembly.GetExecutingAssembly()
                 .GetTypes()
-                .Where(t => t == typeof(Form))
-                .Where(t => t.GetCustomAttribute<FormGroupAttribute>().Group == group);
+                .Where(t => typeof(Form).IsAssignableFrom(t))
+                .Where(t => t.GetCustomAttribute<FormGroupAttribute>()?.Group == group);
 
             // フォーム作成
             foreach (var type in formTypes)
