@@ -9,8 +9,16 @@ public class EventBinder : IDisposable
     /// <summary>
     /// 通常のイベントの追加と解除。
     /// </summary>
-    public void BindCtrl<T>(Action<T> adder, Action<T> remover, T handler) where T : Delegate
+    public void BindCtrl(
+        Action<EventHandler> adder,
+        Action<EventHandler> remover, 
+        EventHandler handler = null)
     {
+        // 解除用の時、nullにする
+        if (handler == null)
+        {
+            handler = (s, e) => Dispose();
+        }
         adder(handler);
         _detachActions.Add(() => remover(handler));
     }
@@ -22,16 +30,6 @@ public class EventBinder : IDisposable
     {
         attachAction();
         _detachActions.Add(detachAction);
-    }
-
-    /// <summary>
-    /// 自身を解除する用。
-    /// </summary>
-    public void BindTrigger(Action<EventHandler> adder, Action<EventHandler> remover)
-    {
-        EventHandler handler = (s, e) => Dispose();
-        adder(handler);
-        _detachActions.Add(() => remover(handler));
     }
 
     /// <summary>

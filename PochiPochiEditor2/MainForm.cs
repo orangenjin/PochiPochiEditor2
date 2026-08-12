@@ -33,21 +33,21 @@ namespace PochiPochiEditor2
         private void InitializeEventHandlers()
         {
             // 読み込み関連
-            _eventBinder.BindCtrl<EventHandler>(
+            _eventBinder.BindCtrl(
                 h => btnSelectRom.Click += h,
                 h => btnSelectRom.Click -= h,
                 btnSelectRom_Click);
-            _eventBinder.BindCtrl<EventHandler>(
+            _eventBinder.BindCtrl(
                 h => btnClearRom.Click += h,
                 h => btnClearRom.Click -= h,
                 btnClearRom_Click);
 
             // 保存関連
-            _eventBinder.BindCtrl<EventHandler>(
+            _eventBinder.BindCtrl(
                 h => btnSaveAs.Click += h,
                 h => btnSaveAs.Click -= h,
                 btnSaveAs_Click);
-            _eventBinder.BindCtrl<EventHandler>(
+            _eventBinder.BindCtrl(
                 h => btnSaveOver.Click += h,
                 h => btnSaveOver.Click -= h,
                 btnSaveOver_Click);
@@ -55,14 +55,14 @@ namespace PochiPochiEditor2
             // 各エディタ用
             foreach (Button btn in grpSelectEditor.Controls)
             {
-                _eventBinder.BindCtrl<EventHandler>(
+                _eventBinder.BindCtrl(
                     h => btn.Click += h,
                     h => btn.Click -= h,
                     EditorButton_Click);
             }
 
             // 解除タイミング指定
-            _eventBinder.BindTrigger(
+            _eventBinder.BindCtrl(
                 h => this.Disposed += h,
                 h => this.Disposed -= h
             );
