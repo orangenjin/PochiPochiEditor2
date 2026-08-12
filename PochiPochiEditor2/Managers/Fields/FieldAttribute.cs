@@ -19,6 +19,9 @@
 
         // byte想定
         NibbleAttribute = 2,
-        BitAttribute = 8
+        BitAttribute = 8,
+
+        // flag想定
+        FlagAttribute = -1
     }
 }

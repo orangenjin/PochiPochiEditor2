@@ -6,34 +6,28 @@ namespace PochiPochiEditor2.Helpers
 {
     public static class IoHelper
     {
-        public static ushort ReadUShort(byte[] data, int offset, bool isLittleEndian = true)
+        /// <summary>
+        /// 1, 2, 4バイトくらいしか想定していない。uintで返るので注意。
+        /// </summary>
+        public static uint ReadByteValue(
+            byte[] data, 
+            int offset, 
+            int length, 
+            bool isLittleEndian = true)
         {
-            if (isLittleEndian)
-            {
-                return (ushort)(data[offset] | (data[offset + 1] << Constants.BitsPerByte));
-            }
-            else
-            {
-                return (ushort)((data[offset] << Constants.BitsPerByte) | data[offset + 1]);
-            }
-        }
+            uint result = 0;
 
-        public static uint ReadUInt(byte[] data, int offset, bool isLittleEndian = true)
-        {
-            if (isLittleEndian)
+            for (int i = 0; i < length; i++)
             {
-                return (uint)data[offset]
-                     | ((uint)data[offset + 1] << (Constants.BitsPerByte * 1))
-                     | ((uint)data[offset + 2] << (Constants.BitsPerByte * 2))
-                     | ((uint)data[offset + 3] << (Constants.BitsPerByte * 3));
+                int shiftIndex = isLittleEndian 
+                    ? i 
+                    : (length - 1 - i);
+
+                // 加算
+                result |= (uint)data[offset + i] << (shiftIndex * Constants.BitsPerByte);
             }
-            else
-            {
-                return ((uint)data[offset] << (Constants.BitsPerByte * 3))
-                     | ((uint)data[offset + 1] << (Constants.BitsPerByte * 2))
-                     | ((uint)data[offset + 2] << (Constants.BitsPerByte * 1))
-                     | (uint)data[offset + 3];
-            }
+
+            return result;
         }
 
         /// <summary>
@@ -46,7 +40,7 @@ namespace PochiPochiEditor2.Helpers
             int ptrOffset,
             out int resultOffset)
         {
-            uint rawAddr = ReadUInt(data, ptrOffset, true); // uint
+            uint rawAddr = ReadByteValue(data, ptrOffset, Constants.UIntSize, true); // uint
 
             // nullポインタ?
             if (rawAddr == 0)

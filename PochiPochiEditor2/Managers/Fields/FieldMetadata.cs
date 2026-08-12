@@ -26,6 +26,7 @@ namespace PochiPochiEditor2.Managers.Fields
         Int16 = 2,
         UInt32 = 4,
         Int32 = 4,
+        Pointer = 4, // 特殊
         String = -1 // 適当
     }
 }
