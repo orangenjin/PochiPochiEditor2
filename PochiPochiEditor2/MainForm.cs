@@ -61,16 +61,10 @@ namespace PochiPochiEditor2
                     EditorButton_Click);
             }
 
-            // コントロール関連
-            _eventBinder.BindCustom(
-                attachAction: () => CtrlHelper.AttachBorder(this, picPoke),
-                detachAction: () => CtrlHelper.DetachBorder(this)
-            );
-
             // 解除タイミング指定
             _eventBinder.BindTrigger(
-                h => btnUndo.Click += h,
-                h => btnUndo.Click -= h
+                h => this.Disposed += h,
+                h => this.Disposed -= h
             );
         }
 

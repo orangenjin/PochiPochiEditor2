@@ -29,9 +29,7 @@ public class EventBinder : IDisposable
     /// </summary>
     public void BindTrigger(Action<EventHandler> adder, Action<EventHandler> remover)
     {
-        EventHandler handler = null;
-        handler = (s, e) => Dispose();
-
+        EventHandler handler = (s, e) => Dispose();
         adder(handler);
         _detachActions.Add(() => remover(handler));
     }
