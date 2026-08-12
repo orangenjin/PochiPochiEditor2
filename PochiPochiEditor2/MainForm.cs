@@ -34,7 +34,7 @@ namespace PochiPochiEditor2
             InitializeComponent();
             InitializeEventHandlers();
 
-            // 先にこれらを初期化（設定のコンボボックスの初期化が必要）
+            // 先にこれらを初期化（設定名のコンボボックスの初期化が必要）
             var config = new IniManager(_iniFolder, cmbConfig);
             var charmap = new TblManager(_tblPath);
             _sharedData = new SharedData(config, charmap);
@@ -60,12 +60,12 @@ namespace PochiPochiEditor2
 
             // 保存関連
             _eventBinder.BindCtrl(
-                h => btnSaveAs.Click += h,
-                h => btnSaveAs.Click -= h,
-                SaveButton_Click);
-            _eventBinder.BindCtrl(
                 h => btnSaveOver.Click += h,
                 h => btnSaveOver.Click -= h,
+                SaveButton_Click);
+            _eventBinder.BindCtrl(
+                h => btnSaveAs.Click += h,
+                h => btnSaveAs.Click -= h,
                 SaveButton_Click);
 
             // 各エディタ用
@@ -92,9 +92,10 @@ namespace PochiPochiEditor2
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    // RomData代入
+                    // RomDataを更新
                     _romPath = openFileDialog.FileName;
-                    _sharedData.RomData = File.ReadAllBytes(_romPath);
+                    var romData = File.ReadAllBytes(_romPath);
+                    _sharedData.LoadRom(romData);
 
                     // 特定の設定名を読み込み
                     string selectedConfig = cmbConfig.SelectedItem.ToString();
@@ -144,6 +145,11 @@ namespace PochiPochiEditor2
                 try
                 {
                     File.WriteAllBytes(path, _sharedData.RomData);
+                    MessageBox.Show(
+                        "保存に成功しました。",
+                        "保存完了",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
@@ -164,7 +170,7 @@ namespace PochiPochiEditor2
         private void MainFormUIUpdate()
         {
             // 現在の状態を整理
-            bool isRomLoaded = _sharedData.RomData != null;
+            bool isRomLoaded = _sharedData.IsRomLoaded;
             bool isEditorOpen = _formGroupManager != null;
 
             // 読み込み前、エディタ起動前

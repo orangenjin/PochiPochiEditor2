@@ -31,39 +31,39 @@ namespace PochiPochiEditor2
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.grpLoadRom = new System.Windows.Forms.GroupBox();
-            this.lblConfig = new System.Windows.Forms.Label();
-            this.cmbConfig = new System.Windows.Forms.ComboBox();
-            this.btnSelectRom = new System.Windows.Forms.Button();
             this.btnClearRom = new System.Windows.Forms.Button();
+            this.btnSelectRom = new System.Windows.Forms.Button();
+            this.cmbConfig = new System.Windows.Forms.ComboBox();
+            this.lblConfig = new System.Windows.Forms.Label();
             this.grpSaveRom = new System.Windows.Forms.GroupBox();
-            this.btnSaveOver = new System.Windows.Forms.Button();
             this.btnSaveAs = new System.Windows.Forms.Button();
+            this.btnSaveOver = new System.Windows.Forms.Button();
             this.grpSelectEditor = new System.Windows.Forms.GroupBox();
-            this.btnPokeData = new System.Windows.Forms.Button();
-            this.btnDexRegional = new System.Windows.Forms.Button();
-            this.btnDexNational = new System.Windows.Forms.Button();
-            this.btnDexHabitat = new System.Windows.Forms.Button();
-            this.btnDexSearch = new System.Windows.Forms.Button();
-            this.btnTmHmTutor = new System.Windows.Forms.Button();
-            this.btnEggmove = new System.Windows.Forms.Button();
-            this.btnWildEnc = new System.Windows.Forms.Button();
-            this.btnSwarm = new System.Windows.Forms.Button();
-            this.btnRoaming = new System.Windows.Forms.Button();
-            this.btnRegion = new System.Windows.Forms.Button();
-            this.btnTileset = new System.Windows.Forms.Button();
-            this.btnOverworld = new System.Windows.Forms.Button();
-            this.btnMap = new System.Windows.Forms.Button();
-            this.btnMailData = new System.Windows.Forms.Button();
-            this.btnItem = new System.Windows.Forms.Button();
             this.btnBattleBackground = new System.Windows.Forms.Button();
             this.btnTrainerList = new System.Windows.Forms.Button();
             this.btnTrade = new System.Windows.Forms.Button();
             this.btnTrainerSprite = new System.Windows.Forms.Button();
             this.btnTrainerClass = new System.Windows.Forms.Button();
+            this.btnMailData = new System.Windows.Forms.Button();
+            this.btnItem = new System.Windows.Forms.Button();
+            this.btnRegion = new System.Windows.Forms.Button();
+            this.btnTileset = new System.Windows.Forms.Button();
+            this.btnOverworld = new System.Windows.Forms.Button();
+            this.btnMap = new System.Windows.Forms.Button();
+            this.btnEggmove = new System.Windows.Forms.Button();
+            this.btnDexSearch = new System.Windows.Forms.Button();
+            this.btnRoaming = new System.Windows.Forms.Button();
+            this.btnDexNational = new System.Windows.Forms.Button();
+            this.btnTmHmTutor = new System.Windows.Forms.Button();
+            this.btnDexHabitat = new System.Windows.Forms.Button();
+            this.btnSwarm = new System.Windows.Forms.Button();
+            this.btnDexRegional = new System.Windows.Forms.Button();
+            this.btnWildEnc = new System.Windows.Forms.Button();
+            this.btnPokeData = new System.Windows.Forms.Button();
             this.grpHistory = new System.Windows.Forms.GroupBox();
-            this.btnUndo = new System.Windows.Forms.Button();
-            this.btnRedo = new System.Windows.Forms.Button();
             this.lstHistory = new System.Windows.Forms.ListBox();
+            this.btnRedo = new System.Windows.Forms.Button();
+            this.btnUndo = new System.Windows.Forms.Button();
             this.picPoke = new System.Windows.Forms.PictureBox();
             this.grpLoadRom.SuspendLayout();
             this.grpSaveRom.SuspendLayout();
@@ -87,25 +87,15 @@ namespace PochiPochiEditor2
             this.grpLoadRom.TabStop = false;
             this.grpLoadRom.Text = "ROMを読み込み";
             // 
-            // lblConfig
+            // btnClearRom
             // 
-            this.lblConfig.AutoSize = true;
-            this.lblConfig.Location = new System.Drawing.Point(20, 28);
-            this.lblConfig.Margin = new System.Windows.Forms.Padding(0);
-            this.lblConfig.Name = "lblConfig";
-            this.lblConfig.Size = new System.Drawing.Size(83, 15);
-            this.lblConfig.TabIndex = 0;
-            this.lblConfig.Text = "読み込み設定 :";
-            // 
-            // cmbConfig
-            // 
-            this.cmbConfig.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbConfig.FormattingEnabled = true;
-            this.cmbConfig.Location = new System.Drawing.Point(112, 24);
-            this.cmbConfig.Margin = new System.Windows.Forms.Padding(0);
-            this.cmbConfig.Name = "cmbConfig";
-            this.cmbConfig.Size = new System.Drawing.Size(120, 23);
-            this.cmbConfig.TabIndex = 1;
+            this.btnClearRom.Location = new System.Drawing.Point(20, 84);
+            this.btnClearRom.Margin = new System.Windows.Forms.Padding(0);
+            this.btnClearRom.Name = "btnClearRom";
+            this.btnClearRom.Size = new System.Drawing.Size(212, 23);
+            this.btnClearRom.TabIndex = 2;
+            this.btnClearRom.Text = "読み込んだROMを破棄";
+            this.btnClearRom.UseVisualStyleBackColor = true;
             // 
             // btnSelectRom
             // 
@@ -117,20 +107,30 @@ namespace PochiPochiEditor2
             this.btnSelectRom.Text = "ROMを選択";
             this.btnSelectRom.UseVisualStyleBackColor = true;
             // 
-            // btnClearRom
+            // cmbConfig
             // 
-            this.btnClearRom.Location = new System.Drawing.Point(20, 84);
-            this.btnClearRom.Margin = new System.Windows.Forms.Padding(0);
-            this.btnClearRom.Name = "btnClearRom";
-            this.btnClearRom.Size = new System.Drawing.Size(212, 23);
-            this.btnClearRom.TabIndex = 2;
-            this.btnClearRom.Text = "読み込んだROMを破棄";
-            this.btnClearRom.UseVisualStyleBackColor = true;
+            this.cmbConfig.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbConfig.FormattingEnabled = true;
+            this.cmbConfig.Location = new System.Drawing.Point(112, 24);
+            this.cmbConfig.Margin = new System.Windows.Forms.Padding(0);
+            this.cmbConfig.Name = "cmbConfig";
+            this.cmbConfig.Size = new System.Drawing.Size(120, 23);
+            this.cmbConfig.TabIndex = 1;
+            // 
+            // lblConfig
+            // 
+            this.lblConfig.AutoSize = true;
+            this.lblConfig.Location = new System.Drawing.Point(20, 28);
+            this.lblConfig.Margin = new System.Windows.Forms.Padding(0);
+            this.lblConfig.Name = "lblConfig";
+            this.lblConfig.Size = new System.Drawing.Size(83, 15);
+            this.lblConfig.TabIndex = 0;
+            this.lblConfig.Text = "読み込み設定 :";
             // 
             // grpSaveRom
             // 
-            this.grpSaveRom.Controls.Add(this.btnSaveOver);
             this.grpSaveRom.Controls.Add(this.btnSaveAs);
+            this.grpSaveRom.Controls.Add(this.btnSaveOver);
             this.grpSaveRom.Location = new System.Drawing.Point(20, 152);
             this.grpSaveRom.Margin = new System.Windows.Forms.Padding(0);
             this.grpSaveRom.Name = "grpSaveRom";
@@ -140,25 +140,25 @@ namespace PochiPochiEditor2
             this.grpSaveRom.TabStop = false;
             this.grpSaveRom.Text = "ROMを保存";
             // 
-            // btnSaveOver
-            // 
-            this.btnSaveOver.Location = new System.Drawing.Point(20, 58);
-            this.btnSaveOver.Margin = new System.Windows.Forms.Padding(0);
-            this.btnSaveOver.Name = "btnSaveOver";
-            this.btnSaveOver.Size = new System.Drawing.Size(212, 23);
-            this.btnSaveOver.TabIndex = 3;
-            this.btnSaveOver.Text = "名前を付けて保存";
-            this.btnSaveOver.UseVisualStyleBackColor = true;
-            // 
             // btnSaveAs
             // 
-            this.btnSaveAs.Location = new System.Drawing.Point(20, 28);
+            this.btnSaveAs.Location = new System.Drawing.Point(20, 58);
             this.btnSaveAs.Margin = new System.Windows.Forms.Padding(0);
             this.btnSaveAs.Name = "btnSaveAs";
             this.btnSaveAs.Size = new System.Drawing.Size(212, 23);
-            this.btnSaveAs.TabIndex = 4;
-            this.btnSaveAs.Text = "上書き保存";
+            this.btnSaveAs.TabIndex = 3;
+            this.btnSaveAs.Text = "名前を付けて保存";
             this.btnSaveAs.UseVisualStyleBackColor = true;
+            // 
+            // btnSaveOver
+            // 
+            this.btnSaveOver.Location = new System.Drawing.Point(20, 28);
+            this.btnSaveOver.Margin = new System.Windows.Forms.Padding(0);
+            this.btnSaveOver.Name = "btnSaveOver";
+            this.btnSaveOver.Size = new System.Drawing.Size(212, 23);
+            this.btnSaveOver.TabIndex = 4;
+            this.btnSaveOver.Text = "上書き保存";
+            this.btnSaveOver.UseVisualStyleBackColor = true;
             // 
             // grpSelectEditor
             // 
@@ -191,166 +191,6 @@ namespace PochiPochiEditor2
             this.grpSelectEditor.TabIndex = 2;
             this.grpSelectEditor.TabStop = false;
             this.grpSelectEditor.Text = "編集項目を選択";
-            // 
-            // btnPokeData
-            // 
-            this.btnPokeData.Location = new System.Drawing.Point(20, 28);
-            this.btnPokeData.Margin = new System.Windows.Forms.Padding(0);
-            this.btnPokeData.Name = "btnPokeData";
-            this.btnPokeData.Size = new System.Drawing.Size(128, 23);
-            this.btnPokeData.TabIndex = 0;
-            this.btnPokeData.Text = "ポケモン";
-            this.btnPokeData.UseVisualStyleBackColor = true;
-            // 
-            // btnDexRegional
-            // 
-            this.btnDexRegional.Location = new System.Drawing.Point(20, 58);
-            this.btnDexRegional.Margin = new System.Windows.Forms.Padding(0);
-            this.btnDexRegional.Name = "btnDexRegional";
-            this.btnDexRegional.Size = new System.Drawing.Size(128, 23);
-            this.btnDexRegional.TabIndex = 0;
-            this.btnDexRegional.Text = "図鑑番号（地方）";
-            this.btnDexRegional.UseVisualStyleBackColor = true;
-            // 
-            // btnDexNational
-            // 
-            this.btnDexNational.Location = new System.Drawing.Point(20, 88);
-            this.btnDexNational.Margin = new System.Windows.Forms.Padding(0);
-            this.btnDexNational.Name = "btnDexNational";
-            this.btnDexNational.Size = new System.Drawing.Size(128, 23);
-            this.btnDexNational.TabIndex = 0;
-            this.btnDexNational.Text = "図鑑番号（全国）";
-            this.btnDexNational.UseVisualStyleBackColor = true;
-            // 
-            // btnDexHabitat
-            // 
-            this.btnDexHabitat.Location = new System.Drawing.Point(20, 118);
-            this.btnDexHabitat.Margin = new System.Windows.Forms.Padding(0);
-            this.btnDexHabitat.Name = "btnDexHabitat";
-            this.btnDexHabitat.Size = new System.Drawing.Size(128, 23);
-            this.btnDexHabitat.TabIndex = 0;
-            this.btnDexHabitat.Text = "図鑑生息地";
-            this.btnDexHabitat.UseVisualStyleBackColor = true;
-            // 
-            // btnDexSearch
-            // 
-            this.btnDexSearch.Location = new System.Drawing.Point(20, 148);
-            this.btnDexSearch.Margin = new System.Windows.Forms.Padding(0);
-            this.btnDexSearch.Name = "btnDexSearch";
-            this.btnDexSearch.Size = new System.Drawing.Size(128, 23);
-            this.btnDexSearch.TabIndex = 0;
-            this.btnDexSearch.Text = "図鑑索引";
-            this.btnDexSearch.UseVisualStyleBackColor = true;
-            // 
-            // btnTmHmTutor
-            // 
-            this.btnTmHmTutor.Location = new System.Drawing.Point(20, 208);
-            this.btnTmHmTutor.Margin = new System.Windows.Forms.Padding(0);
-            this.btnTmHmTutor.Name = "btnTmHmTutor";
-            this.btnTmHmTutor.Size = new System.Drawing.Size(128, 23);
-            this.btnTmHmTutor.TabIndex = 0;
-            this.btnTmHmTutor.Text = "技マシン / 教え技";
-            this.btnTmHmTutor.UseVisualStyleBackColor = true;
-            // 
-            // btnEggmove
-            // 
-            this.btnEggmove.Location = new System.Drawing.Point(20, 238);
-            this.btnEggmove.Margin = new System.Windows.Forms.Padding(0);
-            this.btnEggmove.Name = "btnEggmove";
-            this.btnEggmove.Size = new System.Drawing.Size(128, 23);
-            this.btnEggmove.TabIndex = 0;
-            this.btnEggmove.Text = "タマゴ技";
-            this.btnEggmove.UseVisualStyleBackColor = true;
-            // 
-            // btnWildEnc
-            // 
-            this.btnWildEnc.Location = new System.Drawing.Point(164, 28);
-            this.btnWildEnc.Margin = new System.Windows.Forms.Padding(0);
-            this.btnWildEnc.Name = "btnWildEnc";
-            this.btnWildEnc.Size = new System.Drawing.Size(128, 23);
-            this.btnWildEnc.TabIndex = 0;
-            this.btnWildEnc.Text = "野生設定";
-            this.btnWildEnc.UseVisualStyleBackColor = true;
-            // 
-            // btnSwarm
-            // 
-            this.btnSwarm.Location = new System.Drawing.Point(164, 58);
-            this.btnSwarm.Margin = new System.Windows.Forms.Padding(0);
-            this.btnSwarm.Name = "btnSwarm";
-            this.btnSwarm.Size = new System.Drawing.Size(128, 23);
-            this.btnSwarm.TabIndex = 0;
-            this.btnSwarm.Text = "大量発生";
-            this.btnSwarm.UseVisualStyleBackColor = true;
-            // 
-            // btnRoaming
-            // 
-            this.btnRoaming.Location = new System.Drawing.Point(164, 88);
-            this.btnRoaming.Margin = new System.Windows.Forms.Padding(0);
-            this.btnRoaming.Name = "btnRoaming";
-            this.btnRoaming.Size = new System.Drawing.Size(128, 23);
-            this.btnRoaming.TabIndex = 0;
-            this.btnRoaming.Text = "徘徊位置";
-            this.btnRoaming.UseVisualStyleBackColor = true;
-            // 
-            // btnRegion
-            // 
-            this.btnRegion.Location = new System.Drawing.Point(164, 238);
-            this.btnRegion.Margin = new System.Windows.Forms.Padding(0);
-            this.btnRegion.Name = "btnRegion";
-            this.btnRegion.Size = new System.Drawing.Size(128, 23);
-            this.btnRegion.TabIndex = 1;
-            this.btnRegion.Text = "タウンマップ";
-            this.btnRegion.UseVisualStyleBackColor = true;
-            // 
-            // btnTileset
-            // 
-            this.btnTileset.Location = new System.Drawing.Point(164, 178);
-            this.btnTileset.Margin = new System.Windows.Forms.Padding(0);
-            this.btnTileset.Name = "btnTileset";
-            this.btnTileset.Size = new System.Drawing.Size(128, 23);
-            this.btnTileset.TabIndex = 2;
-            this.btnTileset.Text = "タイルセット";
-            this.btnTileset.UseVisualStyleBackColor = true;
-            // 
-            // btnOverworld
-            // 
-            this.btnOverworld.Location = new System.Drawing.Point(164, 208);
-            this.btnOverworld.Margin = new System.Windows.Forms.Padding(0);
-            this.btnOverworld.Name = "btnOverworld";
-            this.btnOverworld.Size = new System.Drawing.Size(128, 23);
-            this.btnOverworld.TabIndex = 3;
-            this.btnOverworld.Text = "歩行グラフィック";
-            this.btnOverworld.UseVisualStyleBackColor = true;
-            // 
-            // btnMap
-            // 
-            this.btnMap.Location = new System.Drawing.Point(164, 148);
-            this.btnMap.Margin = new System.Windows.Forms.Padding(0);
-            this.btnMap.Name = "btnMap";
-            this.btnMap.Size = new System.Drawing.Size(128, 23);
-            this.btnMap.TabIndex = 4;
-            this.btnMap.Text = "マップ";
-            this.btnMap.UseVisualStyleBackColor = true;
-            // 
-            // btnMailData
-            // 
-            this.btnMailData.Location = new System.Drawing.Point(308, 58);
-            this.btnMailData.Margin = new System.Windows.Forms.Padding(0);
-            this.btnMailData.Name = "btnMailData";
-            this.btnMailData.Size = new System.Drawing.Size(128, 23);
-            this.btnMailData.TabIndex = 5;
-            this.btnMailData.Text = "メール内容";
-            this.btnMailData.UseVisualStyleBackColor = true;
-            // 
-            // btnItem
-            // 
-            this.btnItem.Location = new System.Drawing.Point(308, 28);
-            this.btnItem.Margin = new System.Windows.Forms.Padding(0);
-            this.btnItem.Name = "btnItem";
-            this.btnItem.Size = new System.Drawing.Size(128, 23);
-            this.btnItem.TabIndex = 6;
-            this.btnItem.Text = "アイテム";
-            this.btnItem.UseVisualStyleBackColor = true;
             // 
             // btnBattleBackground
             // 
@@ -402,6 +242,166 @@ namespace PochiPochiEditor2
             this.btnTrainerClass.Text = "トレーナー肩書き";
             this.btnTrainerClass.UseVisualStyleBackColor = true;
             // 
+            // btnMailData
+            // 
+            this.btnMailData.Location = new System.Drawing.Point(308, 58);
+            this.btnMailData.Margin = new System.Windows.Forms.Padding(0);
+            this.btnMailData.Name = "btnMailData";
+            this.btnMailData.Size = new System.Drawing.Size(128, 23);
+            this.btnMailData.TabIndex = 5;
+            this.btnMailData.Text = "メール内容";
+            this.btnMailData.UseVisualStyleBackColor = true;
+            // 
+            // btnItem
+            // 
+            this.btnItem.Location = new System.Drawing.Point(308, 28);
+            this.btnItem.Margin = new System.Windows.Forms.Padding(0);
+            this.btnItem.Name = "btnItem";
+            this.btnItem.Size = new System.Drawing.Size(128, 23);
+            this.btnItem.TabIndex = 6;
+            this.btnItem.Text = "アイテム";
+            this.btnItem.UseVisualStyleBackColor = true;
+            // 
+            // btnRegion
+            // 
+            this.btnRegion.Location = new System.Drawing.Point(164, 238);
+            this.btnRegion.Margin = new System.Windows.Forms.Padding(0);
+            this.btnRegion.Name = "btnRegion";
+            this.btnRegion.Size = new System.Drawing.Size(128, 23);
+            this.btnRegion.TabIndex = 1;
+            this.btnRegion.Text = "タウンマップ";
+            this.btnRegion.UseVisualStyleBackColor = true;
+            // 
+            // btnTileset
+            // 
+            this.btnTileset.Location = new System.Drawing.Point(164, 178);
+            this.btnTileset.Margin = new System.Windows.Forms.Padding(0);
+            this.btnTileset.Name = "btnTileset";
+            this.btnTileset.Size = new System.Drawing.Size(128, 23);
+            this.btnTileset.TabIndex = 2;
+            this.btnTileset.Text = "タイルセット";
+            this.btnTileset.UseVisualStyleBackColor = true;
+            // 
+            // btnOverworld
+            // 
+            this.btnOverworld.Location = new System.Drawing.Point(164, 208);
+            this.btnOverworld.Margin = new System.Windows.Forms.Padding(0);
+            this.btnOverworld.Name = "btnOverworld";
+            this.btnOverworld.Size = new System.Drawing.Size(128, 23);
+            this.btnOverworld.TabIndex = 3;
+            this.btnOverworld.Text = "歩行グラフィック";
+            this.btnOverworld.UseVisualStyleBackColor = true;
+            // 
+            // btnMap
+            // 
+            this.btnMap.Location = new System.Drawing.Point(164, 148);
+            this.btnMap.Margin = new System.Windows.Forms.Padding(0);
+            this.btnMap.Name = "btnMap";
+            this.btnMap.Size = new System.Drawing.Size(128, 23);
+            this.btnMap.TabIndex = 4;
+            this.btnMap.Text = "マップ";
+            this.btnMap.UseVisualStyleBackColor = true;
+            // 
+            // btnEggmove
+            // 
+            this.btnEggmove.Location = new System.Drawing.Point(20, 238);
+            this.btnEggmove.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEggmove.Name = "btnEggmove";
+            this.btnEggmove.Size = new System.Drawing.Size(128, 23);
+            this.btnEggmove.TabIndex = 0;
+            this.btnEggmove.Text = "タマゴ技";
+            this.btnEggmove.UseVisualStyleBackColor = true;
+            // 
+            // btnDexSearch
+            // 
+            this.btnDexSearch.Location = new System.Drawing.Point(20, 148);
+            this.btnDexSearch.Margin = new System.Windows.Forms.Padding(0);
+            this.btnDexSearch.Name = "btnDexSearch";
+            this.btnDexSearch.Size = new System.Drawing.Size(128, 23);
+            this.btnDexSearch.TabIndex = 0;
+            this.btnDexSearch.Text = "図鑑索引";
+            this.btnDexSearch.UseVisualStyleBackColor = true;
+            // 
+            // btnRoaming
+            // 
+            this.btnRoaming.Location = new System.Drawing.Point(164, 88);
+            this.btnRoaming.Margin = new System.Windows.Forms.Padding(0);
+            this.btnRoaming.Name = "btnRoaming";
+            this.btnRoaming.Size = new System.Drawing.Size(128, 23);
+            this.btnRoaming.TabIndex = 0;
+            this.btnRoaming.Text = "徘徊位置";
+            this.btnRoaming.UseVisualStyleBackColor = true;
+            // 
+            // btnDexNational
+            // 
+            this.btnDexNational.Location = new System.Drawing.Point(20, 88);
+            this.btnDexNational.Margin = new System.Windows.Forms.Padding(0);
+            this.btnDexNational.Name = "btnDexNational";
+            this.btnDexNational.Size = new System.Drawing.Size(128, 23);
+            this.btnDexNational.TabIndex = 0;
+            this.btnDexNational.Text = "図鑑番号（全国）";
+            this.btnDexNational.UseVisualStyleBackColor = true;
+            // 
+            // btnTmHmTutor
+            // 
+            this.btnTmHmTutor.Location = new System.Drawing.Point(20, 208);
+            this.btnTmHmTutor.Margin = new System.Windows.Forms.Padding(0);
+            this.btnTmHmTutor.Name = "btnTmHmTutor";
+            this.btnTmHmTutor.Size = new System.Drawing.Size(128, 23);
+            this.btnTmHmTutor.TabIndex = 0;
+            this.btnTmHmTutor.Text = "技マシン / 教え技";
+            this.btnTmHmTutor.UseVisualStyleBackColor = true;
+            // 
+            // btnDexHabitat
+            // 
+            this.btnDexHabitat.Location = new System.Drawing.Point(20, 118);
+            this.btnDexHabitat.Margin = new System.Windows.Forms.Padding(0);
+            this.btnDexHabitat.Name = "btnDexHabitat";
+            this.btnDexHabitat.Size = new System.Drawing.Size(128, 23);
+            this.btnDexHabitat.TabIndex = 0;
+            this.btnDexHabitat.Text = "図鑑生息地";
+            this.btnDexHabitat.UseVisualStyleBackColor = true;
+            // 
+            // btnSwarm
+            // 
+            this.btnSwarm.Location = new System.Drawing.Point(164, 58);
+            this.btnSwarm.Margin = new System.Windows.Forms.Padding(0);
+            this.btnSwarm.Name = "btnSwarm";
+            this.btnSwarm.Size = new System.Drawing.Size(128, 23);
+            this.btnSwarm.TabIndex = 0;
+            this.btnSwarm.Text = "大量発生";
+            this.btnSwarm.UseVisualStyleBackColor = true;
+            // 
+            // btnDexRegional
+            // 
+            this.btnDexRegional.Location = new System.Drawing.Point(20, 58);
+            this.btnDexRegional.Margin = new System.Windows.Forms.Padding(0);
+            this.btnDexRegional.Name = "btnDexRegional";
+            this.btnDexRegional.Size = new System.Drawing.Size(128, 23);
+            this.btnDexRegional.TabIndex = 0;
+            this.btnDexRegional.Text = "図鑑番号（地方）";
+            this.btnDexRegional.UseVisualStyleBackColor = true;
+            // 
+            // btnWildEnc
+            // 
+            this.btnWildEnc.Location = new System.Drawing.Point(164, 28);
+            this.btnWildEnc.Margin = new System.Windows.Forms.Padding(0);
+            this.btnWildEnc.Name = "btnWildEnc";
+            this.btnWildEnc.Size = new System.Drawing.Size(128, 23);
+            this.btnWildEnc.TabIndex = 0;
+            this.btnWildEnc.Text = "野生設定";
+            this.btnWildEnc.UseVisualStyleBackColor = true;
+            // 
+            // btnPokeData
+            // 
+            this.btnPokeData.Location = new System.Drawing.Point(20, 28);
+            this.btnPokeData.Margin = new System.Windows.Forms.Padding(0);
+            this.btnPokeData.Name = "btnPokeData";
+            this.btnPokeData.Size = new System.Drawing.Size(128, 23);
+            this.btnPokeData.TabIndex = 0;
+            this.btnPokeData.Text = "ポケモン";
+            this.btnPokeData.UseVisualStyleBackColor = true;
+            // 
             // grpHistory
             // 
             this.grpHistory.Controls.Add(this.lstHistory);
@@ -416,15 +416,16 @@ namespace PochiPochiEditor2
             this.grpHistory.TabStop = false;
             this.grpHistory.Text = "編集履歴";
             // 
-            // btnUndo
+            // lstHistory
             // 
-            this.btnUndo.Location = new System.Drawing.Point(20, 28);
-            this.btnUndo.Margin = new System.Windows.Forms.Padding(0);
-            this.btnUndo.Name = "btnUndo";
-            this.btnUndo.Size = new System.Drawing.Size(100, 23);
-            this.btnUndo.TabIndex = 0;
-            this.btnUndo.Text = "元に戻す";
-            this.btnUndo.UseVisualStyleBackColor = true;
+            this.lstHistory.FormattingEnabled = true;
+            this.lstHistory.ItemHeight = 15;
+            this.lstHistory.Location = new System.Drawing.Point(20, 64);
+            this.lstHistory.Margin = new System.Windows.Forms.Padding(0);
+            this.lstHistory.Name = "lstHistory";
+            this.lstHistory.ScrollAlwaysVisible = true;
+            this.lstHistory.Size = new System.Drawing.Size(212, 124);
+            this.lstHistory.TabIndex = 1;
             // 
             // btnRedo
             // 
@@ -436,16 +437,15 @@ namespace PochiPochiEditor2
             this.btnRedo.Text = "やり直し";
             this.btnRedo.UseVisualStyleBackColor = true;
             // 
-            // lstHistory
+            // btnUndo
             // 
-            this.lstHistory.FormattingEnabled = true;
-            this.lstHistory.ItemHeight = 15;
-            this.lstHistory.Location = new System.Drawing.Point(20, 64);
-            this.lstHistory.Margin = new System.Windows.Forms.Padding(0);
-            this.lstHistory.Name = "lstHistory";
-            this.lstHistory.ScrollAlwaysVisible = true;
-            this.lstHistory.Size = new System.Drawing.Size(212, 124);
-            this.lstHistory.TabIndex = 1;
+            this.btnUndo.Location = new System.Drawing.Point(20, 28);
+            this.btnUndo.Margin = new System.Windows.Forms.Padding(0);
+            this.btnUndo.Name = "btnUndo";
+            this.btnUndo.Size = new System.Drawing.Size(100, 23);
+            this.btnUndo.TabIndex = 0;
+            this.btnUndo.Text = "元に戻す";
+            this.btnUndo.UseVisualStyleBackColor = true;
             // 
             // picPoke
             // 
@@ -490,8 +490,8 @@ namespace PochiPochiEditor2
         private System.Windows.Forms.ComboBox cmbConfig;
         private System.Windows.Forms.Label lblConfig;
         private System.Windows.Forms.GroupBox grpSaveRom;
-        private System.Windows.Forms.Button btnSaveOver;
         private System.Windows.Forms.Button btnSaveAs;
+        private System.Windows.Forms.Button btnSaveOver;
         private System.Windows.Forms.GroupBox grpSelectEditor;
         private System.Windows.Forms.Button btnDexSearch;
         private System.Windows.Forms.Button btnDexNational;
