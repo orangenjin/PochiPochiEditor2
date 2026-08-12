@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
+using PochiPochiEditor2.Utilities;
+
 namespace PochiPochiEditor2.Managers
 {
     public class FormGroupManager
@@ -11,7 +13,10 @@ namespace PochiPochiEditor2.Managers
         private Form _ownerForm = null;
         private List<Form> _forms = null;
 
-        public FormGroupManager(Form ownerForm, FormGroup group)
+        // メイン画面のUI状態更新用
+        public event EventHandler Closed = null;
+
+        public FormGroupManager(Form ownerForm, FormGroup group, SharedData sharedData)
         {
             _ownerForm = ownerForm;
             _forms = new List<Form>();
@@ -25,7 +30,7 @@ namespace PochiPochiEditor2.Managers
             // フォーム作成
             foreach (var type in formTypes)
             {
-                var form = (Form)Activator.CreateInstance(type);
+                var form = (Form)Activator.CreateInstance(type, sharedData);
 
                 form.FormClosed += SingleForm_FormClosed;
                 _forms.Add(form);
@@ -56,6 +61,7 @@ namespace PochiPochiEditor2.Managers
 
             // 呼び出し元フォームを前に出す
             _ownerForm.BringToFront();
+            Closed.Invoke(this, EventArgs.Empty);
         }
     }
 

@@ -164,7 +164,24 @@ namespace PochiPochiEditor2
 
         private void EditorButton_Click(object sender, EventArgs e)
         {
+            if (!(sender is Button button)) return;
 
+            // "btn" を外す
+            string groupName = button.Name.Substring(Constants.ButtonPrefix.Length);
+
+            // グループ名を取得
+            if (!Enum.TryParse(groupName, out FormGroup group)) return;
+
+            // フォーム生成
+            _formGroupManager = new FormGroupManager(this, group, _sharedData);
+            _formGroupManager.Closed += (_, __) =>
+            {
+                _formGroupManager = null;
+                MainFormUIUpdate();
+            };
+            _formGroupManager.ShowFormGroup();
+
+            MainFormUIUpdate();
         }
 
         private void MainFormUIUpdate()
