@@ -33,6 +33,17 @@ namespace PochiPochiEditor2
         {
             InitializeComponent();
             InitializeEventHandlers();
+
+            // 先にこれらを初期化（設定のコンボボックスの初期化が必要）
+            var config = new IniManager(_iniFolder, cmbConfig);
+            var charmap = new TblManager(_tblPath);
+            _sharedData = new SharedData(config, charmap);
+
+            // タグ付加
+            btnSaveOver.Tag = SaveMode.SaveOver;
+            btnSaveAs.Tag = SaveMode.SaveAs;
+
+            MainFormUIUpdate();
         }
 
         private void InitializeEventHandlers()
@@ -150,20 +161,6 @@ namespace PochiPochiEditor2
 
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            // 先にこれらを初期化（設定のコンボボックスの初期化が必要）
-            var config = new IniManager(_iniFolder, cmbConfig);
-            var charmap = new TblManager(_tblPath);
-            _sharedData = new SharedData(config, charmap);
-
-            // タグ付加
-            btnSaveOver.Tag = SaveMode.SaveOver;
-            btnSaveAs.Tag = SaveMode.SaveAs;
-
-            MainFormUIUpdate();
-        }
-
         private void MainFormUIUpdate()
         {
             // 現在の状態を整理
@@ -179,6 +176,9 @@ namespace PochiPochiEditor2
             btnClearRom.Enabled = canOpenEditor;
             CtrlHelper.SetControlsEnabled(grpSelectEditor, canOpenEditor);
             CtrlHelper.SetControlsEnabled(grpSaveRom, canOpenEditor);
+
+            // 読み込み後の編集履歴
+            CtrlHelper.SetControlsEnabled(grpHistory, isRomLoaded);
         }
     }
 }

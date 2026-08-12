@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class EventBinder : IDisposable
 {
     // イベント解除用
-    private readonly List<Action> _detachActions = new List<Action>();
+    private List<Action> _detachActions = new List<Action>();
 
     /// <summary>
     /// 通常のイベントの追加と解除。

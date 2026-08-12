@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Managers\FormGroupManager.cs" />
     <Compile Include="Managers\TblManager.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Helpers\CalcHelper.cs" />
