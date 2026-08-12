@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Utilities;
@@ -37,14 +38,24 @@ namespace PochiPochiEditor2.Managers
         /// <summary>
         /// 設定ファイル名とパスを格納する。
         /// </summary>
-        public IniManager(string folderPath)
+        public IniManager(string folderPath, ComboBox targetCmb)
         {
             if (!Directory.Exists(folderPath)) return;
 
             foreach (string filePath in Directory.EnumerateFiles(folderPath, "*.ini"))
             {
                 string name = Path.GetFileNameWithoutExtension(filePath);
+
+                // 辞書へ
                 _configs[name] = filePath;
+                // コンボボックスへ
+                targetCmb.Items.Add(name);
+            }
+
+            // 初期選択
+            if (targetCmb.Items.Count > 0)
+            {
+                targetCmb.SelectedIndex = 0;
             }
         }
 

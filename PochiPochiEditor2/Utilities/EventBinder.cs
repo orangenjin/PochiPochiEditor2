@@ -19,6 +19,7 @@ public class EventBinder : IDisposable
         {
             handler = (s, e) => Dispose();
         }
+
         adder(handler);
         _detachActions.Add(() => remover(handler));
     }

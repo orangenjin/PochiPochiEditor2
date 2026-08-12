@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
+using PochiPochiEditor2.Managers;
 
 namespace PochiPochiEditor2
 {
@@ -95,10 +96,8 @@ namespace PochiPochiEditor2
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            /*
-
             // shared data
-            SharedData.Instance.Config = new IniFileReader(_iniFolder, cmbConfig);
+            SharedData.Instance.Config = new IniManager(_iniFolder);
             SharedData.Instance.Charmap = new TblFileReader(_tblPath);
 
             // set tags
@@ -106,8 +105,6 @@ namespace PochiPochiEditor2
             btnSaveAs.Tag = SaveMode.SaveAs;
 
             MainFormUIUpdate();
-
-            */
         }
     }
 }
