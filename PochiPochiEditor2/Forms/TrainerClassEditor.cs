@@ -31,7 +31,7 @@ namespace PochiPochiEditor2.Forms
             int entrycount = _sharedData.Config.ReadInt("TrainerClassPrizeMultiCount");
             var entries = new EntryManager(defFileName, _sharedData, tableOffset, entrycount);
 
-            txtClassName.Text = entries.Fields[0].BinaryData.ToString();
+            txtClassName.Text = entries.Entries[0].Fields[1].BinaryData.ToString();
         }
     }
 }

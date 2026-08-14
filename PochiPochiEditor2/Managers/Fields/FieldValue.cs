@@ -20,7 +20,6 @@ namespace PochiPochiEditor2.Managers.Fields
         public FieldValue(
             FieldMetaData metaData, 
             SharedData sharedData,
-            ControlKind ctrlKind,
             byte[] binaryData = null)
         {
             // FieldValueを利用する先で、扱いやすく加工する
@@ -50,31 +49,40 @@ namespace PochiPochiEditor2.Managers.Fields
             }
             else
             {
-                EntryLength = (int)metaData.Kind;
+                EntryLength = (int)metaData.Field;
                 AllowedLength = -1;
             }
 
             // 符号ありかどうかを判定
-            IsSigned = metaData.Kind is FieldKind.SByte || 
-                metaData.Kind is FieldKind.Int16 ||
-                metaData.Kind is FieldKind.Int32;
+            IsSigned = metaData.Field is FieldKind.SByte || 
+                metaData.Field is FieldKind.Int16 ||
+                metaData.Field is FieldKind.Int32;
 
             // ポインタかどうかを判定
-            IsPointer = metaData.Kind is FieldKind.Pointer;
+            IsPointer = metaData.Field is FieldKind.Pointer;
 
             // コントロールと紐づけ
-            var otherAttribute = metaData.Attributes?
-                .FirstOrDefault(a => a.Kind != AttributeKind.StringAttribute);
-            if (otherAttribute != null) // 高々1つと仮定
+            if (metaData.Ctrl == CtrlKind.none)
             {
-                ControlNames = otherAttribute.Parameters
-                    .Select(param => $"{ctrlKind}{param}")
-                    .ToArray();
+                // 紐づけを除外
+                ControlNames = Array.Empty<string>();
             }
             else
             {
-                // [コントロールのプレフィックス] + [フィールド名]
-                ControlNames = new string[] { $"{ctrlKind}{metaData.Name}" };
+                var otherAttribute = metaData.Attributes?
+                    .FirstOrDefault(a => a.Kind != AttributeKind.StringAttribute);
+
+                if (otherAttribute != null) // 高々1つと仮定
+                {
+                    ControlNames = otherAttribute.Parameters
+                        .Select(param => $"{metaData.Ctrl}{param}")
+                        .ToArray();
+                }
+                else
+                {
+                    // [コントロールのプレフィックス] + [フィールド名]
+                    ControlNames = new string[] { $"{metaData.Ctrl}{metaData.Name}" };
+                }
             }
 
             // 後入れ可能

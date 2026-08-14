@@ -29,6 +29,7 @@
         public const char ColonChar = ':';
         public const char EqualChar = '=';
         public const char SpaceChar = ' ';
+        public const char DotChar = '.';
         public const string DefExt = "def";
 
         public const byte PaddingByte = 0x0;

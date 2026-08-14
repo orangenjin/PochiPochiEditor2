@@ -1,4 +1,4 @@
-ClassNameIndex, Byte
-PrizeMulti, Byte
-Padding1. Byte
-Padding2, Byte
+ClassNameIndex: Byte: none
+PrizeMulti: Byte: nud
+Padding1: Byte: none
+Padding2: Byte: none

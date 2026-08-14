@@ -14,13 +14,11 @@ namespace PochiPochiEditor2.Managers.Fields
 
         // 公開用
         public List<FieldMetaData> FieldDefs { get; }
-        public List<ControlKind> CtrlDefs { get; }
 
         public DefReader(string fileName)
         {
             var splitLines = ReadFile(fileName);
             FieldDefs = ReadFields(splitLines);
-            CtrlDefs = ReadCtrls(splitLines);
         }
 
         /// <summary>
@@ -32,7 +30,10 @@ namespace PochiPochiEditor2.Managers.Fields
             List<string[]> splitLines = new List<string[]>();
 
             // defフォルダ階層下から指定したファイルを探す
-            var foundFiles = Directory.GetFiles(_defFolder, fileName + "." + Constants.DefExt, SearchOption.AllDirectories);
+            var foundFiles = Directory.GetFiles(
+                _defFolder, 
+                fileName + Constants.DotChar + Constants.DefExt, 
+                SearchOption.AllDirectories);
             var allLines = File.ReadAllLines(foundFiles[0]);
 
             foreach (var line in allLines)
@@ -60,6 +61,10 @@ namespace PochiPochiEditor2.Managers.Fields
                 // 型を読み取る
                 var kindStr = line[(int)DefPosition.KindName];
                 if (!Enum.TryParse<FieldKind>(kindStr, true, out var kind)) continue;
+
+                // コントロール定義を読み取る
+                var ctrlStr = line[(int)DefPosition.CtrlName];
+                if (!Enum.TryParse<CtrlKind>(ctrlStr, true, out var ctrl)) continue;
 
                 // 属性読み取る
                 var attributes = new List<FieldAttribute>();
@@ -91,50 +96,10 @@ namespace PochiPochiEditor2.Managers.Fields
                 }
 
                 // フィールド定義を格納
-                fieldDefs.Add(new FieldMetaData(line[(int)DefPosition.FieldName], kind, attributes));
+                fieldDefs.Add(new FieldMetaData(line[(int)DefPosition.FieldName], kind, ctrl, attributes));
             }
 
             return fieldDefs;
         }
-
-        private List<ControlKind> ReadCtrls(List<string[]> splitLines)
-        {
-            // 戻り値用
-            var ctrlDefs = new List<ControlKind>();
-
-            foreach (var line in splitLines)
-            {
-                // コントロール定義を読み取る
-                var ctrlStr = line[(int)DefPosition.CtrlName];
-                if (!Enum.TryParse<ControlKind>(ctrlStr, true, out var ctrl)) continue;
-
-                ctrlDefs.Add(ctrl);
-            }
-
-            return ctrlDefs;
-        }
-    }
-
-    /// <summary>
-    /// バインドできるコントロールの定義をする。
-    /// </summary>
-    public enum ControlKind
-    {
-        txt,
-        nud,
-        cmb,
-        chk,
-        rb
-    }
-
-    /// <summary>
-    /// コロンで区切られた順番。
-    /// </summary>
-    public enum DefPosition
-    {
-        FieldName,
-        KindName,
-        CtrlName,
-        AttributeName
     }
 }

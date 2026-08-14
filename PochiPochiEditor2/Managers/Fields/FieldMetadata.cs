@@ -6,15 +6,32 @@ namespace PochiPochiEditor2.Managers.Fields
     public class FieldMetaData
     {
         public string Name { get; }
-        public FieldKind Kind { get; }
+        public FieldKind Field { get; }
+        public CtrlKind Ctrl { get; }
         public List<FieldAttribute> Attributes { get; }
 
-        public FieldMetaData(string name, FieldKind kind, List<FieldAttribute> attributes = null)
+        public FieldMetaData(
+            string name, 
+            FieldKind kind,
+            CtrlKind ctrl, 
+            List<FieldAttribute> attributes)
         {
             Name = name;
-            Kind = kind;
-            Attributes = attributes?.ToList();
+            Field = kind;
+            Ctrl = ctrl;
+            Attributes = attributes;
         }
+    }
+
+    /// <summary>
+    /// コロンで区切られた順番。
+    /// </summary>
+    public enum DefPosition
+    {
+        FieldName,
+        KindName,
+        CtrlName,
+        AttributeName
     }
 
     /// <summary>
@@ -30,5 +47,18 @@ namespace PochiPochiEditor2.Managers.Fields
         Int32 = 4,
         Pointer = 4, // 特殊
         String = -1 // 適当
+    }
+
+    /// <summary>
+    /// バインドできるコントロールの定義をする。
+    /// </summary>
+    public enum CtrlKind
+    {
+        none,
+        txt,
+        nud,
+        cmb,
+        chk,
+        rb
     }
 }
