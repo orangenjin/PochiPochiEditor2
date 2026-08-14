@@ -18,7 +18,6 @@ namespace PochiPochiEditor2.Managers
         public EntryManager(
             string defFileName, 
             SharedData sharedData, 
-            byte[] romData,
             int baseOffset,
             ControlKind[] controlKinds)
         {
@@ -35,7 +34,12 @@ namespace PochiPochiEditor2.Managers
 
                 // バイナリデータを取得
                 fieldValue.BinaryData = new byte[fieldValue.EntryLength];
-                Array.Copy(romData, baseOffset, fieldValue.BinaryData, 0, fieldValue.EntryLength);
+                Array.Copy(
+                    sharedData.RomData,
+                    baseOffset, 
+                    fieldValue.BinaryData,
+                    0, 
+                    fieldValue.EntryLength);
 
                 Fields.Add(fieldValue);
                 baseOffset += fieldValue.EntryLength;
