@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 using PochiPochiEditor2.Managers.Fields;
 using PochiPochiEditor2.Utilities;
@@ -32,7 +33,9 @@ namespace PochiPochiEditor2.Helpers
             // 文字列
             if (fieldValue.AllowedLength > 0)
             {
-                return (T)(object)sharedData.Charmap.BytesToString(data, startIndex, entryLength);
+                return (T)Convert.ChangeType
+                    (sharedData.Charmap.BytesToString(data, startIndex, entryLength), 
+                    typeof(T));
             }
 
             switch(entryLength)
@@ -50,17 +53,17 @@ namespace PochiPochiEditor2.Helpers
                             int nibbleValue = ctrlNameindex == 0 // high
                                 ? (rawByte >> Constants.NibbleShift) & Constants.NibbleMask
                                 : rawByte & Constants.NibbleMask;
-                            return (T)(object)nibbleValue;
+                            return (T)Convert.ChangeType(nibbleValue, typeof(T));
 
                         // ビット
                         case Constants.BitsPerByte:
                             int bitValue = (rawByte >> ctrlNameindex) & 1;
-                            return (T)(object)bitValue;
+                            return (T)Convert.ChangeType(bitValue, typeof(T));
 
                         default:
                             return isSigned
-                                ? (T)(object)(sbyte)rawByte
-                                : (T)(object)rawByte;
+                                ? (T)Convert.ChangeType((sbyte)rawByte, typeof(T))
+                                : (T)Convert.ChangeType(rawByte, typeof(T));
                     }
 
                 // 2バイト
@@ -70,8 +73,8 @@ namespace PochiPochiEditor2.Helpers
                         startIndex,
                         Constants.UShortSize);
                     return isSigned
-                        ? (T)(object)(short)rawUShort
-                        : (T)(object)rawUShort;
+                        ? (T)Convert.ChangeType((short)rawUShort, typeof(T))
+                        : (T)Convert.ChangeType(rawUShort, typeof(T));
 
                 // 4バイト
                 case Constants.UIntSize:
@@ -84,13 +87,13 @@ namespace PochiPochiEditor2.Helpers
                     if (fieldValue.IsPointer)
                     {
                         return rawUInt == 0
-                            ? (T)(object)Constants.InvalidOffsetValue
-                            : (T)(object)(rawUInt - Constants.BaseAddr);
+                            ? (T)Convert.ChangeType(Constants.InvalidOffsetValue, typeof(T))
+                            : (T)Convert.ChangeType(rawUInt - Constants.BaseAddr, typeof(T));
                     }
 
                     return isSigned
-                        ? (T)(object)(int)rawUInt
-                        : (T)(object)rawUInt;
+                        ? (T)Convert.ChangeType((int)rawUInt, typeof(T))
+                        : (T)Convert.ChangeType(rawUInt, typeof(T));
 
                 // その他
                 default:

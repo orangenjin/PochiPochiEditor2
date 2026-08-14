@@ -13,6 +13,7 @@
         public const int ByteSize = 1;
         public const int UShortSize = 2;
         public const int UIntSize = 4;
+        public const int InvalidSize = -1;
         public const uint BaseAddr = 0x8000000U;
         public const int InvalidOffsetValue = -1;
         public const string InvalidOffsetString = "null";
