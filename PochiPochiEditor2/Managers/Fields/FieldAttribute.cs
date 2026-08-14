@@ -1,27 +1,16 @@
-﻿namespace PochiPochiEditor2.Managers.Fields
+﻿using PochiPochiEditor2.Utilities;
+
+namespace PochiPochiEditor2.Managers.Fields
 {
     public class FieldAttribute
     {
-        public AttributeKind Kind { get; }
-        public string[] Parameters { get; }
+        public Extensions.AttrKind Kind { get; }
+        public string[] Args { get; }
 
-        public FieldAttribute(AttributeKind attributeKind, params string[] parameters)
+        public FieldAttribute(Extensions.AttrKind attrKind, params string[] args)
         {
-            Kind = attributeKind;
-            Parameters = parameters;
+            Kind = attrKind;
+            Args = args;
         }
-    }
-
-    // 右辺は最大パラメータ数
-    public enum AttributeKind
-    {
-        StringAttribute = 2,
-
-        // byte想定
-        NibbleAttribute = 2,
-        BitAttribute = 8,
-
-        // flag想定
-        FlagAttribute = -1
     }
 }

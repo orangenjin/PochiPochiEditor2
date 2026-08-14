@@ -59,16 +59,16 @@ namespace PochiPochiEditor2.Managers.Fields
             foreach (var line in splitLines)
             {
                 // 型を読み取る
-                var kindStr = line[(int)DefPosition.KindName];
-                if (!Enum.TryParse<FieldKind>(kindStr, true, out var kind)) continue;
+                var kindStr = line[(int)Extensions.DefName.KindName];
+                if (!Enum.TryParse<Extensions.FieldKind>(kindStr, true, out var kind)) continue;
 
                 // コントロール定義を読み取る
-                var ctrlStr = line[(int)DefPosition.CtrlName];
-                if (!Enum.TryParse<CtrlKind>(ctrlStr, true, out var ctrl)) continue;
+                var ctrlStr = line[(int)Extensions.DefName.CtrlName];
+                if (!Enum.TryParse<Extensions.CtrlKind>(ctrlStr, true, out var ctrl)) continue;
 
                 // 属性読み取る
-                var attributes = new List<FieldAttribute>();
-                for (int i = (int)DefPosition.AttributeName; i < line.Length; i++)
+                var attrs = new List<FieldAttribute>();
+                for (int i = (int)Extensions.DefName.AttrName; i < line.Length; i++)
                 {
                     // 角括弧を外す
                     var target = line[i].Trim(Constants.OpenBracketChar, Constants.CloseBracketChar);
@@ -77,26 +77,26 @@ namespace PochiPochiEditor2.Managers.Fields
                     var closeParenIndex = target.LastIndexOf(Constants.CloseParenChar);
 
                     // 属性名を取得
-                    var attributeName = target.Substring(0, openParenIndex);
+                    var attrName = target.Substring(0, openParenIndex);
 
-                    // パラメータを取得
-                    var rawParams = target.Substring(openParenIndex + 1, closeParenIndex - openParenIndex - 1);
+                    // 属性引数を取得
+                    var rawArgs = target.Substring(openParenIndex + 1, closeParenIndex - openParenIndex - 1);
                     // カンマで分割
-                    var paramParts = rawParams.Split(Constants.CommaChar).Select(p => p.Trim()).ToArray();
+                    var argParts = rawArgs.Split(Constants.CommaChar).Select(p => p.Trim()).ToArray();
 
-                    // パラメータを格納
-                    if (Enum.TryParse<AttributeKind>(attributeName, true, out var attrType))
+                    // 属性引数を格納
+                    if (Enum.TryParse<Extensions.AttrKind>(attrName, true, out var attrType))
                     {
-                        var paramList = paramParts
+                        var argList = argParts
                             .Select(p => p.Trim().Trim(Constants.QuotationChar))
                             .ToArray();
 
-                        attributes.Add(new FieldAttribute(attrType, paramList));
+                        attrs.Add(new FieldAttribute(attrType, argList));
                     }
                 }
 
                 // フィールド定義を格納
-                fieldDefs.Add(new FieldMetaData(line[(int)DefPosition.FieldName], kind, ctrl, attributes));
+                fieldDefs.Add(new FieldMetaData(line[(int)Extensions.DefName.FieldName], kind, attrs, ctrl));
             }
 
             return fieldDefs;

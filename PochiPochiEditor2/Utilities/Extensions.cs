@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PochiPochiEditor2.Utilities
+﻿namespace PochiPochiEditor2.Utilities
 {
     public static class Extensions
     {
         /// <summary>
         /// defファイル行において、コロンで区切られる順番。
         /// </summary>
-        public enum DefPosition
+        public enum DefName
         {
             FieldName,
             KindName,
-            AttributeName,
+            AttrName,
             CtrlName
         }
 
@@ -38,7 +32,7 @@ namespace PochiPochiEditor2.Utilities
         /// <summary>
         /// FieldKindに対応するサイズを取得する。
         /// </summary>
-        public static int GetByteSize(this FieldKind kind)
+        public static int GetFieldSize(this FieldKind kind)
         {
             switch (kind)
             {
@@ -56,7 +50,7 @@ namespace PochiPochiEditor2.Utilities
                     return Constants.UIntSize;
 
                 default:
-                    return Constants.InvalidSize;
+                    return Constants.InvalidValue;
             }
         }
 
@@ -71,6 +65,42 @@ namespace PochiPochiEditor2.Utilities
             cmb,
             chk,
             rb
+        }
+
+        /// <summary>
+        /// defファイルの属性の種類を定義する。
+        /// </summary>
+        public enum AttrKind
+        {
+            StringAttr,
+
+            // byte想定
+            NibbleAttr,
+            BitAttr,
+
+            // flag想定（特殊）
+            FlagAttr
+        }
+
+        /// <summary>
+        /// AttrKindに対応するサイズを取得する。
+        /// </summary>
+        public static int GetAttrSize(this AttrKind kind)
+        {
+            switch (kind)
+            {
+                case AttrKind.StringAttr:
+                    return 2; // EntryLength, AllowedLength
+
+                case AttrKind.NibbleAttr:
+                    return Constants.CharPerByte;
+
+                case AttrKind.BitAttr:
+                    return Constants.BitsPerByte;
+
+                default:
+                    return Constants.InvalidValue;
+            }
         }
     }
 }
