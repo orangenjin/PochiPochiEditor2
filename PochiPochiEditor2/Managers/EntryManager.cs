@@ -18,35 +18,37 @@ namespace PochiPochiEditor2.Managers
         public EntryManager(
             string defFileName, 
             SharedData sharedData, 
-            int baseOffset,
-            ControlKind[] controlKinds)
+            int tableOffset,
+            int entryCount)
         {
             // DefReaderから定義情報を読み込む
             var defReader = new DefReader(defFileName);
 
-            for (int i = 0; i < defReader.FieldDefs.Count; i++)
+            for (int i = 0; i < entryCount; i++)
             {
-                // FieldValueを仮生成
-                var fieldValue = new FieldValue(
-                    defReader.FieldDefs[i], 
-                    sharedData, 
-                    controlKinds[i]);
+                // 内部位置
+                int fieldOffset = 0;
 
-                // バイナリデータを取得
-                fieldValue.BinaryData = new byte[fieldValue.EntryLength];
-                Array.Copy(
-                    sharedData.RomData,
-                    baseOffset, 
-                    fieldValue.BinaryData,
-                    0, 
-                    fieldValue.EntryLength);
+                for (int j = 0; j < defReader.FieldDefs.Count; j++)
+                {
+                    // FieldValueを仮生成
+                    var fieldValue = new FieldValue(
+                        defReader.FieldDefs[j],
+                        sharedData,
+                        defReader.CtrlDefs[j]);
 
-                Fields.Add(fieldValue);
-                baseOffset += fieldValue.EntryLength;
+                    // バイナリデータを取得
+                    fieldValue.BinaryData = new byte[fieldValue.EntryLength];
+                    Array.Copy(
+                        sharedData.RomData,
+                        tableOffset,
+                        fieldValue.BinaryData,
+                        0,
+                        fieldValue.EntryLength);
 
-                
-
-
+                    Fields.Add(fieldValue);
+                    fieldOffset += fieldValue.EntryLength;
+                }
             }
         }
     }

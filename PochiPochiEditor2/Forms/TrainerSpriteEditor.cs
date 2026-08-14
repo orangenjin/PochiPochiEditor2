@@ -17,13 +17,16 @@ namespace PochiPochiEditor2.Forms
     [FormGroup(FormGroup.TrainerSprite)]
     public partial class TrainerSpriteEditor : Form
     {
-        private readonly SharedData _sharedData;
+        private SharedData _sharedData = null;
 
         public TrainerSpriteEditor(SharedData sharedData)
         {
             InitializeComponent();
 
             _sharedData = sharedData;
+
+            // test
+
         }
     }
 }

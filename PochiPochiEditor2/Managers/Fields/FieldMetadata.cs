@@ -17,7 +17,9 @@ namespace PochiPochiEditor2.Managers.Fields
         }
     }
 
-    // 右辺はバイトサイズ
+    /// <summary>
+    /// 右辺はバイトサイズ。
+    /// </summary>
     public enum FieldKind
     {
         Byte = 1,

@@ -104,7 +104,7 @@
     <None Include="charmap.tbl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ini\cfru_dpe.ini">
+    <None Include="ini\dpe_cfru.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="ini\default.ini">
@@ -124,13 +124,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="def\Trainer\TrainerClassBaseIVEntry.def">
+    <Content Include="def\Trainer\TrainerClassBaseIvEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="def\Trainer\TrainerClassBattleMusicEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="def\Trainer\TrainerClassEncounterMusicEntry.def">
+    <Content Include="def\Trainer\TrainerClassEncMusicEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="def\Trainer\TrainerClassNameEntry.def">

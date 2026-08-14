@@ -24,6 +24,14 @@ namespace PochiPochiEditor2.Forms
             InitializeComponent();
 
             _sharedData = sharedData;
+
+            // test
+            string defFileName = "TrainerClassPrizeMultiEntry";
+            int tableOffset = _sharedData.Config.ReadInt("TrainerClassPrizeMultiTableOffset");
+            int entrycount = _sharedData.Config.ReadInt("TrainerClassPrizeMultiCount");
+            var entries = new EntryManager(defFileName, _sharedData, tableOffset, entrycount);
+
+            txtClassName.Text = entries.Fields[0].BinaryData.ToString();
         }
     }
 }

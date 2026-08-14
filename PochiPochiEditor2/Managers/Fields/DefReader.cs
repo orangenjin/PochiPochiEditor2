@@ -10,47 +10,63 @@ namespace PochiPochiEditor2.Managers.Fields
 {
     public class DefReader
     {
-        private string _defFolder = Path.Combine(Application.StartupPath, "def");
+        private string _defFolder = Path.Combine(Application.StartupPath, Constants.DefExt);
 
         // 公開用
         public List<FieldMetaData> FieldDefs { get; }
+        public List<ControlKind> CtrlDefs { get; }
 
         public DefReader(string fileName)
         {
-            FieldDefs = ReadFields(fileName);
+            var splitLines = ReadFile(fileName);
+            FieldDefs = ReadFields(splitLines);
+            CtrlDefs = ReadCtrls(splitLines);
         }
 
-        // ファイルから定義情報を整理
-        private List<FieldMetaData> ReadFields(string fileName)
+        /// <summary>
+        /// ファイルから行を読み込み、コロンで分割など。
+        /// </summary>
+        private List<string[]> ReadFile(string fileName)
         {
             // 戻り値用
-            var results = new List<FieldMetaData>();
+            List<string[]> splitLines = new List<string[]>();
 
             // defフォルダ階層下から指定したファイルを探す
-            var foundFiles = Directory.GetFiles(_defFolder, fileName, SearchOption.AllDirectories);
-            var filePath = foundFiles[0];
-            var lines = File.ReadAllLines(filePath);
+            var foundFiles = Directory.GetFiles(_defFolder, fileName + "." + Constants.DefExt, SearchOption.AllDirectories);
+            var allLines = File.ReadAllLines(foundFiles[0]);
 
-            foreach (var line in lines)
+            foreach (var line in allLines)
             {
                 var trimmedLine = line.Trim();
 
                 // 空行をスキップ
                 if (string.IsNullOrWhiteSpace(trimmedLine)) continue;
 
-                // コロンで分割
-                var parts = line.Split(Constants.ColonChar).Select(p => p.Trim()).ToArray();
+                // コロン分割
+                var parts = trimmedLine.Split(Constants.ColonChar).Select(p => p.Trim()).ToArray();
+                splitLines.Add(parts);
+            }
 
+            return splitLines;
+        }
+
+        private List<FieldMetaData> ReadFields(List<string[]> splitLines)
+        {
+            // 戻り値用
+            var fieldDefs = new List<FieldMetaData>();
+
+            foreach (var line in splitLines)
+            {
                 // 型を読み取る
-                var kindStr = parts[1];
+                var kindStr = line[(int)DefPosition.KindName];
                 if (!Enum.TryParse<FieldKind>(kindStr, true, out var kind)) continue;
 
                 // 属性読み取る
                 var attributes = new List<FieldAttribute>();
-                for (int i = 2; i < parts.Length; i++)
+                for (int i = (int)DefPosition.AttributeName; i < line.Length; i++)
                 {
                     // 角括弧を外す
-                    var target = parts[i].Trim(Constants.OpenBracketChar, Constants.CloseBracketChar);
+                    var target = line[i].Trim(Constants.OpenBracketChar, Constants.CloseBracketChar);
                     // 丸括弧の位置を探す
                     var openParenIndex = target.IndexOf(Constants.OpenParenChar);
                     var closeParenIndex = target.LastIndexOf(Constants.CloseParenChar);
@@ -75,10 +91,50 @@ namespace PochiPochiEditor2.Managers.Fields
                 }
 
                 // フィールド定義を格納
-                results.Add(new FieldMetaData(parts[0], kind, attributes));
+                fieldDefs.Add(new FieldMetaData(line[(int)DefPosition.FieldName], kind, attributes));
             }
 
-            return results;
+            return fieldDefs;
         }
+
+        private List<ControlKind> ReadCtrls(List<string[]> splitLines)
+        {
+            // 戻り値用
+            var ctrlDefs = new List<ControlKind>();
+
+            foreach (var line in splitLines)
+            {
+                // コントロール定義を読み取る
+                var ctrlStr = line[(int)DefPosition.CtrlName];
+                if (!Enum.TryParse<ControlKind>(ctrlStr, true, out var ctrl)) continue;
+
+                ctrlDefs.Add(ctrl);
+            }
+
+            return ctrlDefs;
+        }
+    }
+
+    /// <summary>
+    /// バインドできるコントロールの定義をする。
+    /// </summary>
+    public enum ControlKind
+    {
+        txt,
+        nud,
+        cmb,
+        chk,
+        rb
+    }
+
+    /// <summary>
+    /// コロンで区切られた順番。
+    /// </summary>
+    public enum DefPosition
+    {
+        FieldName,
+        KindName,
+        CtrlName,
+        AttributeName
     }
 }

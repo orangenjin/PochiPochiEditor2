@@ -16,11 +16,11 @@ namespace PochiPochiEditor2.Managers.Fields
         public byte[] BinaryData { get; set; } // 可変長の場合のValueの長さは.Lengthで取得
         public string[] ControlNames { get; set; } // 自動設定の後でも上書き可能
 
-        // DefReaderで読み込んだ定義情報から作成
+        // DefReaderで読み込んだ定義情報からコンテナ作成
         public FieldValue(
             FieldMetaData metaData, 
             SharedData sharedData,
-            ControlKind controlKind,
+            ControlKind ctrlKind,
             byte[] binaryData = null)
         {
             // FieldValueを利用する先で、扱いやすく加工する
@@ -68,13 +68,13 @@ namespace PochiPochiEditor2.Managers.Fields
             if (otherAttribute != null) // 高々1つと仮定
             {
                 ControlNames = otherAttribute.Parameters
-                    .Select(param => $"{controlKind}{param}")
+                    .Select(param => $"{ctrlKind}{param}")
                     .ToArray();
             }
             else
             {
                 // [コントロールのプレフィックス] + [フィールド名]
-                ControlNames = new string[] { $"{controlKind}{metaData.Name}" };
+                ControlNames = new string[] { $"{ctrlKind}{metaData.Name}" };
             }
 
             // 後入れ可能
@@ -107,17 +107,5 @@ namespace PochiPochiEditor2.Managers.Fields
         }
 
 
-    }
-
-    /// <summary>
-    /// バインドできるコントロールの定義をする。
-    /// </summary>
-    public enum ControlKind
-    {
-        txt,
-        nud,
-        cmb,
-        chk,
-        rb
     }
 }
