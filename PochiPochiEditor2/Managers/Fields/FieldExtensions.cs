@@ -1,6 +1,8 @@
-﻿namespace PochiPochiEditor2.Utilities
+﻿using PochiPochiEditor2.Utilities;
+
+namespace PochiPochiEditor2.Managers.Fields
 {
-    public static class Extensions
+    public static class FieldExtensions
     {
         /// <summary>
         /// defファイル行において、コロンで区切られる順番。

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PochiPochiEditor2.Managers.Fields;
 using PochiPochiEditor2.Utilities;
@@ -61,13 +59,29 @@ namespace PochiPochiEditor2.Managers
     {
         public List<FieldValue> Fields { get; set; }
 
+        private Dictionary<string, FieldValue> _fieldMap;
+
         public Entry(List<FieldValue> fields)
         {
-            Fields = new List<FieldValue>();
-            Fields.AddRange(fields);
+            Fields = fields;
+
+            // 辞書化
+            _fieldMap = Fields.ToDictionary(f => f.Name);
         }
 
         // 単一エントリーのサイズ
         public int EntrySize => Fields.Sum(f => f.EntryLength);
+
+        /// <summary>
+        /// FieldValueにアクセスするためのインデクサ。
+        /// </summary>
+        public FieldValue this[Enum key]
+        {
+            get
+            {
+                string fieldName = key.ToString();
+                return _fieldMap[fieldName];
+            }
+        }
     }
 }

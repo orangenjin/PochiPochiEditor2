@@ -29,7 +29,7 @@ namespace PochiPochiEditor2.Managers.Fields
 
             // StringAttributeであるか確認
             var stringAttr = metaData.Attrs
-                .FirstOrDefault(a => a.Kind == Extensions.AttrKind.StringAttr);
+                .FirstOrDefault(a => a.Kind == FieldExtensions.AttrKind.StringAttr);
 
             // 現状stringだけ動的長さを計算する必要あり
             if (stringAttr != null)
@@ -37,7 +37,7 @@ namespace PochiPochiEditor2.Managers.Fields
                 // 属性引数AllowedLengthがない場合がある
                 int maxCount = Math.Min(
                     stringAttr.Args.Length, 
-                    Extensions.AttrKind.StringAttr.GetAttrSize());
+                    FieldExtensions.AttrKind.StringAttr.GetAttrSize());
 
                 int[] lengths = new int[maxCount];
                 for (int i = 0; i < maxCount; i++)
@@ -46,10 +46,10 @@ namespace PochiPochiEditor2.Managers.Fields
                 }
 
                 // 存在しない場合も考慮、その場合同値を入れる
-                EntryLength = lengths[(int)Extensions.StringAttrArgs.EntryLengthArg];
+                EntryLength = lengths[(int)FieldExtensions.StringAttrArgs.EntryLengthArg];
                 AllowedLength = lengths.Length > 1
-                    ? lengths[(int)Extensions.StringAttrArgs.AllowedLengthArg]
-                    : lengths[(int)Extensions.StringAttrArgs.EntryLengthArg];
+                    ? lengths[(int)FieldExtensions.StringAttrArgs.AllowedLengthArg]
+                    : lengths[(int)FieldExtensions.StringAttrArgs.EntryLengthArg];
             }
             else
             {
@@ -58,15 +58,15 @@ namespace PochiPochiEditor2.Managers.Fields
             }
 
             // 符号ありかどうかを判定
-            IsSigned = metaData.Field is Extensions.FieldKind.SByte || 
-                metaData.Field is Extensions.FieldKind.Int16 ||
-                metaData.Field is Extensions.FieldKind.Int32;
+            IsSigned = metaData.Field is FieldExtensions.FieldKind.SByte || 
+                metaData.Field is FieldExtensions.FieldKind.Int16 ||
+                metaData.Field is FieldExtensions.FieldKind.Int32;
 
             // ポインタかどうかを判定
-            IsPointer = metaData.Field is Extensions.FieldKind.Pointer;
+            IsPointer = metaData.Field is FieldExtensions.FieldKind.Pointer;
 
             // コントロールと紐づけ
-            if (metaData.Ctrl == Extensions.CtrlKind.none)
+            if (metaData.Ctrl == FieldExtensions.CtrlKind.none)
             {
                 // ない場合は紐づけを除外
                 ControlNames = Array.Empty<string>();
@@ -75,7 +75,7 @@ namespace PochiPochiEditor2.Managers.Fields
             {
                 // StringAttr以外
                 var otherAttr = metaData.Attrs?
-                    .FirstOrDefault(a => a.Kind != Extensions.AttrKind.StringAttr);
+                    .FirstOrDefault(a => a.Kind != FieldExtensions.AttrKind.StringAttr);
 
                 if (otherAttr != null) // 高々1つと仮定
                 {

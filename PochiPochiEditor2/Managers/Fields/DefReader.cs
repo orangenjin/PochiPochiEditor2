@@ -59,16 +59,16 @@ namespace PochiPochiEditor2.Managers.Fields
             foreach (var line in splitLines)
             {
                 // 型を読み取る
-                var kindStr = line[(int)Extensions.DefName.KindName];
-                if (!Enum.TryParse<Extensions.FieldKind>(kindStr, true, out var kind)) continue;
+                var kindStr = line[(int)FieldExtensions.DefName.KindName];
+                if (!Enum.TryParse<FieldExtensions.FieldKind>(kindStr, true, out var kind)) continue;
 
                 // コントロール定義を読み取る
-                var ctrlStr = line[(int)Extensions.DefName.CtrlName];
-                if (!Enum.TryParse<Extensions.CtrlKind>(ctrlStr, true, out var ctrl)) continue;
+                var ctrlStr = line[(int)FieldExtensions.DefName.CtrlName];
+                if (!Enum.TryParse<FieldExtensions.CtrlKind>(ctrlStr, true, out var ctrl)) continue;
 
                 // 属性読み取る
                 var attrs = new List<FieldAttribute>();
-                for (int i = (int)Extensions.DefName.AttrName; i < line.Length; i++)
+                for (int i = (int)FieldExtensions.DefName.AttrName; i < line.Length; i++)
                 {
                     // 角括弧を外す
                     var target = line[i].Trim(Constants.OpenBracketChar, Constants.CloseBracketChar);
@@ -85,7 +85,7 @@ namespace PochiPochiEditor2.Managers.Fields
                     var argParts = rawArgs.Split(Constants.CommaChar).Select(p => p.Trim()).ToArray();
 
                     // 属性引数を格納
-                    if (Enum.TryParse<Extensions.AttrKind>(attrName, true, out var attrType))
+                    if (Enum.TryParse<FieldExtensions.AttrKind>(attrName, true, out var attrType))
                     {
                         var argList = argParts
                             .Select(p => p.Trim().Trim(Constants.QuotationChar))
@@ -96,7 +96,7 @@ namespace PochiPochiEditor2.Managers.Fields
                 }
 
                 // フィールド定義を格納
-                fieldDefs.Add(new FieldMetaData(line[(int)Extensions.DefName.FieldName], kind, ctrl, attrs));
+                fieldDefs.Add(new FieldMetaData(line[(int)FieldExtensions.DefName.FieldName], kind, ctrl, attrs));
             }
 
             return fieldDefs;

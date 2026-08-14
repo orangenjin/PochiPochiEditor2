@@ -82,7 +82,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\EventBinder.cs" />
-    <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Managers\Fields\FieldExtensions.cs" />
     <Compile Include="Utilities\SharedData.cs" />
     <EmbeddedResource Include="Forms\TrainerClassEditor.resx">
       <DependentUpon>TrainerClassEditor.cs</DependentUpon>

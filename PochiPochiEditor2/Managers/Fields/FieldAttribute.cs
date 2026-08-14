@@ -1,13 +1,11 @@
-﻿using PochiPochiEditor2.Utilities;
-
-namespace PochiPochiEditor2.Managers.Fields
+﻿namespace PochiPochiEditor2.Managers.Fields
 {
     public class FieldAttribute
     {
-        public Extensions.AttrKind Kind { get; }
+        public FieldExtensions.AttrKind Kind { get; }
         public string[] Args { get; }
 
-        public FieldAttribute(Extensions.AttrKind attrKind, params string[] args)
+        public FieldAttribute(FieldExtensions.AttrKind attrKind, params string[] args)
         {
             Kind = attrKind;
             Args = args;
