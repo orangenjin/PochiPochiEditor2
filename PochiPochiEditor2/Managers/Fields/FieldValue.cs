@@ -92,16 +92,19 @@ namespace PochiPochiEditor2.Managers.Fields
         /// <summary>
         /// BinaryDataから型Tの値を取得する。indexはControlNamesに対応。
         /// </summary>
-        public T GetData<T>(SharedData sharedData, Func<SharedData, FieldValue, int, T> converter = null, int index = 0)
+        public T GetData<T>(
+            SharedData sharedData, 
+            Func<SharedData, FieldValue, int, T> converter = null,
+            int ctrlNameindex = 0)
         {
             // 特殊処理があれば渡して
             if (converter != null)
             {
-                return converter(sharedData, this, index);
+                return converter(sharedData, this, ctrlNameindex);
             }
 
             // 通常変換
-            return CalcHelper.BytesToModelConv<T>(sharedData, this, index);
+            return CalcHelper.BytesToModelConv<T>(sharedData, this, ctrlNameindex);
         }
 
         public void SetData<T>(T rawData)

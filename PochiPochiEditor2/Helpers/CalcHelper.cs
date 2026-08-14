@@ -18,7 +18,10 @@ namespace PochiPochiEditor2.Helpers
         /// <summary>
         /// byte[]を汎用的なTとして変換する。
         /// </summary>
-        public static T BytesToModelConv<T>(SharedData sharedData, FieldValue fieldValue, int index)
+        public static T BytesToModelConv<T>(
+            SharedData sharedData, 
+            FieldValue fieldValue,
+            int ctrlNameindex)
         {
             int entryLength = fieldValue.EntryLength;
             byte[] data = fieldValue.BinaryData;
@@ -44,14 +47,14 @@ namespace PochiPochiEditor2.Helpers
                     {
                         // ニブル
                         case Constants.CharPerByte:
-                            int nibbleValue = index == 0 // high
+                            int nibbleValue = ctrlNameindex == 0 // high
                                 ? (rawByte >> Constants.NibbleShift) & Constants.NibbleMask
                                 : rawByte & Constants.NibbleMask;
                             return (T)(object)nibbleValue;
 
                         // ビット
                         case Constants.BitsPerByte:
-                            int bitValue = (rawByte >> index) & 1;
+                            int bitValue = (rawByte >> ctrlNameindex) & 1;
                             return (T)(object)bitValue;
 
                         default:
@@ -71,7 +74,7 @@ namespace PochiPochiEditor2.Helpers
                         : (T)(object)rawUShort;
 
                 // 4バイト
-                case Constants.UIntSize when fieldValue.IsPointer:
+                case Constants.UIntSize:
                     uint rawUInt = IoHelper.ReadByteValue(
                         data,
                         startIndex,
@@ -91,7 +94,7 @@ namespace PochiPochiEditor2.Helpers
 
                 // その他
                 default:
-                    return (T)(object)default;
+                    return default;
             }
         }
     }

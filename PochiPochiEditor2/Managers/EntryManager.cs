@@ -11,7 +11,7 @@ namespace PochiPochiEditor2.Managers
 {
     public class EntryManager
     {
-        public List<Entry> Entries { get; } = new List<Entry>();
+        public List<Entry> Entries { get; set; }
 
         public EntryManager(
             string defFileName, 
@@ -19,6 +19,9 @@ namespace PochiPochiEditor2.Managers
             int tableOffset, 
             int entryCount)
         {
+            // 初期化
+            Entries = new List<Entry>();
+
             // DefReaderから定義情報を読み込む
             var defReader = new DefReader(defFileName);
 
@@ -56,7 +59,7 @@ namespace PochiPochiEditor2.Managers
 
     public class Entry
     {
-        public List<FieldValue> Fields { get; }
+        public List<FieldValue> Fields { get; set; }
 
         public Entry(List<FieldValue> fields)
         {
