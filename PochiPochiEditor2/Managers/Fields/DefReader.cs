@@ -20,6 +20,7 @@ namespace PochiPochiEditor2.Managers.Fields
             FieldDefs = ReadFields(fileName);
         }
 
+        // ファイルから定義情報を整理
         private List<FieldMetaData> ReadFields(string fileName)
         {
             // 戻り値用

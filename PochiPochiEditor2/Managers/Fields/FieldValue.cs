@@ -8,6 +8,7 @@ namespace PochiPochiEditor2.Managers.Fields
 {
     public class FieldValue
     {
+        public string Name { get; }
         public int EntryLength { get; }
         public int AllowedLength { get; } // ほぼstring用
         public bool IsSigned { get; }
@@ -22,6 +23,9 @@ namespace PochiPochiEditor2.Managers.Fields
             byte[] binaryData,
             ControlKind controlKind)
         {
+            // FieldValueを利用する先で、扱いやすく加工する
+            Name = metaData.Name;
+
             // StringAttributeを確認
             var stringAttr = metaData.Attributes
                 .FirstOrDefault(a => a.Kind == AttributeKind.StringAttribute);
