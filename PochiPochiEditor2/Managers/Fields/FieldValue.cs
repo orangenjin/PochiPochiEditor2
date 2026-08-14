@@ -13,69 +13,74 @@ namespace PochiPochiEditor2.Managers.Fields
         public int AllowedLength { get; } // ほぼstring用
         public bool IsSigned { get; }
         public bool IsPointer { get; }
-        public byte[] BinaryData { get; set; } // 可変長の場合のValueの長さは.Lengthで取得
+        public byte[] BinaryData { get; set; } // 可変長の場合の長さは.Lengthで取得
         public string[] ControlNames { get; set; } // 自動設定の後でも上書き可能
 
-        // DefReaderで読み込んだ定義情報からコンテナ作成
+        /// <summary>
+        /// DefReaderで読み込んだ定義情報からコンテナを作成する。
+        /// </summary>
         public FieldValue(
             FieldMetaData metaData, 
             SharedData sharedData,
-            byte[] binaryData = null)
+            byte[] binaryData = null) // 後入れ可能
         {
-            // FieldValueを利用する先で、扱いやすく加工する
+            // FieldValueを利用する先で、扱いやすく加工する予定
             Name = metaData.Name;
 
-            // StringAttributeを確認
-            var stringAttr = metaData.Attributes
-                .FirstOrDefault(a => a.Kind == AttributeKind.StringAttribute);
+            // StringAttributeであるか確認
+            var stringAttr = metaData.Attrs
+                .FirstOrDefault(a => a.Kind == Extensions.AttrKind.StringAttr);
 
-            // 現状stringだけ動的長さ
+            // 現状stringだけ動的長さを計算する必要あり
             if (stringAttr != null)
             {
-                // 要素数
-                int maxCount = Math.Min(stringAttr.Parameters.Length, (int)AttributeKind.StringAttribute);
+                // 属性引数AllowedLengthがない場合がある
+                int maxCount = Math.Min(
+                    stringAttr.Args.Length, 
+                    Extensions.AttrKind.StringAttr.GetAttrSize());
 
                 int[] lengths = new int[maxCount];
                 for (int i = 0; i < maxCount; i++)
                 {
-                    lengths[i] = sharedData.Config.ReadInt(stringAttr.Parameters[i]);
+                    lengths[i] = sharedData.Config.ReadInt(stringAttr.Args[i]);
                 }
 
-                // 存在しない場合も考慮、その場合同値
-                EntryLength = lengths[0];
+                // 存在しない場合も考慮、その場合同値を入れる
+                EntryLength = lengths[(int)Extensions.StringAttrArgs.EntryLengthArg];
                 AllowedLength = lengths.Length > 1
-                    ? lengths[1]
-                    : lengths[0];
+                    ? lengths[(int)Extensions.StringAttrArgs.AllowedLengthArg]
+                    : lengths[(int)Extensions.StringAttrArgs.EntryLengthArg];
             }
             else
             {
-                EntryLength = (int)metaData.Field;
-                AllowedLength = -1;
+                EntryLength = metaData.Field.GetFieldSize();
+                AllowedLength = Constants.InvalidValue;
             }
 
             // 符号ありかどうかを判定
-            IsSigned = metaData.Field is FieldKind.SByte || 
-                metaData.Field is FieldKind.Int16 ||
-                metaData.Field is FieldKind.Int32;
+            IsSigned = metaData.Field is Extensions.FieldKind.SByte || 
+                metaData.Field is Extensions.FieldKind.Int16 ||
+                metaData.Field is Extensions.FieldKind.Int32;
 
             // ポインタかどうかを判定
-            IsPointer = metaData.Field is FieldKind.Pointer;
+            IsPointer = metaData.Field is Extensions.FieldKind.Pointer;
 
             // コントロールと紐づけ
-            if (metaData.Ctrl == CtrlKind.none)
+            if (metaData.Ctrl == Extensions.CtrlKind.none)
             {
-                // 紐づけを除外
+                // ない場合は紐づけを除外
                 ControlNames = Array.Empty<string>();
             }
             else
             {
-                var otherAttribute = metaData.Attributes?
-                    .FirstOrDefault(a => a.Kind != AttributeKind.StringAttribute);
+                // StringAttr以外
+                var otherAttr = metaData.Attrs?
+                    .FirstOrDefault(a => a.Kind != Extensions.AttrKind.StringAttr);
 
-                if (otherAttribute != null) // 高々1つと仮定
+                if (otherAttr != null) // 高々1つと仮定
                 {
-                    ControlNames = otherAttribute.Parameters
-                        .Select(param => $"{metaData.Ctrl}{param}")
+                    ControlNames = otherAttr.Args
+                        .Select(arg => $"{metaData.Ctrl}{arg}")
                         .ToArray();
                 }
                 else

@@ -9,8 +9,8 @@
         {
             FieldName,
             KindName,
-            AttrName,
-            CtrlName
+            CtrlName,
+            AttrName
         }
 
         /// <summary>
@@ -80,6 +80,36 @@
 
             // flag想定（特殊）
             FlagAttr
+        }
+
+        public enum StringAttrArgs
+        {
+            EntryLengthArg,
+            AllowedLengthArg
+        }
+
+        public enum NibbleAttrArgs
+        {
+            HighValueArg,
+            LowValueArg
+        }
+
+        public enum BitAttrArgs
+        {
+            Bit0Arg,
+            Bit1Arg,
+            Bit2Arg,
+            Bit3Arg,
+            Bit4Arg,
+            Bit5Arg,
+            Bit6Arg,
+            Bit7Arg
+        }
+
+        public enum FalgAttrArgs
+        {
+            EntryLengthArg,
+            AllowedLengthArg
         }
 
         /// <summary>

@@ -34,27 +34,27 @@ namespace PochiPochiEditor2.Forms
             this.nudClassNameIndex = new System.Windows.Forms.NumericUpDown();
             this.cmbClassNameIndex = new System.Windows.Forms.ComboBox();
             this.grpBasicData = new System.Windows.Forms.GroupBox();
-            this.lblClassName = new System.Windows.Forms.Label();
-            this.txtClassName = new System.Windows.Forms.TextBox();
-            this.lblPrizeMulti = new System.Windows.Forms.Label();
             this.nudPrizeMulti = new System.Windows.Forms.NumericUpDown();
+            this.lblPrizeMulti = new System.Windows.Forms.Label();
+            this.txtClassName = new System.Windows.Forms.TextBox();
+            this.lblClassName = new System.Windows.Forms.Label();
             this.grpExtraData = new System.Windows.Forms.GroupBox();
-            this.nudEncMusic = new System.Windows.Forms.NumericUpDown();
-            this.lblEncMusic = new System.Windows.Forms.Label();
-            this.lblBattleMusic = new System.Windows.Forms.Label();
-            this.nudBattleMusic = new System.Windows.Forms.NumericUpDown();
             this.nudBaseIv = new System.Windows.Forms.NumericUpDown();
             this.nudPokeBall = new System.Windows.Forms.NumericUpDown();
             this.lblBaseIv = new System.Windows.Forms.Label();
             this.lblPokeBall = new System.Windows.Forms.Label();
+            this.nudBattleMusic = new System.Windows.Forms.NumericUpDown();
+            this.nudEncMusic = new System.Windows.Forms.NumericUpDown();
+            this.lblBattleMusic = new System.Windows.Forms.Label();
+            this.lblEncMusic = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudClassNameIndex)).BeginInit();
             this.grpBasicData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPrizeMulti)).BeginInit();
             this.grpExtraData.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudEncMusic)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudBattleMusic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudBaseIv)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPokeBall)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudBattleMusic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudEncMusic)).BeginInit();
             this.SuspendLayout();
             // 
             // lblClassNameIndex
@@ -104,33 +104,6 @@ namespace PochiPochiEditor2.Forms
             this.grpBasicData.TabStop = false;
             this.grpBasicData.Text = "肩書きデータ";
             // 
-            // lblClassName
-            // 
-            this.lblClassName.AutoSize = true;
-            this.lblClassName.Location = new System.Drawing.Point(20, 32);
-            this.lblClassName.Margin = new System.Windows.Forms.Padding(0);
-            this.lblClassName.Name = "lblClassName";
-            this.lblClassName.Size = new System.Drawing.Size(58, 15);
-            this.lblClassName.TabIndex = 0;
-            this.lblClassName.Text = "肩書き名 :";
-            // 
-            // txtClassName
-            // 
-            this.txtClassName.Location = new System.Drawing.Point(104, 28);
-            this.txtClassName.Name = "txtClassName";
-            this.txtClassName.Size = new System.Drawing.Size(144, 23);
-            this.txtClassName.TabIndex = 1;
-            // 
-            // lblPrizeMulti
-            // 
-            this.lblPrizeMulti.AutoSize = true;
-            this.lblPrizeMulti.Location = new System.Drawing.Point(20, 62);
-            this.lblPrizeMulti.Margin = new System.Windows.Forms.Padding(0);
-            this.lblPrizeMulti.Name = "lblPrizeMulti";
-            this.lblPrizeMulti.Size = new System.Drawing.Size(61, 15);
-            this.lblPrizeMulti.TabIndex = 2;
-            this.lblPrizeMulti.Text = "賞金倍率 :";
-            // 
             // nudPrizeMulti
             // 
             this.nudPrizeMulti.Location = new System.Drawing.Point(104, 58);
@@ -143,6 +116,33 @@ namespace PochiPochiEditor2.Forms
             this.nudPrizeMulti.Name = "nudPrizeMulti";
             this.nudPrizeMulti.Size = new System.Drawing.Size(56, 23);
             this.nudPrizeMulti.TabIndex = 3;
+            // 
+            // lblPrizeMulti
+            // 
+            this.lblPrizeMulti.AutoSize = true;
+            this.lblPrizeMulti.Location = new System.Drawing.Point(20, 62);
+            this.lblPrizeMulti.Margin = new System.Windows.Forms.Padding(0);
+            this.lblPrizeMulti.Name = "lblPrizeMulti";
+            this.lblPrizeMulti.Size = new System.Drawing.Size(61, 15);
+            this.lblPrizeMulti.TabIndex = 2;
+            this.lblPrizeMulti.Text = "賞金倍率 :";
+            // 
+            // txtClassName
+            // 
+            this.txtClassName.Location = new System.Drawing.Point(104, 28);
+            this.txtClassName.Name = "txtClassName";
+            this.txtClassName.Size = new System.Drawing.Size(144, 23);
+            this.txtClassName.TabIndex = 1;
+            // 
+            // lblClassName
+            // 
+            this.lblClassName.AutoSize = true;
+            this.lblClassName.Location = new System.Drawing.Point(20, 32);
+            this.lblClassName.Margin = new System.Windows.Forms.Padding(0);
+            this.lblClassName.Name = "lblClassName";
+            this.lblClassName.Size = new System.Drawing.Size(58, 15);
+            this.lblClassName.TabIndex = 0;
+            this.lblClassName.Text = "肩書き名 :";
             // 
             // grpExtraData
             // 
@@ -158,56 +158,10 @@ namespace PochiPochiEditor2.Forms
             this.grpExtraData.Margin = new System.Windows.Forms.Padding(0);
             this.grpExtraData.Name = "grpExtraData";
             this.grpExtraData.Padding = new System.Windows.Forms.Padding(0);
-            this.grpExtraData.Size = new System.Drawing.Size(186, 162);
+            this.grpExtraData.Size = new System.Drawing.Size(202, 162);
             this.grpExtraData.TabIndex = 4;
             this.grpExtraData.TabStop = false;
             this.grpExtraData.Text = "追加データ";
-            // 
-            // nudEncMusic
-            // 
-            this.nudEncMusic.Location = new System.Drawing.Point(104, 28);
-            this.nudEncMusic.Margin = new System.Windows.Forms.Padding(0);
-            this.nudEncMusic.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.nudEncMusic.Name = "nudEncMusic";
-            this.nudEncMusic.Size = new System.Drawing.Size(56, 23);
-            this.nudEncMusic.TabIndex = 5;
-            // 
-            // lblEncMusic
-            // 
-            this.lblEncMusic.AutoSize = true;
-            this.lblEncMusic.Location = new System.Drawing.Point(20, 32);
-            this.lblEncMusic.Margin = new System.Windows.Forms.Padding(0);
-            this.lblEncMusic.Name = "lblEncMusic";
-            this.lblEncMusic.Size = new System.Drawing.Size(75, 15);
-            this.lblEncMusic.TabIndex = 4;
-            this.lblEncMusic.Text = "戦闘前BGM :";
-            // 
-            // lblBattleMusic
-            // 
-            this.lblBattleMusic.AutoSize = true;
-            this.lblBattleMusic.Location = new System.Drawing.Point(20, 62);
-            this.lblBattleMusic.Margin = new System.Windows.Forms.Padding(0);
-            this.lblBattleMusic.Name = "lblBattleMusic";
-            this.lblBattleMusic.Size = new System.Drawing.Size(75, 15);
-            this.lblBattleMusic.TabIndex = 4;
-            this.lblBattleMusic.Text = "戦闘中BGM :";
-            // 
-            // nudBattleMusic
-            // 
-            this.nudBattleMusic.Location = new System.Drawing.Point(104, 58);
-            this.nudBattleMusic.Margin = new System.Windows.Forms.Padding(0);
-            this.nudBattleMusic.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.nudBattleMusic.Name = "nudBattleMusic";
-            this.nudBattleMusic.Size = new System.Drawing.Size(56, 23);
-            this.nudBattleMusic.TabIndex = 5;
             // 
             // nudBaseIv
             // 
@@ -255,6 +209,52 @@ namespace PochiPochiEditor2.Forms
             this.lblPokeBall.TabIndex = 7;
             this.lblPokeBall.Text = "使用ボールID :";
             // 
+            // nudBattleMusic
+            // 
+            this.nudBattleMusic.Location = new System.Drawing.Point(104, 58);
+            this.nudBattleMusic.Margin = new System.Windows.Forms.Padding(0);
+            this.nudBattleMusic.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.nudBattleMusic.Name = "nudBattleMusic";
+            this.nudBattleMusic.Size = new System.Drawing.Size(72, 23);
+            this.nudBattleMusic.TabIndex = 5;
+            // 
+            // nudEncMusic
+            // 
+            this.nudEncMusic.Location = new System.Drawing.Point(104, 28);
+            this.nudEncMusic.Margin = new System.Windows.Forms.Padding(0);
+            this.nudEncMusic.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.nudEncMusic.Name = "nudEncMusic";
+            this.nudEncMusic.Size = new System.Drawing.Size(72, 23);
+            this.nudEncMusic.TabIndex = 5;
+            // 
+            // lblBattleMusic
+            // 
+            this.lblBattleMusic.AutoSize = true;
+            this.lblBattleMusic.Location = new System.Drawing.Point(20, 62);
+            this.lblBattleMusic.Margin = new System.Windows.Forms.Padding(0);
+            this.lblBattleMusic.Name = "lblBattleMusic";
+            this.lblBattleMusic.Size = new System.Drawing.Size(75, 15);
+            this.lblBattleMusic.TabIndex = 4;
+            this.lblBattleMusic.Text = "戦闘中BGM :";
+            // 
+            // lblEncMusic
+            // 
+            this.lblEncMusic.AutoSize = true;
+            this.lblEncMusic.Location = new System.Drawing.Point(20, 32);
+            this.lblEncMusic.Margin = new System.Windows.Forms.Padding(0);
+            this.lblEncMusic.Name = "lblEncMusic";
+            this.lblEncMusic.Size = new System.Drawing.Size(75, 15);
+            this.lblEncMusic.TabIndex = 4;
+            this.lblEncMusic.Text = "戦闘前BGM :";
+            // 
             // TrainerClassEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -277,10 +277,10 @@ namespace PochiPochiEditor2.Forms
             ((System.ComponentModel.ISupportInitialize)(this.nudPrizeMulti)).EndInit();
             this.grpExtraData.ResumeLayout(false);
             this.grpExtraData.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudEncMusic)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudBattleMusic)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudBaseIv)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPokeBall)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudBattleMusic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudEncMusic)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

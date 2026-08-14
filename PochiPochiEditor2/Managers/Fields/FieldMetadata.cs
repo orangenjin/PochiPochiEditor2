@@ -8,20 +8,19 @@ namespace PochiPochiEditor2.Managers.Fields
     {
         public string Name { get; }
         public Extensions.FieldKind Field { get; }
-        public List<FieldAttribute> Attrs { get; }
         public Extensions.CtrlKind Ctrl { get; }
-
+        public List<FieldAttribute> Attrs { get; }
 
         public FieldMetaData(
             string name,
             Extensions.FieldKind kind,
-            List<FieldAttribute> attrs,
-            Extensions.CtrlKind ctrl)
+            Extensions.CtrlKind ctrl,
+            List<FieldAttribute> attrs)
         {
             Name = name;
             Field = kind;
-            Attrs = attrs;
             Ctrl = ctrl;
+            Attrs = attrs;
         }
     }
 }

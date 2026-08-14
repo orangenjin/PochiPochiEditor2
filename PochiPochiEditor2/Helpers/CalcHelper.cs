@@ -87,7 +87,7 @@ namespace PochiPochiEditor2.Helpers
                     if (fieldValue.IsPointer)
                     {
                         return rawUInt == 0
-                            ? (T)Convert.ChangeType(Constants.InvalidOffsetValue, typeof(T))
+                            ? (T)Convert.ChangeType(Constants.InvalidValue, typeof(T))
                             : (T)Convert.ChangeType(rawUInt - Constants.BaseAddr, typeof(T));
                     }
 

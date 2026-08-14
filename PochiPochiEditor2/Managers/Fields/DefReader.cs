@@ -96,7 +96,7 @@ namespace PochiPochiEditor2.Managers.Fields
                 }
 
                 // フィールド定義を格納
-                fieldDefs.Add(new FieldMetaData(line[(int)Extensions.DefName.FieldName], kind, attrs, ctrl));
+                fieldDefs.Add(new FieldMetaData(line[(int)Extensions.DefName.FieldName], kind, ctrl, attrs));
             }
 
             return fieldDefs;

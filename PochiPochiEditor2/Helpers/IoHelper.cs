@@ -32,8 +32,8 @@ namespace PochiPochiEditor2.Helpers
 
         /// <summary>
         /// ポインタとして読み取る。
-        /// [00 00 00 00]はnullポインタとして、trueとConstants.InvalidOffsetを返す。
-        /// ポインタとして読み取れない場合は、falseとConstants.InvalidOffsetを返す。
+        /// [00 00 00 00]はnullポインタとして、trueとConstants.InvalidValueを返す。
+        /// ポインタとして読み取れない場合は、falseとConstants.InvalidValueを返す。
         /// </summary>
         public static bool TryReadPtr(
             byte[] data,
@@ -45,14 +45,14 @@ namespace PochiPochiEditor2.Helpers
             // nullポインタ?
             if (rawAddr == 0)
             {
-                resultOffset = Constants.InvalidOffsetValue;
+                resultOffset = Constants.InvalidValue;
                 return true;
             }
 
             // 正規?
             if (rawAddr < Constants.BaseAddr)
             {
-                resultOffset = Constants.InvalidOffsetValue;
+                resultOffset = Constants.InvalidValue;
                 return false;
             }
 
