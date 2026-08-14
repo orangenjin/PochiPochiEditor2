@@ -19,9 +19,9 @@ namespace PochiPochiEditor2.Managers.Fields
         // DefReaderで読み込んだ定義情報から作成
         public FieldValue(
             FieldMetaData metaData, 
-            SharedData sharedData, 
-            byte[] binaryData,
-            ControlKind controlKind)
+            SharedData sharedData,
+            ControlKind controlKind,
+            byte[] binaryData = null)
         {
             // FieldValueを利用する先で、扱いやすく加工する
             Name = metaData.Name;
@@ -77,7 +77,7 @@ namespace PochiPochiEditor2.Managers.Fields
                 ControlNames = new string[] { $"{controlKind}{metaData.Name}" };
             }
 
-            // 簡易的に切り取ったバイナリデータ
+            // 後入れ可能
             BinaryData = binaryData;
         }
 
