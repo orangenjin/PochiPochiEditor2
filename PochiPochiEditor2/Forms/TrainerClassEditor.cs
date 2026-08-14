@@ -17,9 +17,11 @@ namespace PochiPochiEditor2.Forms
     [FormGroup(FormGroup.TrainerClass)]
     public partial class TrainerClassEditor : Form
     {
-        private readonly SharedData _sharedData;
+        private SharedData _sharedData = null;
+        private EntryManager _className = null;
 
-        private enum TrainerClassFieldKey
+
+        private enum FieldKey
         {
             ClassName,
             PrizeMulti,
@@ -29,16 +31,28 @@ namespace PochiPochiEditor2.Forms
         public TrainerClassEditor(SharedData sharedData)
         {
             InitializeComponent();
-
             _sharedData = sharedData;
 
-            // test
+            InitializeEntries();
+
+
+        }
+
+        private void InitializeEntries()
+        {
+            // 肩書名テーブルを作成
             string defFileName = "TrainerClassNameEntry";
             int tableOffset = _sharedData.Config.ReadInt("TrainerClassNameTableOffset");
             int entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
-            var entries = new EntryManager(defFileName, _sharedData, tableOffset, entrycount);
+            _className = new EntryManager(defFileName, _sharedData, tableOffset, entrycount);
 
-            txtClassName.Text = entries.Entries[1][TrainerClassFieldKey.ClassName].GetData<string>(sharedData);
+            
         }
+
+
+
+
+
+        // txtClassName.Text = _className.Entries[1][FieldKey.ClassName].GetData<string>(_sharedData);
     }
 }

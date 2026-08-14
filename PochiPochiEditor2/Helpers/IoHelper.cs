@@ -31,6 +31,27 @@ namespace PochiPochiEditor2.Helpers
         }
 
         /// <summary>
+        /// uintをbyte[]に書き込む。
+        /// </summary>
+        public static void WriteByteValue(
+            byte[] buffer,
+            int offset,
+            int length,
+            uint value,
+            bool isLittleEndian = true)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                int shiftIndex = isLittleEndian
+                    ? i
+                    : (length - 1 - i);
+
+                buffer[offset + i] =
+                    (byte)((value >> (shiftIndex * Constants.BitsPerByte)) & Constants.ByteMask);
+            }
+        }
+
+        /// <summary>
         /// ポインタとして読み取る。
         /// [00 00 00 00]はnullポインタとして、trueとConstants.InvalidValueを返す。
         /// ポインタとして読み取れない場合は、falseとConstants.InvalidValueを返す。

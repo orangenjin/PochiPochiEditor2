@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
+using PochiPochiEditor2.Managers;
 using PochiPochiEditor2.Managers.Fields;
 using PochiPochiEditor2.Utilities;
 
@@ -17,16 +18,15 @@ namespace PochiPochiEditor2.Helpers
         }
 
         /// <summary>
-        /// byte[]を汎用的なTとして変換する。
+        /// byte[]を型Tとして変換する。
         /// </summary>
         public static T BytesToModelConv<T>(
-            SharedData sharedData, 
             FieldValue fieldValue,
+            TblManager charmap,
             int ctrlNameindex)
         {
             int entryLength = fieldValue.EntryLength;
-            byte[] data = fieldValue.BinaryData;
-            int startIndex = 0;
+            byte[] binaryData = fieldValue.BinaryData;
             int nameCount = fieldValue.ControlNames.Length;
             bool isSigned = fieldValue.IsSigned;
 
@@ -34,7 +34,7 @@ namespace PochiPochiEditor2.Helpers
             if (fieldValue.AllowedLength > 0)
             {
                 return (T)Convert.ChangeType
-                    (sharedData.Charmap.BytesToString(data, startIndex, entryLength), 
+                    (charmap.BytesToString(binaryData, 0, entryLength), 
                     typeof(T));
             }
 
@@ -43,14 +43,15 @@ namespace PochiPochiEditor2.Helpers
                 // 1バイト
                 case Constants.ByteSize:
                     byte rawByte = (byte)IoHelper.ReadByteValue(
-                        data,
-                        startIndex,
+                        binaryData,
+                        0,
                         Constants.ByteSize);
                     switch (nameCount)
                     {
                         // ニブル
                         case Constants.CharPerByte:
-                            int nibbleValue = ctrlNameindex == 0 // high
+                            int nibbleValue = 
+                                ctrlNameindex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg // high
                                 ? (rawByte >> Constants.NibbleShift) & Constants.NibbleMask
                                 : rawByte & Constants.NibbleMask;
                             return (T)Convert.ChangeType(nibbleValue, typeof(T));
@@ -69,8 +70,8 @@ namespace PochiPochiEditor2.Helpers
                 // 2バイト
                 case Constants.UShortSize:
                     ushort rawUShort = (ushort)IoHelper.ReadByteValue(
-                        data,
-                        startIndex,
+                        binaryData,
+                        0,
                         Constants.UShortSize);
                     return isSigned
                         ? (T)Convert.ChangeType((short)rawUShort, typeof(T))
@@ -79,8 +80,8 @@ namespace PochiPochiEditor2.Helpers
                 // 4バイト
                 case Constants.UIntSize:
                     uint rawUInt = IoHelper.ReadByteValue(
-                        data,
-                        startIndex,
+                        binaryData,
+                        0,
                         Constants.UIntSize);
 
                     // ポインタ
@@ -99,6 +100,119 @@ namespace PochiPochiEditor2.Helpers
                 default:
                     return default;
             }
+        }
+
+        /// <summary>
+        /// 型Tの値をbyte[]に変換する。
+        /// </summary>
+        public static byte[] ModelToBytesConv<T>(
+           T value,
+           FieldValue fieldValue,
+           TblManager charmap,
+           int ctrlNameindex)
+        {
+            int entryLength = fieldValue.EntryLength;
+            int nameCount = fieldValue.ControlNames.Length;
+            bool isSigned = fieldValue.IsSigned;
+
+            // マージ用
+            byte[] result = new byte[entryLength];
+            Array.Copy(fieldValue.BinaryData, 0, result, 0, entryLength);
+
+            // 文字列
+            if (fieldValue.AllowedLength > 0)
+            {
+                var text = Convert.ToString(value);
+
+                // AllowedLength分
+                byte[] bytes = charmap.StringToBytes(
+                    text,
+                    appendTerminator: true,
+                    targetLength: fieldValue.AllowedLength);
+
+                // EntryLength分
+                Array.Copy(bytes, 0, result, 0, Math.Min(bytes.Length, entryLength));
+                return result;
+            }
+
+            switch (entryLength)
+            {
+                // 1バイト
+                case Constants.ByteSize:
+                    byte rawByte = result[0];
+
+                    switch (nameCount)
+                    {
+                        // ニブル（上位/下位のニブルのみ更新）
+                        case Constants.CharPerByte:
+                            byte nibbleValue = Convert.ToByte(value);
+                            if (ctrlNameindex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg) // high
+                            {
+                                // 下位ニブルを残し、上位ニブルに値をセット
+                                rawByte = (byte)((rawByte & ~(Constants.NibbleMask << Constants.NibbleShift))
+                                               | ((nibbleValue & Constants.NibbleMask) << Constants.NibbleShift));
+                            }
+                            else // low
+                            {
+                                // 上位ニブルを残し、下位ニブルに値をセット
+                                rawByte = (byte)((rawByte & (Constants.NibbleMask << Constants.NibbleShift))
+                                               | (nibbleValue & Constants.NibbleMask));
+                            }
+                            result[0] = rawByte;
+                            break;
+
+                        // ビット（特定の1ビットのみ更新）
+                        case Constants.BitsPerByte:
+                            byte bitValue = Convert.ToByte(value);
+                            if ((bitValue & 1) == 1)
+                            {
+                                rawByte |= (byte)(1 << ctrlNameindex);
+                            }
+                            else
+                            {
+                                rawByte &= (byte)~(1 << ctrlNameindex);
+                            }
+                            result[0] = rawByte;
+                            break;
+
+                        default:
+                            result[0] = isSigned
+                                ? (byte)Convert.ToSByte(value)
+                                : Convert.ToByte(value);
+                            break;
+                    }
+                    break;
+
+                // 2バイト
+                case Constants.UShortSize:
+                    ushort rawUShort = isSigned
+                        ? (ushort)Convert.ToInt16(value)
+                        : Convert.ToUInt16(value);
+                    IoHelper.WriteByteValue(result, 0, Constants.UShortSize, rawUShort);
+                    break;
+
+                // 4バイト
+                case Constants.UIntSize:
+                    uint rawUInt;
+
+                    if (fieldValue.IsPointer)
+                    {
+                        int tempValue = Convert.ToInt32(value);
+                        rawUInt = tempValue == Constants.InvalidValue
+                            ? 0
+                            : (uint)tempValue + Constants.BaseAddr;
+                    }
+                    else
+                    {
+                        rawUInt = isSigned
+                            ? (uint)Convert.ToInt32(value)
+                            : Convert.ToUInt32(value);
+                    }
+                    IoHelper.WriteByteValue(result, 0, Constants.UIntSize, rawUInt);
+                    break;
+            }
+
+            return result;
         }
     }
 }

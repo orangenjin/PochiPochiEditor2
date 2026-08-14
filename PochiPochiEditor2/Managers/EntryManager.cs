@@ -59,6 +59,7 @@ namespace PochiPochiEditor2.Managers
     {
         public List<FieldValue> Fields { get; set; }
 
+        // ただのアクセス用
         private Dictionary<string, FieldValue> _fieldMap;
 
         public Entry(List<FieldValue> fields)
@@ -69,7 +70,9 @@ namespace PochiPochiEditor2.Managers
             _fieldMap = Fields.ToDictionary(f => f.Name);
         }
 
-        // 単一エントリーのサイズ
+        /// <summary>
+        /// 単一エントリーのサイズを計算する。
+        /// </summary>
         public int EntrySize => Fields.Sum(f => f.EntryLength);
 
         /// <summary>

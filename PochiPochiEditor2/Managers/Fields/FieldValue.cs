@@ -98,28 +98,44 @@ namespace PochiPochiEditor2.Managers.Fields
         /// BinaryDataから型Tの値を取得する。indexはControlNamesに対応。
         /// </summary>
         public T GetData<T>(
-            SharedData sharedData, 
-            Func<SharedData, FieldValue, int, T> converter = null,
+            TblManager charmap, // 文字変換用
+            Func<FieldValue, int, TblManager, T> converter = null,
             int ctrlNameindex = 0)
         {
             // 特殊処理があれば渡して
             if (converter != null)
             {
-                return converter(sharedData, this, ctrlNameindex);
+                return converter(this, ctrlNameindex, charmap);
             }
 
             // 通常変換
-            return CalcHelper.BytesToModelConv<T>(sharedData, this, ctrlNameindex);
+            return CalcHelper.BytesToModelConv<T>(this, charmap, ctrlNameindex);
         }
 
-        public void SetData<T>(T rawData)
+        /// <summary>
+        /// 型Tの値をBinaryDataに適用する。indexはControlNamesに対応。
+        /// </summary>
+        public void SetData<T>(
+            T rawData,
+            TblManager charmap, // 文字変換用
+            Func<T, FieldValue, TblManager, int, byte[]> converter = null,
+            int ctrlNameindex = 0)
         {
+            byte[] newBytes;
 
-        }
+            // 特殊処理があれば渡して
+            if (converter != null)
+            {
+                newBytes = converter(rawData, this, charmap, ctrlNameindex);
+            }
+            else
+            {
+                // 通常変換
+                newBytes = CalcHelper.ModelToBytesConv(rawData, this, charmap, ctrlNameindex);
+            }
 
-        public void SetData<T>(T rawData, Func<T, byte[]> processor)
-        {
-
+            // 更新されたbyte[]を適用
+            BinaryData = newBytes;
         }
 
 
