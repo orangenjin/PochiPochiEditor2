@@ -42,7 +42,9 @@ namespace PochiPochiEditor2.Managers
         {
             if (!Directory.Exists(folderPath)) return;
 
-            foreach (string filePath in Directory.EnumerateFiles(folderPath, "*.ini"))
+            var ext = $"{Constants.AsteriskChar}{Constants.DotChar}{Constants.IniExt}";
+
+            foreach (string filePath in Directory.EnumerateFiles(folderPath, ext))
             {
                 string name = Path.GetFileNameWithoutExtension(filePath);
 
@@ -85,9 +87,11 @@ namespace PochiPochiEditor2.Managers
                 }
 
                 // ポインタかどうか
-                if (rawString.StartsWith("*"))
+                if (rawString.StartsWith(Constants.AsteriskChar.ToString()))
                 {
-                    if (TryParseNumber(rawString.Substring(1), out int ptrOffset))
+                    if (TryParseNumber(
+                        rawString.Substring(Constants.AsteriskChar.ToString().Length), 
+                        out int ptrOffset))
                     {
                         if (IoHelper.TryReadPtr(data, ptrOffset, out int resultOffset))
                         {

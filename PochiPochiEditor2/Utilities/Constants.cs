@@ -31,8 +31,10 @@
         public const char EqualChar = '=';
         public const char SpaceChar = ' ';
         public const char DotChar = '.';
+        public const char AsteriskChar = '*';
 
         public const string DefExt = "def";
+        public const string IniExt = "ini";
 
         public const byte PaddingByte = 0x0;
         public const byte FreeSpaceByte = 0xFF;
