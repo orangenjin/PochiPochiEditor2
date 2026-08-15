@@ -86,8 +86,7 @@ namespace PochiPochiEditor2
             // 解除タイミング指定
             _eventBinder.BindCtrl(
                 h => this.Disposed += h,
-                h => this.Disposed -= h
-            );
+                h => this.Disposed -= h);
         }
 
         private void btnSelectRom_Click(object sender, EventArgs e)
