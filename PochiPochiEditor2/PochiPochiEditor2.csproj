@@ -61,7 +61,9 @@
     <Compile Include="Forms\TrainerSpriteEditor.Designer.cs">
       <DependentUpon>TrainerSpriteEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Managers\BindingManager.cs" />
     <Compile Include="Managers\EntryManager.cs" />
+    <Compile Include="Managers\Fields\FieldBinding.cs" />
     <Compile Include="Managers\FormGroupManager.cs" />
     <Compile Include="Managers\TblManager.cs" />
     <Compile Include="Utilities\Constants.cs" />

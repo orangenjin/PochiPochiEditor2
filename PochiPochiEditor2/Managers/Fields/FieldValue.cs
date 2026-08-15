@@ -16,6 +16,9 @@ namespace PochiPochiEditor2.Managers.Fields
         public byte[] BinaryData { get; set; } // 可変長の場合の長さは.Lengthで取得
         public string[] ControlNames { get; set; } // 自動設定の後でも上書き可能
 
+        // 変更検知用
+        public event EventHandler DataUpdated = null;
+
         /// <summary>
         /// DefReaderで読み込んだ定義情報からコンテナを作成する。
         /// </summary>
@@ -24,7 +27,7 @@ namespace PochiPochiEditor2.Managers.Fields
             SharedData sharedData,
             byte[] binaryData = null) // 後入れ可能
         {
-            // FieldValueを利用する先で、扱いやすく加工する予定
+            // フィールド名を格納
             Name = metaData.Name;
 
             // StringAttributeであるか確認
@@ -102,14 +105,10 @@ namespace PochiPochiEditor2.Managers.Fields
             Func<FieldValue, int, TblManager, T> converter = null,
             int ctrlNameindex = 0)
         {
-            // 特殊処理があれば渡して
-            if (converter != null)
-            {
-                return converter(this, ctrlNameindex, charmap);
-            }
-
-            // 通常変換
-            return CalcHelper.BytesToModelConv<T>(this, charmap, ctrlNameindex);
+            // 特殊処理があれば渡す
+            return converter != null
+                ? converter(this, ctrlNameindex, charmap)
+                : CalcHelper.BytesToModelConv<T>(this, charmap, ctrlNameindex);
         }
 
         /// <summary>
@@ -121,21 +120,16 @@ namespace PochiPochiEditor2.Managers.Fields
             Func<T, FieldValue, TblManager, int, byte[]> converter = null,
             int ctrlNameindex = 0)
         {
-            byte[] newBytes;
-
-            // 特殊処理があれば渡して
-            if (converter != null)
-            {
-                newBytes = converter(rawData, this, charmap, ctrlNameindex);
-            }
-            else
-            {
-                // 通常変換
-                newBytes = CalcHelper.ModelToBytesConv(rawData, this, charmap, ctrlNameindex);
-            }
+            // 特殊処理があれば渡す
+            byte[] newBytes = converter != null
+                    ? converter(rawData, this, charmap, ctrlNameindex)
+                    : CalcHelper.ModelToBytesConv(rawData, this, charmap, ctrlNameindex);
 
             // 更新されたbyte[]を適用
             BinaryData = newBytes;
+
+            // データが更新されたことを通知
+            DataUpdated?.Invoke(this, EventArgs.Empty);
         }
 
 

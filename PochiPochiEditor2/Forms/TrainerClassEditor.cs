@@ -29,6 +29,9 @@ namespace PochiPochiEditor2.Forms
         private EntryManager _pokeBall = null;
         private EntryManager _baseIv = null;
 
+        // バインディング
+        private BindingManager _bindingManager = null;
+
         // 追加データ判定用
         private bool _isEncounterMusicEnabled = false;
         private bool _isBattleMusicEnabled = false;
@@ -51,6 +54,7 @@ namespace PochiPochiEditor2.Forms
             InitializeEntries();
             InitializeControls();
             InitializeEventHandlers();
+            InitializeBindings();
         }
 
         private void InitializeEntries()
@@ -163,41 +167,27 @@ namespace PochiPochiEditor2.Forms
                 h => this.Disposed -= h);
         }
 
-        private void LoadDataToUI(int idx)
+        private void InitializeBindings()
         {
-            // クラス名txt
-            txtClassName.Text = _nameManager.Entries[idx]._ClassName;
+            _bindingManager = new BindingManager(this, _sharedData.Charmap);
 
-            // prize multi
-            var prizeEntry = _prizeMultiManager.Entries.FirstOrDefault(e => e._ClassIdx == idx);
-            if (prizeEntry == null) // -> 0xFF
-            {
-                prizeEntry = _prizeMultiManager.Entries.FirstOrDefault(e => e._ClassIdx == 0xFF);
-            }
-            nudClassPrizeMulti.Value = prizeEntry?._ClassPrizeMulti ?? nudClassPrizeMulti.Minimum;
-
-            // extra data
-            if (isEncounterMusicEnabled)
-            {
-                BindingHelper.BindObjectToControls(grpExtraData, _encounterMusicManager.Entries[idx]);
-            }
-
-            if (isBattleMusicEnabled)
-            {
-                BindingHelper.BindObjectToControls(grpExtraData, _battleMusicManager.Entries[idx]);
-            }
-
-            if (isPokeBallEnabled)
-            {
-                BindingHelper.BindObjectToControls(grpExtraData, _pokeBallManager.Entries[idx]);
-            }
-
-            if (isBaseIvEnabled)
-            {
-                BindingHelper.BindObjectToControls(grpExtraData, _baseIvManager.Entries[idx]);
-            }
+            _bindingManager.AddBinding<string>(_className.Entries[5][FieldKey.ClassName]);
         }
 
+        private void LoadDataToUI(int idx)
+        {
+
+        }
+
+        private void cmbClassNameIndex_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _className.Entries[5][FieldKey.ClassName].SetData<string>("あああ", _sharedData.Charmap);
+        }
+
+        private void txtClassName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
 
         // txtClassName.Text = _className.Entries[1][FieldKey.ClassName].GetData<string>(_sharedData);
     }
