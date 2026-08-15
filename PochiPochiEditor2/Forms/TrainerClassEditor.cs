@@ -173,7 +173,8 @@ namespace PochiPochiEditor2.Forms
             _bindingManager = new BindingManager(this);
 
 
-            // _bindingManager.AddBinding<string>(_className.Entries[5][FieldKey.ClassName]);
+
+            _bindingManager.AddBinding<string>(_className.Entries[5][FieldKey.ClassName]);
         }
 
         private void LoadDataToUI(int idx)

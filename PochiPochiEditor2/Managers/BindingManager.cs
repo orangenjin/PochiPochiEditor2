@@ -9,7 +9,6 @@ namespace PochiPochiEditor2.Managers
     public class BindingManager : IDisposable
     {
         private  Control _parentCtrl;
-        private TblManager _charmap;
 
         // 一括管理用
         private List<IDisposable> _bindings = new List<IDisposable>();

@@ -124,7 +124,7 @@ namespace PochiPochiEditor2.Managers
             string[] parts = line.Split(Constants.EqualChar);
 
             key = parts[(int)PartName.Key].Trim();
-            rawValue = parts[(int)PartName.Key].Trim();
+            rawValue = parts[(int)PartName.Value].Trim();
             return true;
         }
 
