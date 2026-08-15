@@ -1,4 +1,6 @@
-﻿using PochiPochiEditor2.Utilities;
+﻿using System;
+
+using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Managers.Fields
 {
@@ -50,7 +52,8 @@ namespace PochiPochiEditor2.Managers.Fields
                 case FieldKind.Int32:
                 case FieldKind.Pointer:
                     return Constants.UIntSize;
-
+                
+                // stringは動的長さ
                 default:
                     return Constants.InvalidValue;
             }
@@ -78,10 +81,7 @@ namespace PochiPochiEditor2.Managers.Fields
 
             // byte想定
             NibbleAttr,
-            BitAttr,
-
-            // flag想定（特殊）
-            FlagAttr
+            BitAttr
         }
 
         public enum StringAttrArgs
@@ -108,31 +108,30 @@ namespace PochiPochiEditor2.Managers.Fields
             Bit7Arg
         }
 
-        public enum FalgAttrArgs
-        {
-            EntryLengthArg,
-            AllowedLengthArg
-        }
-
         /// <summary>
-        /// AttrKindに対応するサイズを取得する。
+        /// AttrKindに対応する引数の数を取得する。
         /// </summary>
         public static int GetAttrSize(this AttrKind kind)
         {
+            // 戻り値用
+            int count = default;
+
             switch (kind)
             {
                 case AttrKind.StringAttr:
-                    return 2; // EntryLength, AllowedLength
+                    count = Enum.GetValues(typeof(StringAttrArgs)).Length;
+                    break;
 
                 case AttrKind.NibbleAttr:
-                    return Constants.CharPerByte;
+                    count = Enum.GetValues(typeof(NibbleAttrArgs)).Length;
+                    break;
 
                 case AttrKind.BitAttr:
-                    return Constants.BitsPerByte;
-
-                default:
-                    return Constants.InvalidValue;
+                    count = Enum.GetValues(typeof(BitAttrArgs)).Length;
+                    break;
             }
+
+            return count;
         }
     }
 }

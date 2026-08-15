@@ -78,7 +78,7 @@ namespace PochiPochiEditor2.Managers
             if (bytes == null) return string.Empty;
             StringBuilder result = new StringBuilder();
 
-            // determine scope
+            // 範囲を定める
             int calcLength = bytes.Length - offset;
             int length =
                 maxLength.HasValue

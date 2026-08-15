@@ -1,38 +1,30 @@
 ﻿using System;
 using System.Windows.Forms;
 
-using PochiPochiEditor2.Managers;
-using PochiPochiEditor2.Managers.Fields;
-
 namespace PochiPochiEditor2.Managers.Fields
 {
     /// <summary>
-    /// UIとFieldValueの双方向同期を管理する。
+    /// 一組のUIとFieldValueの双方向同期を管理する。
     /// </summary>
     public class FieldBinding<T> : IDisposable
     {
-        // イベント登録・解除用
-        private EventBinder _eventBinder = new EventBinder();
-
         // 必須引数
-        private Control _control;
-        private FieldValue _fieldValue;
-        private TblManager _charmap;
+        private Control _control = null;
+        private FieldValue _fieldValue = null;
 
         // 手動設定用
-        private Action<Control, T> _uiSetter;
-        private Func<Control, T> _uiGetter;
-        private Func<FieldValue, int, TblManager, T> _dataGetter;
-        private Func<T, FieldValue, TblManager, int, byte[]> _dataSetter;
-        private int _ctrlNameIndex;
+        private Action<Control, T> _uiSetter = null;
+        private Func<Control, T> _uiGetter = null;
+        private Func<FieldValue, int, TblManager, T> _dataGetter = null;
+        private Func<T, FieldValue, TblManager, int, byte[]> _dataSetter = null;
+        private int _ctrlNameIndex = 0;
 
-        // 無限ループ防止
+        // 無限ループ防止用
         private bool _isSynchronizing = false;
 
         public FieldBinding(
             Control control,
             FieldValue fieldValue,
-            TblManager charmap,
             Action<Control, T> customUiSetter = null,
             Func<Control, T> customUiGetter = null,
             Func<FieldValue, int, TblManager, T> customDataGetter = null,
@@ -41,7 +33,6 @@ namespace PochiPochiEditor2.Managers.Fields
         {
             _control = control;
             _fieldValue = fieldValue;
-            _charmap = charmap;
 
             _uiSetter = customUiSetter;
             _uiGetter = customUiGetter;
@@ -55,7 +46,7 @@ namespace PochiPochiEditor2.Managers.Fields
             // FieldValueに入れる（Disposeで解除）
             _fieldValue.DataUpdated += OnDataUpdated;
 
-            // 初期化（一度反映する）
+            // 初期化（一度実行する）
             UpdateUIFromData();
         }
 
@@ -76,9 +67,9 @@ namespace PochiPochiEditor2.Managers.Fields
             try
             {
                 // FieldValueからGetDataで型Tとして値を取得
-                T value = _fieldValue.GetData(_charmap, _dataGetter, _ctrlNameIndex);
+                T value = _fieldValue.GetData(_dataGetter, _ctrlNameIndex);
 
-                // カスタム処理があれば優先する
+                // 特殊処理があれば優先する
                 if (_uiSetter != null)
                 {
                     _uiSetter(_control, value);
@@ -111,7 +102,7 @@ namespace PochiPochiEditor2.Managers.Fields
                     : ExtractValueFromControl();
 
                 // FieldValueからSetDataで更新
-                _fieldValue.SetData(value, _charmap, _dataSetter, _ctrlNameIndex);
+                _fieldValue.SetData(value, _dataSetter, _ctrlNameIndex);
             }
             finally
             {
@@ -130,24 +121,59 @@ namespace PochiPochiEditor2.Managers.Fields
                 case TextBox txt: 
                     txt.Leave += OnControlValueChanged; // 暫定Leave
                     break;
+
                 // CtrlKind.nud
                 case NumericUpDown nud: 
                     nud.ValueChanged += OnControlValueChanged; 
                     break;
+
                 // CtrlKind.chk
                 case CheckBox chk: 
                     chk.CheckedChanged += OnControlValueChanged; 
                     break;
+
                 // CtrlKind.cmb
                 case ComboBox cmb: 
                     cmb.SelectedIndexChanged += OnControlValueChanged; 
                     break;
+
                 // CtrlKind.rb
                 case RadioButton rb: 
                     rb.CheckedChanged += OnControlValueChanged; 
                     break;
+
                 default: 
                     _control.Validated += OnControlValueChanged; // 適当
+                    break;
+            }
+        }
+
+        private void DetachControlEvent()
+        {
+            switch (_control)
+            {
+                case TextBox txt:
+                    txt.Leave -= OnControlValueChanged;
+                    break;
+
+                case NumericUpDown nud:
+                    nud.ValueChanged -= OnControlValueChanged;
+                    break;
+
+                case CheckBox chk:
+                    chk.CheckedChanged -= OnControlValueChanged;
+                    break;
+
+                case ComboBox cmb:
+                    cmb.SelectedIndexChanged -= OnControlValueChanged;
+                    break;
+
+                case RadioButton rb:
+                    rb.CheckedChanged -= OnControlValueChanged;
+                    break;
+
+                default:
+                    _control.Validated -= OnControlValueChanged;
                     break;
             }
         }
@@ -157,7 +183,7 @@ namespace PochiPochiEditor2.Managers.Fields
             switch (_control)
             {
                 case TextBox txt: 
-                    txt.Text = value?.ToString() ?? ""; 
+                    txt.Text = value?.ToString() ?? ""; // 他の処理で8桁整形あり
                     break;
                 case NumericUpDown nud:
                     nud.Value = Convert.ToDecimal(value); 
@@ -201,7 +227,7 @@ namespace PochiPochiEditor2.Managers.Fields
         public void Dispose()
         {
             _fieldValue.DataUpdated -= OnDataUpdated;
-            // ... コントロールのイベント解除も実装 ...
+            DetachControlEvent();
         }
     }
 }

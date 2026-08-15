@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-using PochiPochiEditor2.Managers;
 using PochiPochiEditor2.Managers.Fields;
 
 namespace PochiPochiEditor2.Managers
@@ -16,12 +15,11 @@ namespace PochiPochiEditor2.Managers
         private List<IDisposable> _bindings = new List<IDisposable>();
 
         /// <summary>
-        /// 探索範囲と文字列変換を事前に準備する。
+        /// 探索範囲を指定する。
         /// </summary>
-        public BindingManager(Control parentCtrl, TblManager charmap)
+        public BindingManager(Control parentCtrl)
         {
             _parentCtrl = parentCtrl;
-            _charmap = charmap;
         }
 
         /// <summary>
@@ -42,7 +40,6 @@ namespace PochiPochiEditor2.Managers
             var binding = new FieldBinding<T>(
                 targetControls[0],
                 fieldValue,
-                _charmap,
                 customUiSetter,
                 customUiGetter,
                 customDataGetter,

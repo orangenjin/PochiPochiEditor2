@@ -34,7 +34,7 @@ namespace PochiPochiEditor2.Helpers
             if (fieldValue.AllowedLength > 0)
             {
                 return (T)Convert.ChangeType
-                    (charmap.BytesToString(binaryData, 0, entryLength), 
+                    (charmap.BytesToString(binaryData, Constants.DefaultIndex, entryLength), 
                     typeof(T));
             }
 
@@ -44,7 +44,7 @@ namespace PochiPochiEditor2.Helpers
                 case Constants.ByteSize:
                     byte rawByte = (byte)IoHelper.ReadByteValue(
                         binaryData,
-                        0,
+                        Constants.DefaultIndex,
                         Constants.ByteSize);
                     switch (nameCount)
                     {
@@ -71,7 +71,7 @@ namespace PochiPochiEditor2.Helpers
                 case Constants.UShortSize:
                     ushort rawUShort = (ushort)IoHelper.ReadByteValue(
                         binaryData,
-                        0,
+                        Constants.DefaultIndex,
                         Constants.UShortSize);
                     return isSigned
                         ? (T)Convert.ChangeType((short)rawUShort, typeof(T))
@@ -81,7 +81,7 @@ namespace PochiPochiEditor2.Helpers
                 case Constants.UIntSize:
                     uint rawUInt = IoHelper.ReadByteValue(
                         binaryData,
-                        0,
+                        Constants.DefaultIndex,
                         Constants.UIntSize);
 
                     // ポインタ
@@ -117,7 +117,11 @@ namespace PochiPochiEditor2.Helpers
 
             // マージ用
             byte[] result = new byte[entryLength];
-            Array.Copy(fieldValue.BinaryData, 0, result, 0, entryLength);
+            Array.Copy(fieldValue.BinaryData,
+                Constants.DefaultIndex, 
+                result, 
+                Constants.DefaultIndex, 
+                entryLength);
 
             // 文字列
             if (fieldValue.AllowedLength > 0)
@@ -131,7 +135,12 @@ namespace PochiPochiEditor2.Helpers
                     targetLength: fieldValue.AllowedLength);
 
                 // EntryLength分
-                Array.Copy(bytes, 0, result, 0, Math.Min(bytes.Length, entryLength));
+                Array.Copy(bytes, 
+                    Constants.DefaultIndex, 
+                    result, 
+                    Constants.DefaultIndex, 
+                    Math.Min(bytes.Length, entryLength));
+
                 return result;
             }
 
@@ -139,7 +148,7 @@ namespace PochiPochiEditor2.Helpers
             {
                 // 1バイト
                 case Constants.ByteSize:
-                    byte rawByte = result[0];
+                    byte rawByte = result[Constants.DefaultIndex];
 
                     switch (nameCount)
                     {
@@ -158,7 +167,7 @@ namespace PochiPochiEditor2.Helpers
                                 rawByte = (byte)((rawByte & (Constants.NibbleMask << Constants.NibbleShift))
                                                | (nibbleValue & Constants.NibbleMask));
                             }
-                            result[0] = rawByte;
+                            result[Constants.DefaultIndex] = rawByte;
                             break;
 
                         // ビット（特定の1ビットのみ更新）
@@ -172,11 +181,11 @@ namespace PochiPochiEditor2.Helpers
                             {
                                 rawByte &= (byte)~(1 << ctrlNameindex);
                             }
-                            result[0] = rawByte;
+                            result[Constants.DefaultIndex] = rawByte;
                             break;
 
                         default:
-                            result[0] = isSigned
+                            result[Constants.DefaultIndex] = isSigned
                                 ? (byte)Convert.ToSByte(value)
                                 : Convert.ToByte(value);
                             break;
@@ -188,7 +197,7 @@ namespace PochiPochiEditor2.Helpers
                     ushort rawUShort = isSigned
                         ? (ushort)Convert.ToInt16(value)
                         : Convert.ToUInt16(value);
-                    IoHelper.WriteByteValue(result, 0, Constants.UShortSize, rawUShort);
+                    IoHelper.WriteByteValue(result, Constants.DefaultIndex, Constants.UShortSize, rawUShort);
                     break;
 
                 // 4バイト
@@ -208,7 +217,7 @@ namespace PochiPochiEditor2.Helpers
                             ? (uint)Convert.ToInt32(value)
                             : Convert.ToUInt32(value);
                     }
-                    IoHelper.WriteByteValue(result, 0, Constants.UIntSize, rawUInt);
+                    IoHelper.WriteByteValue(result, Constants.DefaultIndex, Constants.UIntSize, rawUInt);
                     break;
             }
 

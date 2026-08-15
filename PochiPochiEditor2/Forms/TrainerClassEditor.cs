@@ -118,7 +118,7 @@ namespace PochiPochiEditor2.Forms
         {
             // クラス名をcmbに格納
             var classNames = _className.Entries
-                .Select(entry => entry[FieldKey.ClassName].GetData<string>(_sharedData.Charmap))
+                .Select(entry => entry[FieldKey.ClassName].GetData<string>())
                 .ToArray();
             cmbClassNameIndex.Items.AddRange(classNames);
 
@@ -169,9 +169,11 @@ namespace PochiPochiEditor2.Forms
 
         private void InitializeBindings()
         {
-            _bindingManager = new BindingManager(this, _sharedData.Charmap);
+            // コンストラクタ
+            _bindingManager = new BindingManager(this);
 
-            _bindingManager.AddBinding<string>(_className.Entries[5][FieldKey.ClassName]);
+
+            // _bindingManager.AddBinding<string>(_className.Entries[5][FieldKey.ClassName]);
         }
 
         private void LoadDataToUI(int idx)
@@ -181,14 +183,12 @@ namespace PochiPochiEditor2.Forms
 
         private void cmbClassNameIndex_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _className.Entries[5][FieldKey.ClassName].SetData<string>("あああ", _sharedData.Charmap);
+
         }
 
         private void txtClassName_TextChanged(object sender, EventArgs e)
         {
 
         }
-
-        // txtClassName.Text = _className.Entries[1][FieldKey.ClassName].GetData<string>(_sharedData);
     }
 }

@@ -16,6 +16,7 @@
         public const uint BaseAddr = 0x8000000U;
         public const int InvalidValue = -1;
         public const string InvalidOffsetString = "null";
+        public const int DefaultIndex = 0;
 
         public const string HexPrefix = "0x";
         public const string ButtonPrefix = "btn";

@@ -21,7 +21,7 @@ namespace PochiPochiEditor2.Managers
         /// 設定ファイルから数値を読み取る。
         /// 読み取れない場合は、defaultValueを返す。
         /// </summary>
-        public int ReadInt(string key, int defaultValue = 0) =>
+        public int ReadInt(string key, int defaultValue = default) =>
             key != null && _iniCacheInt.TryGetValue(key, out int value)
                 ? value
                 : defaultValue;
@@ -30,7 +30,7 @@ namespace PochiPochiEditor2.Managers
         /// 設定ファイルから真偽値を読み取る。
         /// 読み取れない場合は、defaultValueを返す。
         /// </summary>
-        public bool ReadBool(string key, bool defaultValue = false) =>
+        public bool ReadBool(string key, bool defaultValue = default) =>
             key != null && _iniCacheBool.TryGetValue(key, out bool value)
                 ? value
                 : defaultValue;
@@ -112,10 +112,10 @@ namespace PochiPochiEditor2.Managers
         /// <summary>
         /// 空行を除外して、stringとして分割する。
         /// </summary>
-        private bool TryParseLine(string line, out string key, out string rawString)
+        private bool TryParseLine(string line, out string key, out string rawValue)
         {
             key = string.Empty;
-            rawString = string.Empty;
+            rawValue = string.Empty;
 
             // 除外行チェック
             if (string.IsNullOrWhiteSpace(line) || line.StartsWith(Constants.CommentChar.ToString())) return false;
@@ -123,8 +123,8 @@ namespace PochiPochiEditor2.Managers
             // イコールで分割
             string[] parts = line.Split(Constants.EqualChar);
 
-            key = parts[0].Trim();
-            rawString = parts[1].Trim();
+            key = parts[(int)PartName.Key].Trim();
+            rawValue = parts[(int)PartName.Key].Trim();
             return true;
         }
 
@@ -140,6 +140,12 @@ namespace PochiPochiEditor2.Managers
             }
 
             return int.TryParse(rawString, out parsedValue); // 10進数
+        }
+
+        private enum PartName 
+        {
+            Key,
+            Value
         }
     }
 }

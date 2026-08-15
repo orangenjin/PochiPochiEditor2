@@ -26,8 +26,10 @@ namespace PochiPochiEditor2.Managers
             // カーソル用
             int currentOffset = tableOffset;
 
+            // 現在のエントリーのインデックス
             for (int i = 0; i < entryCount; i++)
             {
+                //　単一エントリーに対するフィールド
                 var entryFields = new List<FieldValue>();
 
                 for (int j = 0; j < defReader.FieldDefs.Count; j++)
@@ -43,7 +45,7 @@ namespace PochiPochiEditor2.Managers
                         sharedData.RomData,
                         currentOffset,
                         fieldValue.BinaryData,
-                        0,
+                        Constants.DefaultIndex,
                         fieldValue.EntryLength);
 
                     entryFields.Add(fieldValue);
@@ -57,10 +59,10 @@ namespace PochiPochiEditor2.Managers
 
     public class Entry
     {
-        public List<FieldValue> Fields { get; set; }
+        // アクセス用
+        private Dictionary<string, FieldValue> _fieldMap = null;
 
-        // ただのアクセス用
-        private Dictionary<string, FieldValue> _fieldMap;
+        public List<FieldValue> Fields { get; set; }
 
         public Entry(List<FieldValue> fields)
         {
