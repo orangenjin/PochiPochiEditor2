@@ -55,7 +55,7 @@ namespace PochiPochiEditor2.Managers.Fields
         /// </summary>
         private void OnDataUpdated(object sender, EventArgs e)
         {
-            UpdateUIFromData();
+            _control.BeginInvoke(new Action(UpdateUIFromData));
         }
 
         private void UpdateUIFromData()
@@ -119,7 +119,7 @@ namespace PochiPochiEditor2.Managers.Fields
             {
                 // CtrlKind.txt
                 case TextBox txt: 
-                    txt.Leave += OnControlValueChanged; // 暫定Leave
+                    txt.TextChanged += OnControlValueChanged; // 暫定
                     break;
 
                 // CtrlKind.nud
@@ -143,7 +143,7 @@ namespace PochiPochiEditor2.Managers.Fields
                     break;
 
                 default: 
-                    _control.Validated += OnControlValueChanged; // 適当
+                    _control.Leave += OnControlValueChanged; // 適当
                     break;
             }
         }
@@ -153,7 +153,7 @@ namespace PochiPochiEditor2.Managers.Fields
             switch (_control)
             {
                 case TextBox txt:
-                    txt.Leave -= OnControlValueChanged;
+                    txt.TextChanged -= OnControlValueChanged;
                     break;
 
                 case NumericUpDown nud:
@@ -173,7 +173,7 @@ namespace PochiPochiEditor2.Managers.Fields
                     break;
 
                 default:
-                    _control.Validated -= OnControlValueChanged;
+                    _control.Leave -= OnControlValueChanged;
                     break;
             }
         }

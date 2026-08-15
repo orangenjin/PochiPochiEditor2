@@ -69,6 +69,11 @@ namespace PochiPochiEditor2.Forms
             // 
             // nudClassNameIndex
             // 
+            this.nudClassNameIndex.Increment = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.nudClassNameIndex.Location = new System.Drawing.Point(56, 16);
             this.nudClassNameIndex.Margin = new System.Windows.Forms.Padding(0);
             this.nudClassNameIndex.Maximum = new decimal(new int[] {
@@ -77,6 +82,7 @@ namespace PochiPochiEditor2.Forms
             0,
             0});
             this.nudClassNameIndex.Name = "nudClassNameIndex";
+            this.nudClassNameIndex.ReadOnly = true;
             this.nudClassNameIndex.Size = new System.Drawing.Size(56, 23);
             this.nudClassNameIndex.TabIndex = 1;
             // 

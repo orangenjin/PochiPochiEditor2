@@ -38,11 +38,16 @@ namespace PochiPochiEditor2.Forms
         private bool _isPokeBallEnabled = false;
         private bool _isBaseIvEnabled = false;
 
+        // 現在インデックス管理
+        private int _currentClassIdx = 0;
 
         private enum FieldKey
         {
             ClassName,
+
+            ClassNameIndex,
             PrizeMulti,
+
             Padding1
         }
 
@@ -54,7 +59,8 @@ namespace PochiPochiEditor2.Forms
             InitializeEntries();
             InitializeControls();
             InitializeEventHandlers();
-            InitializeBindings();
+
+            LoadDataToUI(_currentClassIdx);
         }
 
         private void InitializeEntries()
@@ -167,29 +173,42 @@ namespace PochiPochiEditor2.Forms
                 h => this.Disposed -= h);
         }
 
-        private void InitializeBindings()
+        private void LoadDataToUI(int index)
         {
-            // コンストラクタ
-            _bindingManager = new BindingManager(this);
+            _currentClassIdx = index;
+            cmbClassNameIndex.SelectedIndex = index;
+            nudClassNameIndex.Value = (decimal)index;
 
+            _bindingManager?.Dispose();
+            _bindingManager = new BindingManager(grpBasicData);
 
+            // クラス名
+            _bindingManager.AddBinding<string>(_className.Entries[index][FieldKey.ClassName]);
 
-            _bindingManager.AddBinding<string>(_className.Entries[5][FieldKey.ClassName]);
-        }
-
-        private void LoadDataToUI(int idx)
-        {
+            // 賞金倍率、インデックス調整あり
+            int foundIndex = _prizeMulti.Entries
+                .FindIndex(entry => entry[FieldKey.ClassNameIndex]
+                .GetData<int>() == index);
+            if (foundIndex == Constants.InvalidValue) // 存在せず、クラス名インデックス0xFF適用パターン
+            {
+                foundIndex = _prizeMulti.Entries
+                    .FindIndex(entry => entry[FieldKey.ClassNameIndex]
+                    .GetData<int>() == 0xFF);
+            }
+            _bindingManager.AddBinding<int>(_prizeMulti.Entries[foundIndex][FieldKey.PrizeMulti]);
 
         }
 
         private void cmbClassNameIndex_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            int newIndex = cmbClassNameIndex.SelectedIndex;
+            LoadDataToUI(newIndex);
         }
 
         private void txtClassName_TextChanged(object sender, EventArgs e)
         {
-
+            string validName = _className.Entries[_currentClassIdx][FieldKey.ClassName].GetData<string>();
+            cmbClassNameIndex.Items[_currentClassIdx] = validName;
         }
     }
 }
