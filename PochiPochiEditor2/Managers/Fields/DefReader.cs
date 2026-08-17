@@ -35,6 +35,8 @@ namespace PochiPochiEditor2.Managers.Fields
                 _defFolder, 
                 $"{fileName}{Constants.DotChar}{Constants.DefExt}", 
                 SearchOption.AllDirectories);
+
+            // 最初にヒットしたもの
             var allLines = File.ReadAllLines(foundFiles[Constants.DefaultIndex]);
 
             foreach (var line in allLines)
@@ -71,25 +73,43 @@ namespace PochiPochiEditor2.Managers.Fields
                 var kindStr = line[(int)FieldExtensions.DefName.KindName];
                 if (!Enum.TryParse<FieldExtensions.FieldKind>(kindStr, true, out var kind)) continue;
 
-                // コントロール定義を読み取る
-                var ctrlStr = line[(int)FieldExtensions.DefName.CtrlName];
-                if (!Enum.TryParse<FieldExtensions.CtrlKind>(ctrlStr, true, out var ctrl)) continue;
-
-                // 属性読み取る（ない場合を考慮）
+                // 属性読み取る
                 var attrs = new List<FieldAttribute>();
                 for (int i = (int)FieldExtensions.DefName.AttrName; i < line.Length; i++)
                 {
-                    // 角括弧を外す
-                    var target = line[i].Trim(Constants.OpenBracketChar, Constants.CloseBracketChar);
-                    // 丸括弧の位置を探す
-                    var openParenIndex = target.IndexOf(Constants.OpenParenChar);
-                    var closeParenIndex = target.LastIndexOf(Constants.CloseParenChar);
+                    // 対象を取り出す
+                    var attrText = line[i];
+
+                    // "("の位置を探す
+                    var openParenIndex = attrText.IndexOf(Constants.OpenParenChar);
+
+                    // 属性名のみ
+                    if (openParenIndex < 0)
+                    {
+                        // 属性名を取得
+                        var attrName = (FieldExtensions.AttrKind)Enum.Parse(
+                            typeof(FieldExtensions.AttrKind),
+                            attrText);
+
+                        // 引数なし
+                        attrs.Add(new FieldAttribute(attrName, Array.Empty<string>()));
+
+                        continue;
+                    }
+
+                    //　")"の位置を探す
+                    var closeParenIndex = attrText.LastIndexOf(Constants.CloseParenChar);
 
                     // 属性名を取得
-                    var attrName = target.Substring(Constants.DefaultIndex, openParenIndex);
+                    var attrStr = attrText.Substring(
+                        Constants.DefaultIndex,
+                        openParenIndex);
+                    var attrKind = (FieldExtensions.AttrKind)Enum.Parse(
+                        typeof(FieldExtensions.AttrKind),
+                        attrStr);
 
                     // 属性引数を取得
-                    var rawArgs = target.Substring(
+                    var rawArgs = line[i].Substring(
                         openParenIndex + 1, 
                         closeParenIndex - openParenIndex - 1);
                     // カンマで分割
@@ -98,19 +118,12 @@ namespace PochiPochiEditor2.Managers.Fields
                         .Select(p => p.Trim())
                         .ToArray();
 
-                    // 属性引数を格納
-                    if (Enum.TryParse<FieldExtensions.AttrKind>(attrName, true, out var attrKind))
-                    {
-                        var argList = argParts
-                            .Select(p => p.Trim().Trim(Constants.QuotationChar))
-                            .ToArray();
-
-                        attrs.Add(new FieldAttribute(attrKind, argList));
-                    }
+                    // 属性名と引数を格納
+                    attrs.Add(new FieldAttribute(attrKind, argParts));
                 }
 
                 // フィールド定義を格納
-                fieldDefs.Add(new FieldMetaData(name, kind, ctrl, attrs));
+                fieldDefs.Add(new FieldMetaData(name, kind, attrs));
             }
 
             return fieldDefs;

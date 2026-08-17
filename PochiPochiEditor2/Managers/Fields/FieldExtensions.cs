@@ -13,12 +13,11 @@ namespace PochiPochiEditor2.Managers.Fields
         {
             FieldName,
             KindName,
-            CtrlName,
             AttrName
         }
 
         /// <summary>
-        /// defファイルのフィールドの種類を定義する。
+        /// defファイルのフィールドの型の種類を定義する。
         /// </summary>
 
         public enum FieldKind
@@ -57,19 +56,6 @@ namespace PochiPochiEditor2.Managers.Fields
                 default:
                     return Constants.InvalidValue;
             }
-        }
-
-        /// <summary>
-        /// defファイルのバインドできるコントロールを定義する。
-        /// </summary>
-        public enum CtrlKind
-        {
-            none,
-            txt,
-            nud,
-            cmb,
-            chk,
-            rb
         }
 
         /// <summary>

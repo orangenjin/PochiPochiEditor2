@@ -41,7 +41,7 @@ namespace PochiPochiEditor2.Forms
         // 現在インデックス管理
         private int _currentClassIdx = 0;
 
-        private enum FieldKey
+        public enum FieldKey
         {
             ClassName,
 

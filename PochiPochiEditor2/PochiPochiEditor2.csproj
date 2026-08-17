@@ -77,8 +77,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Managers\Fields\DefReader.cs" />
-    <Compile Include="Managers\Fields\FieldAttribute.cs" />
-    <Compile Include="Managers\Fields\FieldMetadata.cs" />
+    <Compile Include="Managers\Fields\FieldDefinitions.cs" />
     <Compile Include="Managers\Fields\FieldValue.cs" />
     <Compile Include="Managers\IniManager.cs" />
     <Compile Include="Program.cs" />
