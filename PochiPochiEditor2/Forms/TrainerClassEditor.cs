@@ -29,26 +29,29 @@ namespace PochiPochiEditor2.Forms
         private EntryManager _pokeBall = null;
         private EntryManager _baseIv = null;
 
-        // バインディング
-        private BindingManager _bindingManager = null;
-
         // 追加データ判定用
         private bool _isEncounterMusicEnabled = false;
         private bool _isBattleMusicEnabled = false;
         private bool _isPokeBallEnabled = false;
         private bool _isBaseIvEnabled = false;
 
-        // 現在インデックス管理
+        // UI制御用
+        private bool _isUpdatingUI = false;
         private int _currentClassIdx = 0;
 
         public enum FieldKey
         {
-            ClassName,
+            ClassNameStr,
 
             ClassNameIndex,
-            PrizeMulti,
+            PrizeMultiValue,
+            PrizeMultiUnk1,
+            PrizeMultiUnk2,
 
-            Padding1
+            EncounterMusicIndex,
+            BattleMusicIndex,
+            PokeBallIndex,
+            BaseIvValue
         }
 
         public TrainerClassEditor(SharedData sharedData)
@@ -69,13 +72,13 @@ namespace PochiPochiEditor2.Forms
             string defFileName = "TrainerClassNameEntry";
             int tableOffset = _sharedData.Config.ReadInt("TrainerClassNameTableOffset");
             int entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
-            _className = new EntryManager(defFileName, _sharedData, tableOffset, entrycount);
+            _className = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // 賞金倍率テーブルを作成
             defFileName = "TrainerClassPrizeMultiEntry";
             tableOffset = _sharedData.Config.ReadInt("TrainerClassPrizeMultiTableOffset");
             entrycount = _sharedData.Config.ReadInt("TrainerClassPrizeMultiCount");
-            _prizeMulti = new EntryManager(defFileName, _sharedData, tableOffset, entrycount);
+            _prizeMulti = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // 追加データのbool判定
             _isEncounterMusicEnabled = _sharedData.Config.ReadBool("EnableTrainerClassEncMusic");
@@ -89,7 +92,7 @@ namespace PochiPochiEditor2.Forms
                 defFileName = "TrainerClassEncMusicEntry";
                 tableOffset = _sharedData.Config.ReadInt("TrainerClassEncMusicTableOffset");
                 entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
-                _encMusic = new EntryManager(defFileName, _sharedData, tableOffset, entrycount);
+                _encMusic = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             if (_isBattleMusicEnabled)
@@ -98,7 +101,7 @@ namespace PochiPochiEditor2.Forms
                 defFileName = "TrainerClassBattleMusicEntry";
                 tableOffset = _sharedData.Config.ReadInt("TrainerClassBattleMusicTableOffset");
                 entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
-                _battleMusic = new EntryManager(defFileName, _sharedData, tableOffset, entrycount);
+                _battleMusic = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             if (_isPokeBallEnabled)
@@ -107,7 +110,7 @@ namespace PochiPochiEditor2.Forms
                 defFileName = "TrainerClassPokeBallEntry";
                 tableOffset = _sharedData.Config.ReadInt("TrainerClassPokeBallTableOffset");
                 entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
-                _pokeBall = new EntryManager(defFileName, _sharedData, tableOffset, entrycount);
+                _pokeBall = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             if (_isBaseIvEnabled)
@@ -116,7 +119,7 @@ namespace PochiPochiEditor2.Forms
                 defFileName = "TrainerClassBaseIvEntry";
                 tableOffset = _sharedData.Config.ReadInt("TrainerClassBaseIVTableOffset");
                 entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
-                _baseIv = new EntryManager(defFileName, _sharedData, tableOffset, entrycount);
+                _baseIv = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
         }
 
@@ -124,7 +127,7 @@ namespace PochiPochiEditor2.Forms
         {
             // クラス名をcmbに格納
             var classNames = _className.Entries
-                .Select(entry => entry[FieldKey.ClassName].GetData<string>())
+                .Select(entry => entry[FieldKey.ClassNameStr].GetData<string>())
                 .ToArray();
             cmbClassNameIndex.Items.AddRange(classNames);
 
@@ -175,11 +178,36 @@ namespace PochiPochiEditor2.Forms
 
         private void LoadDataToUI(int index)
         {
+            _isUpdatingUI = true;
+
             _currentClassIdx = index;
             cmbClassNameIndex.SelectedIndex = index;
             nudClassNameIndex.Value = (decimal)index;
 
-            _bindingManager?.Dispose();
+
+
+
+            _isUpdatingUI = false;
+        }
+
+        private void cmbClassNameIndex_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_isUpdatingUI) return;
+
+            int newIndex = cmbClassNameIndex.SelectedIndex;
+            LoadDataToUI(newIndex);
+        }
+
+        private void txtClassName_TextChanged(object sender, EventArgs e)
+        {
+            if (_isUpdatingUI) return;
+
+            string validName = _className.Entries[_currentClassIdx][FieldKey.ClassNameStr].GetData<string>();
+            cmbClassNameIndex.Items[_currentClassIdx] = validName;
+        }
+
+        /*
+         *             _bindingManager?.Dispose();
             _bindingManager = new BindingManager(grpBasicData);
 
             // クラス名
@@ -196,19 +224,10 @@ namespace PochiPochiEditor2.Forms
                     .GetData<int>() == 0xFF);
             }
             _bindingManager.AddBinding<int>(_prizeMulti.Entries[foundIndex][FieldKey.PrizeMulti]);
-
-        }
-
-        private void cmbClassNameIndex_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int newIndex = cmbClassNameIndex.SelectedIndex;
-            LoadDataToUI(newIndex);
-        }
-
-        private void txtClassName_TextChanged(object sender, EventArgs e)
-        {
-            string validName = _className.Entries[_currentClassIdx][FieldKey.ClassName].GetData<string>();
-            cmbClassNameIndex.Items[_currentClassIdx] = validName;
-        }
+         * 
+         * 
+         * 
+         * 
+         * */
     }
 }

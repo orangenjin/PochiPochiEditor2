@@ -22,6 +22,8 @@
         public const string ButtonPrefix = "btn";
 
         public const char CommentChar = ';';
+        public const char OpenBracketChar = '[';
+        public const char CloseBracketChar = ']';
         public const char OpenParenChar = '(';
         public const char CloseParenChar = ')';
         public const char CommaChar = ',';

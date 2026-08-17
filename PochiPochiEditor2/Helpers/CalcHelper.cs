@@ -22,12 +22,11 @@ namespace PochiPochiEditor2.Helpers
         /// </summary>
         public static T BytesToModelConv<T>(
             FieldValue fieldValue,
-            TblManager charmap,
-            int ctrlNameindex)
+            int valueindex,
+            TblManager charmap)
         {
             int entryLength = fieldValue.EntryLength;
             byte[] binaryData = fieldValue.BinaryData;
-            int nameCount = fieldValue.ControlNames.Length;
             bool isSigned = fieldValue.IsSigned;
 
             // 文字列
@@ -46,19 +45,19 @@ namespace PochiPochiEditor2.Helpers
                         binaryData,
                         Constants.DefaultIndex,
                         Constants.ByteSize);
-                    switch (nameCount)
+                    switch (fieldValue.ValueCount)
                     {
                         // ニブル
                         case Constants.CharPerByte:
-                            int nibbleValue = 
-                                ctrlNameindex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg // high
+                            int nibbleValue =
+                                valueindex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg // high
                                 ? (rawByte >> Constants.NibbleShift) & Constants.NibbleMask
                                 : rawByte & Constants.NibbleMask;
                             return (T)Convert.ChangeType(nibbleValue, typeof(T));
 
                         // ビット
                         case Constants.BitsPerByte:
-                            int bitValue = (rawByte >> ctrlNameindex) & 1;
+                            int bitValue = (rawByte >> valueindex) & 1;
                             return (T)Convert.ChangeType(bitValue, typeof(T));
 
                         default:
@@ -108,11 +107,10 @@ namespace PochiPochiEditor2.Helpers
         public static byte[] ModelToBytesConv<T>(
            T value,
            FieldValue fieldValue,
-           TblManager charmap,
-           int ctrlNameindex)
+           int ctrlNameindex,
+           TblManager charmap)
         {
             int entryLength = fieldValue.EntryLength;
-            int nameCount = fieldValue.ControlNames.Length;
             bool isSigned = fieldValue.IsSigned;
 
             // マージ用
@@ -150,7 +148,7 @@ namespace PochiPochiEditor2.Helpers
                 case Constants.ByteSize:
                     byte rawByte = result[Constants.DefaultIndex];
 
-                    switch (nameCount)
+                    switch (fieldValue.ValueCount)
                     {
                         // ニブル（上位/下位のニブルのみ更新）
                         case Constants.CharPerByte:

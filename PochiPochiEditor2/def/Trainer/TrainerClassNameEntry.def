@@ -1,1 +1,1 @@
-ClassName: String: txt: [StringAttr("TrainerClassNameEntryLength")]
+ClassNameStr: String: StringAttr(TrainerClassNameEntryLength)

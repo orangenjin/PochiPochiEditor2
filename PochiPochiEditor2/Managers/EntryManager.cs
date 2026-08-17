@@ -12,7 +12,8 @@ namespace PochiPochiEditor2.Managers
         public List<Entry> Entries { get; set; }
 
         public EntryManager(
-            string defFileName, 
+            string defFileName,
+            Type enumType,
             SharedData sharedData,
             int tableOffset, 
             int entryCount)
@@ -36,8 +37,9 @@ namespace PochiPochiEditor2.Managers
                 {
                     // FieldValueを仮生成
                     var fieldValue = new FieldValue(
+                        sharedData,
                         defReader.FieldDefs[j],
-                        sharedData);
+                        enumType);
 
                     // バイナリデータを代入
                     fieldValue.BinaryData = new byte[fieldValue.EntryLength];
@@ -60,7 +62,7 @@ namespace PochiPochiEditor2.Managers
     public class Entry
     {
         // アクセス用
-        private Dictionary<string, FieldValue> _fieldMap = null;
+        private Dictionary<Enum, FieldValue> _fieldMap = null;
 
         public List<FieldValue> Fields { get; set; }
 
@@ -80,13 +82,9 @@ namespace PochiPochiEditor2.Managers
         /// <summary>
         /// FieldValueにアクセスするためのインデクサ。
         /// </summary>
-        public FieldValue this[Enum key]
+        public FieldValue this[Enum fieldName]
         {
-            get
-            {
-                string fieldName = key.ToString();
-                return _fieldMap[fieldName];
-            }
+            get => _fieldMap[fieldName];
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Utilities;
@@ -9,9 +8,10 @@ namespace PochiPochiEditor2.Managers.Fields
     {
         public Enum Name { get; }
         public int EntryLength { get; }
-        public int AllowedLength { get; } // ほぼstring用
+        public int AllowedLength { get; } // string用
         public bool IsSigned { get; }
         public bool IsPointer { get; }
+        public int ValueCount { get; } // nibble, bit用
         public byte[] BinaryData { get; set; } // 後入れ
 
         // 共有データ用
@@ -22,45 +22,55 @@ namespace PochiPochiEditor2.Managers.Fields
         /// </summary>
         public FieldValue(
             SharedData sharedData,
-            FieldMetaData metaData, 
-            Enum fieldKey,
+            FieldMetaData metaData,
+            Type enumType,
             byte[] binaryData = null)
         {
             // 後に使用するので保持
             _sharedData = sharedData;
 
             // フィールド名を変換
-            Type enumType = fieldKey.GetType();
             Name = (Enum)Enum.Parse(enumType, metaData.Name);
 
-            // StringAttributeであるか確認
-            var stringAttr = metaData.Attrs
-                .FirstOrDefault(a => a.Kind == FieldExtensions.AttrKind.StringAttr);
+            // 属性を確認、仮入れ
+            ValueCount = default;
+            EntryLength = metaData.Field.GetFieldSize();
+            AllowedLength = Constants.InvalidValue;
 
-            // 現状stringだけ動的長さを計算する必要あり
-            if (stringAttr != null)
+            // ない場合は実行されない
+            foreach (var attr in metaData.Attrs)
             {
-                // 属性引数AllowedLengthがない場合がある
-                int maxCount = Math.Min(
-                    stringAttr.Args.Length, 
-                    FieldExtensions.AttrKind.StringAttr.GetAttrSize());
-
-                int[] lengths = new int[maxCount];
-                for (int i = 0; i < maxCount; i++)
+                switch (attr.Kind)
                 {
-                    lengths[i] = sharedData.Config.ReadInt(stringAttr.Args[i]);
-                }
+                    case FieldExtensions.AttrKind.StringAttr:
+                        ValueCount = FieldExtensions.AttrKind.StringAttr.GetAttrSize(); // 一応
 
-                // 存在しない場合、同値を入れる
-                EntryLength = lengths[(int)FieldExtensions.StringAttrArgs.EntryLengthArg];
-                AllowedLength = lengths.Length > 1
-                    ? lengths[(int)FieldExtensions.StringAttrArgs.AllowedLengthArg]
-                    : lengths[(int)FieldExtensions.StringAttrArgs.EntryLengthArg];
-            }
-            else
-            {
-                EntryLength = metaData.Field.GetFieldSize();
-                AllowedLength = Constants.InvalidValue;
+                        // 属性引数AllowedLengthがない場合がある
+                        int maxCount = Math.Min(
+                            attr.Args.Length,
+                            FieldExtensions.AttrKind.StringAttr.GetAttrSize());
+
+                        int[] lengths = new int[maxCount];
+                        for (int i = 0; i < maxCount; i++)
+                        {
+                            lengths[i] = sharedData.Config.ReadInt(attr.Args[i]);
+                        }
+
+                        // 存在しない場合、同値を入れる
+                        EntryLength = lengths[(int)FieldExtensions.StringAttrArgs.EntryLengthArg];
+                        AllowedLength = lengths.Length > 1
+                            ? lengths[(int)FieldExtensions.StringAttrArgs.AllowedLengthArg]
+                            : lengths[(int)FieldExtensions.StringAttrArgs.EntryLengthArg];
+                        break;
+
+                    case FieldExtensions.AttrKind.NibbleAttr:
+                        ValueCount = FieldExtensions.AttrKind.NibbleAttr.GetAttrSize();
+                        break;
+
+                    case FieldExtensions.AttrKind.BitAttr:
+                        ValueCount = FieldExtensions.AttrKind.BitAttr.GetAttrSize();
+                        break;
+                }
             }
 
             // 符号ありかどうかを判定
@@ -79,8 +89,8 @@ namespace PochiPochiEditor2.Managers.Fields
         /// BinaryDataから型Tの値を取得する。
         /// </summary>
         public T GetData<T>(
-            Func<FieldValue, int, TblManager, T> converter = null,
-            int valueindex = 0)
+            int valueindex = Constants.DefaultIndex,
+            Func<FieldValue, int, TblManager, T> converter = null)
         {
             // 特殊処理があれば渡す
             return converter != null
@@ -93,8 +103,8 @@ namespace PochiPochiEditor2.Managers.Fields
         /// </summary>
         public void SetData<T>(
             T rawData,
-            Func<T, FieldValue, int, TblManager, byte[]> converter = null,
-            int valueindex = 0)
+            int valueindex = Constants.DefaultIndex,
+            Func<T, FieldValue, int, TblManager, byte[]> converter = null)
         {
             // 特殊処理があれば渡す
             byte[] newBytes = converter != null
