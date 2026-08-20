@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Managers;
+using PochiPochiEditor2.Managers.Fields;
 using PochiPochiEditor2.Managers.UiControls;
 using PochiPochiEditor2.Utilities;
 
@@ -20,6 +21,8 @@ namespace PochiPochiEditor2.Forms
     {
         // イベント登録・解除用
         private EventBinder _eventBinder = new EventBinder();
+        // 変更履歴管理用
+        private UndoManager _undoManager = new UndoManager();
         // 共有データ用
         private SharedData _sharedData = null;
         // 各テーブル用
@@ -204,10 +207,39 @@ namespace PochiPochiEditor2.Forms
                             ctx.Data.InputText,
                             entryLength);
                     })
-                    // データとテキストボックスを更新
+                    // データを更新
                     .Then(ctx =>
                     {
-                        _className.Entries[_currentClassIdx][FieldKey.ClassNameStr].SetData(ctx.Data.FormattedText);
+                        var targetField = _className.Entries[_currentClassIdx][FieldKey.ClassNameStr];
+
+                        // 変更前のバイナリデータ
+                        byte[] oldBinary = targetField.BinaryData;
+
+                        // データ更新
+                        targetField.SetData(ctx.Data.FormattedText);
+
+                        // 変更後のバイナリデータ
+                        byte[] newBinary = targetField.BinaryData;
+
+                        // 異なればスタックに追加
+                        if (!oldBinary.SequenceEqual(newBinary))
+                        {
+                            var cmd = new FieldChangeCommand(
+                                targetField,
+                                oldBinary,
+                                newBinary,
+                                () => OnStateRestored(_currentClassIdx)
+                            );
+                            _undoManager.PushCommand(cmd);
+                        }
+
+                        // UI更新
+                        txtClassName.Text = ctx.Data.FormattedText;
+                        CtrlHelper.MoveCursorToEnd(txtClassName);
+                    })
+                    // テキストボックスを更新
+                    .Then(ctx => 
+                    {
                         txtClassName.Text = ctx.Data.FormattedText;
                         CtrlHelper.MoveCursorToEnd(txtClassName); // カーソル位置
                     })
@@ -225,6 +257,15 @@ namespace PochiPochiEditor2.Forms
                         uiPipeline.Execute(
                             new UiContext<ClassNamePipelineData>(s, e, UpdateTrigger.Ctrl));
                     });
+
+                // Undo, Redoの際に復元するもの
+                void OnStateRestored(int classIndex)
+                {
+                    if (_currentClassIdx == classIndex)
+                    {
+                        LoadDataToUI(classIndex);
+                    }
+                }
             }
         }
 
@@ -275,6 +316,21 @@ namespace PochiPochiEditor2.Forms
             nudPrizeMulti.Value = (decimal)_prizeMulti.Entries[foundIndex][FieldKey.PrizeMultiValue].GetData<int>();
 
             _isUpdatingUI = false;
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.Z))
+            {
+                _undoManager.Undo();
+                return true; // 処理済みとする
+            }
+            if (keyData == (Keys.Control | Keys.Y))
+            {
+                _undoManager.Redo();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }
