@@ -74,12 +74,6 @@ namespace PochiPochiEditor2.Forms
             int entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
             _className = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
-            // 賞金倍率テーブルを作成
-            defFileName = "TrainerClassPrizeMultiEntry";
-            tableOffset = _sharedData.Config.ReadInt("TrainerClassPrizeMultiTableOffset");
-            entrycount = _sharedData.Config.ReadInt("TrainerClassPrizeMultiCount");
-            _prizeMulti = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
-
             // 追加データのbool判定
             _isEncounterMusicEnabled = _sharedData.Config.ReadBool("EnableTrainerClassEncMusic");
             _isBattleMusicEnabled = _sharedData.Config.ReadBool("EnableTrainerClassBattleMusic");
@@ -91,7 +85,6 @@ namespace PochiPochiEditor2.Forms
                 // 戦闘前BGMテーブルを作成
                 defFileName = "TrainerClassEncMusicEntry";
                 tableOffset = _sharedData.Config.ReadInt("TrainerClassEncMusicTableOffset");
-                entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
                 _encMusic = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
@@ -100,7 +93,6 @@ namespace PochiPochiEditor2.Forms
                 // 戦闘中BGMテーブルを作成
                 defFileName = "TrainerClassBattleMusicEntry";
                 tableOffset = _sharedData.Config.ReadInt("TrainerClassBattleMusicTableOffset");
-                entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
                 _battleMusic = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
@@ -109,7 +101,6 @@ namespace PochiPochiEditor2.Forms
                 // 使用ボールIDテーブルを作成
                 defFileName = "TrainerClassPokeBallEntry";
                 tableOffset = _sharedData.Config.ReadInt("TrainerClassPokeBallTableOffset");
-                entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
                 _pokeBall = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
@@ -118,9 +109,14 @@ namespace PochiPochiEditor2.Forms
                 // 基礎個体値テーブルを作成
                 defFileName = "TrainerClassBaseIvEntry";
                 tableOffset = _sharedData.Config.ReadInt("TrainerClassBaseIVTableOffset");
-                entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
                 _baseIv = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
+
+            // 賞金倍率テーブルを作成
+            defFileName = "TrainerClassPrizeMultiEntry";
+            tableOffset = _sharedData.Config.ReadInt("TrainerClassPrizeMultiTableOffset");
+            entrycount = _sharedData.Config.ReadInt("TrainerClassPrizeMultiCount");
+            _prizeMulti = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
         }
 
         private void InitializeControls()
