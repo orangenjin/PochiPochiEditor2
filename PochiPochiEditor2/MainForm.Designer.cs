@@ -39,6 +39,7 @@ namespace PochiPochiEditor2
             this.btnSaveAs = new System.Windows.Forms.Button();
             this.btnSaveOver = new System.Windows.Forms.Button();
             this.grpSelectEditor = new System.Windows.Forms.GroupBox();
+            this.btnEditor3 = new System.Windows.Forms.Button();
             this.btnBattleBackground = new System.Windows.Forms.Button();
             this.btnTrainerList = new System.Windows.Forms.Button();
             this.btnTrade = new System.Windows.Forms.Button();
@@ -46,10 +47,12 @@ namespace PochiPochiEditor2
             this.btnTrainerClass = new System.Windows.Forms.Button();
             this.btnMailData = new System.Windows.Forms.Button();
             this.btnItem = new System.Windows.Forms.Button();
+            this.btnEditor2 = new System.Windows.Forms.Button();
             this.btnRegion = new System.Windows.Forms.Button();
             this.btnTileset = new System.Windows.Forms.Button();
             this.btnOverworld = new System.Windows.Forms.Button();
             this.btnMap = new System.Windows.Forms.Button();
+            this.btnEditor1 = new System.Windows.Forms.Button();
             this.btnEggmove = new System.Windows.Forms.Button();
             this.btnDexSearch = new System.Windows.Forms.Button();
             this.btnRoaming = new System.Windows.Forms.Button();
@@ -65,16 +68,13 @@ namespace PochiPochiEditor2
             this.btnRedo = new System.Windows.Forms.Button();
             this.btnUndo = new System.Windows.Forms.Button();
             this.picPoke = new System.Windows.Forms.PictureBox();
-            this.btnEditor1 = new System.Windows.Forms.Button();
-            this.btnEditor2 = new System.Windows.Forms.Button();
-            this.btnEditor3 = new System.Windows.Forms.Button();
             this.btnFreeSpaceFinder = new System.Windows.Forms.Button();
             this.grpAssistantTool = new System.Windows.Forms.GroupBox();
-            this.btnTool1 = new System.Windows.Forms.Button();
-            this.btnTool3 = new System.Windows.Forms.Button();
-            this.btnTool2 = new System.Windows.Forms.Button();
             this.btnTool5 = new System.Windows.Forms.Button();
             this.btnTool4 = new System.Windows.Forms.Button();
+            this.btnTool3 = new System.Windows.Forms.Button();
+            this.btnTool2 = new System.Windows.Forms.Button();
+            this.btnTool1 = new System.Windows.Forms.Button();
             this.grpLoadRom.SuspendLayout();
             this.grpSaveRom.SuspendLayout();
             this.grpSelectEditor.SuspendLayout();
@@ -168,7 +168,7 @@ namespace PochiPochiEditor2
             this.btnSaveOver.Name = "btnSaveOver";
             this.btnSaveOver.Size = new System.Drawing.Size(212, 23);
             this.btnSaveOver.TabIndex = 4;
-            this.btnSaveOver.Text = "上書き保存";
+            this.btnSaveOver.Text = "上書き保存 ( Ctrl + S )";
             this.btnSaveOver.UseVisualStyleBackColor = true;
             // 
             // grpSelectEditor
@@ -205,6 +205,16 @@ namespace PochiPochiEditor2
             this.grpSelectEditor.TabIndex = 2;
             this.grpSelectEditor.TabStop = false;
             this.grpSelectEditor.Text = "編集項目を選択";
+            // 
+            // btnEditor3
+            // 
+            this.btnEditor3.Location = new System.Drawing.Point(308, 298);
+            this.btnEditor3.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditor3.Name = "btnEditor3";
+            this.btnEditor3.Size = new System.Drawing.Size(128, 23);
+            this.btnEditor3.TabIndex = 7;
+            this.btnEditor3.Text = "エディタ3";
+            this.btnEditor3.UseVisualStyleBackColor = true;
             // 
             // btnBattleBackground
             // 
@@ -276,6 +286,16 @@ namespace PochiPochiEditor2
             this.btnItem.Text = "アイテム";
             this.btnItem.UseVisualStyleBackColor = true;
             // 
+            // btnEditor2
+            // 
+            this.btnEditor2.Location = new System.Drawing.Point(164, 298);
+            this.btnEditor2.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditor2.Name = "btnEditor2";
+            this.btnEditor2.Size = new System.Drawing.Size(128, 23);
+            this.btnEditor2.TabIndex = 1;
+            this.btnEditor2.Text = "エディタ2";
+            this.btnEditor2.UseVisualStyleBackColor = true;
+            // 
             // btnRegion
             // 
             this.btnRegion.Location = new System.Drawing.Point(164, 238);
@@ -315,6 +335,16 @@ namespace PochiPochiEditor2
             this.btnMap.TabIndex = 4;
             this.btnMap.Text = "マップ";
             this.btnMap.UseVisualStyleBackColor = true;
+            // 
+            // btnEditor1
+            // 
+            this.btnEditor1.Location = new System.Drawing.Point(20, 298);
+            this.btnEditor1.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditor1.Name = "btnEditor1";
+            this.btnEditor1.Size = new System.Drawing.Size(128, 23);
+            this.btnEditor1.TabIndex = 0;
+            this.btnEditor1.Text = "エディタ1";
+            this.btnEditor1.UseVisualStyleBackColor = true;
             // 
             // btnEggmove
             // 
@@ -434,11 +464,11 @@ namespace PochiPochiEditor2
             // 
             this.lstHistory.FormattingEnabled = true;
             this.lstHistory.ItemHeight = 15;
-            this.lstHistory.Location = new System.Drawing.Point(20, 70);
+            this.lstHistory.Location = new System.Drawing.Point(20, 88);
             this.lstHistory.Margin = new System.Windows.Forms.Padding(0);
             this.lstHistory.Name = "lstHistory";
             this.lstHistory.ScrollAlwaysVisible = true;
-            this.lstHistory.Size = new System.Drawing.Size(212, 139);
+            this.lstHistory.Size = new System.Drawing.Size(212, 124);
             this.lstHistory.TabIndex = 1;
             // 
             // btnRedo
@@ -446,9 +476,9 @@ namespace PochiPochiEditor2
             this.btnRedo.Location = new System.Drawing.Point(132, 28);
             this.btnRedo.Margin = new System.Windows.Forms.Padding(0);
             this.btnRedo.Name = "btnRedo";
-            this.btnRedo.Size = new System.Drawing.Size(100, 23);
+            this.btnRedo.Size = new System.Drawing.Size(100, 46);
             this.btnRedo.TabIndex = 0;
-            this.btnRedo.Text = "やり直し";
+            this.btnRedo.Text = "やり直し\r\n( Ctrl + Y )";
             this.btnRedo.UseVisualStyleBackColor = true;
             // 
             // btnUndo
@@ -456,9 +486,9 @@ namespace PochiPochiEditor2
             this.btnUndo.Location = new System.Drawing.Point(20, 28);
             this.btnUndo.Margin = new System.Windows.Forms.Padding(0);
             this.btnUndo.Name = "btnUndo";
-            this.btnUndo.Size = new System.Drawing.Size(100, 23);
+            this.btnUndo.Size = new System.Drawing.Size(100, 46);
             this.btnUndo.TabIndex = 0;
-            this.btnUndo.Text = "元に戻す";
+            this.btnUndo.Text = "元に戻す\r\n( Ctrl + Z )";
             this.btnUndo.UseVisualStyleBackColor = true;
             // 
             // picPoke
@@ -469,36 +499,6 @@ namespace PochiPochiEditor2
             this.picPoke.Size = new System.Drawing.Size(136, 104);
             this.picPoke.TabIndex = 4;
             this.picPoke.TabStop = false;
-            // 
-            // btnEditor1
-            // 
-            this.btnEditor1.Location = new System.Drawing.Point(20, 298);
-            this.btnEditor1.Margin = new System.Windows.Forms.Padding(0);
-            this.btnEditor1.Name = "btnEditor1";
-            this.btnEditor1.Size = new System.Drawing.Size(128, 23);
-            this.btnEditor1.TabIndex = 0;
-            this.btnEditor1.Text = "エディタ1";
-            this.btnEditor1.UseVisualStyleBackColor = true;
-            // 
-            // btnEditor2
-            // 
-            this.btnEditor2.Location = new System.Drawing.Point(164, 298);
-            this.btnEditor2.Margin = new System.Windows.Forms.Padding(0);
-            this.btnEditor2.Name = "btnEditor2";
-            this.btnEditor2.Size = new System.Drawing.Size(128, 23);
-            this.btnEditor2.TabIndex = 1;
-            this.btnEditor2.Text = "エディタ2";
-            this.btnEditor2.UseVisualStyleBackColor = true;
-            // 
-            // btnEditor3
-            // 
-            this.btnEditor3.Location = new System.Drawing.Point(308, 298);
-            this.btnEditor3.Margin = new System.Windows.Forms.Padding(0);
-            this.btnEditor3.Name = "btnEditor3";
-            this.btnEditor3.Size = new System.Drawing.Size(128, 23);
-            this.btnEditor3.TabIndex = 7;
-            this.btnEditor3.Text = "エディタ3";
-            this.btnEditor3.UseVisualStyleBackColor = true;
             // 
             // btnFreeSpaceFinder
             // 
@@ -526,14 +526,23 @@ namespace PochiPochiEditor2
             this.grpAssistantTool.TabStop = false;
             this.grpAssistantTool.Text = "補助ツール";
             // 
-            // btnTool1
+            // btnTool5
             // 
-            this.btnTool1.Location = new System.Drawing.Point(164, 28);
-            this.btnTool1.Name = "btnTool1";
-            this.btnTool1.Size = new System.Drawing.Size(128, 23);
-            this.btnTool1.TabIndex = 6;
-            this.btnTool1.Text = "ツール1";
-            this.btnTool1.UseVisualStyleBackColor = true;
+            this.btnTool5.Location = new System.Drawing.Point(164, 88);
+            this.btnTool5.Name = "btnTool5";
+            this.btnTool5.Size = new System.Drawing.Size(128, 23);
+            this.btnTool5.TabIndex = 10;
+            this.btnTool5.Text = "ツール5";
+            this.btnTool5.UseVisualStyleBackColor = true;
+            // 
+            // btnTool4
+            // 
+            this.btnTool4.Location = new System.Drawing.Point(20, 88);
+            this.btnTool4.Name = "btnTool4";
+            this.btnTool4.Size = new System.Drawing.Size(128, 23);
+            this.btnTool4.TabIndex = 9;
+            this.btnTool4.Text = "ツール4";
+            this.btnTool4.UseVisualStyleBackColor = true;
             // 
             // btnTool3
             // 
@@ -553,23 +562,14 @@ namespace PochiPochiEditor2
             this.btnTool2.Text = "ツール2";
             this.btnTool2.UseVisualStyleBackColor = true;
             // 
-            // btnTool5
+            // btnTool1
             // 
-            this.btnTool5.Location = new System.Drawing.Point(164, 88);
-            this.btnTool5.Name = "btnTool5";
-            this.btnTool5.Size = new System.Drawing.Size(128, 23);
-            this.btnTool5.TabIndex = 10;
-            this.btnTool5.Text = "ツール5";
-            this.btnTool5.UseVisualStyleBackColor = true;
-            // 
-            // btnTool4
-            // 
-            this.btnTool4.Location = new System.Drawing.Point(20, 88);
-            this.btnTool4.Name = "btnTool4";
-            this.btnTool4.Size = new System.Drawing.Size(128, 23);
-            this.btnTool4.TabIndex = 9;
-            this.btnTool4.Text = "ツール4";
-            this.btnTool4.UseVisualStyleBackColor = true;
+            this.btnTool1.Location = new System.Drawing.Point(164, 28);
+            this.btnTool1.Name = "btnTool1";
+            this.btnTool1.Size = new System.Drawing.Size(128, 23);
+            this.btnTool1.TabIndex = 6;
+            this.btnTool1.Text = "ツール1";
+            this.btnTool1.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 

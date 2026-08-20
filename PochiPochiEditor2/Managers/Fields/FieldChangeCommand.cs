@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PochiPochiEditor2.Managers.Fields
 {
@@ -13,7 +9,11 @@ namespace PochiPochiEditor2.Managers.Fields
         private readonly byte[] _newData;
         private readonly Action _onStateRestored; // UI更新用のコールバック
 
-        public FieldChangeCommand(FieldValue target, byte[] oldData, byte[] newData, Action onStateRestored)
+        public FieldChangeCommand
+            (FieldValue target, 
+            byte[] oldData, 
+            byte[] newData, 
+            Action onStateRestored)
         {
             _target = target;
             _oldData = (byte[])oldData.Clone(); // 参照を切るためにCloneする
@@ -23,13 +23,13 @@ namespace PochiPochiEditor2.Managers.Fields
 
         public void Undo()
         {
-            _target.BinaryData = (byte[])_oldData.Clone();
+            _target.BinaryData = _oldData;
             _onStateRestored?.Invoke();
         }
 
         public void Redo()
         {
-            _target.BinaryData = (byte[])_newData.Clone();
+            _target.BinaryData = _newData;
             _onStateRestored?.Invoke();
         }
     }

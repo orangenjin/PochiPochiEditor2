@@ -28,9 +28,6 @@ namespace PochiPochiEditor2.Managers
             // 後の書き込み用に保持
             BaseOffset = tableOffset;
 
-            // カーソル用
-            int currentOffset = tableOffset;
-
             // 現在のエントリーのインデックス
             for (int i = 0; i < entryCount; i++)
             {
@@ -39,26 +36,16 @@ namespace PochiPochiEditor2.Managers
 
                 for (int j = 0; j < defReader.FieldDefs.Count; j++)
                 {
-                    // FieldValueを仮生成
+                    // FieldValueを生成
                     var fieldValue = new FieldValue(
                         sharedData,
                         defReader.FieldDefs[j],
                         enumType);
 
-                    // バイナリデータを代入
-                    fieldValue.BinaryData = new byte[fieldValue.EntryLength];
-                    Array.Copy(
-                        sharedData.RomData,
-                        currentOffset,
-                        fieldValue.BinaryData,
-                        Constants.DefaultIndex,
-                        fieldValue.EntryLength);
-
                     entryFields.Add(fieldValue);
-                    currentOffset += fieldValue.EntryLength;
                 }
 
-                Entries.Add(new Entry(i, entryFields));
+                Entries.Add(new Entry(i, BaseOffset, entryFields));
             }
         }
     }
@@ -72,13 +59,24 @@ namespace PochiPochiEditor2.Managers
         public int EntryIndex { get; set; }
         public List<FieldValue> Fields { get; set; }
 
-        public Entry(int index, List<FieldValue> fields)
+        public Entry(int index, int baseOffset, List<FieldValue> fields)
         {
             EntryIndex = index;
             Fields = fields;
 
             // 辞書化
             _fieldMap = Fields.ToDictionary(f => f.Name);
+
+            // エントリーのオフセット
+            int entryStartOffset = baseOffset + (EntryIndex * EntrySize);
+
+            // 各フィールドのオフセットを計算
+            int currentRelativeOffset = 0;
+            foreach (var field in Fields)
+            {
+                field.RomOffset = entryStartOffset + currentRelativeOffset;
+                currentRelativeOffset += field.EntryLength;
+            }
         }
 
         /// <summary>

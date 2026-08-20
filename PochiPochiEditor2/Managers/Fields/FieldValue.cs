@@ -12,7 +12,22 @@ namespace PochiPochiEditor2.Managers.Fields
         public bool IsSigned { get; }
         public bool IsPointer { get; }
         public int ValueCount { get; } // nibble, bit用
-        public byte[] BinaryData { get; set; } // 後入れ
+        public int RomOffset { get; set; }
+        public byte[] BinaryData
+        {
+            get
+            {
+                // RomDataから現在のデータを取得
+                byte[] data = new byte[EntryLength];
+                Array.Copy(_sharedData.RomData, RomOffset, data, Constants.DefaultIndex, EntryLength);
+                return data;
+            }
+            set
+            {
+                // RomDataへ書き込み
+                Array.Copy(value, Constants.DefaultIndex, _sharedData.RomData, RomOffset, EntryLength);
+            }
+        }
 
         // 共有データ用
         private SharedData _sharedData = null;
@@ -23,8 +38,7 @@ namespace PochiPochiEditor2.Managers.Fields
         public FieldValue(
             SharedData sharedData,
             FieldMetaData metaData,
-            Type enumType,
-            byte[] binaryData = null)
+            Type enumType)
         {
             // 後に使用するので保持
             _sharedData = sharedData;
@@ -80,9 +94,6 @@ namespace PochiPochiEditor2.Managers.Fields
 
             // ポインタかどうかを判定
             IsPointer = metaData.Field is FieldExtensions.FieldKind.Pointer;
-
-            // 後入れ可能
-            BinaryData = binaryData;
         }
 
         /// <summary>

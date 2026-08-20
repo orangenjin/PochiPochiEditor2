@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PochiPochiEditor2.Managers.UiControls
+namespace PochiPochiEditor2.Utilities
 {
-    public class UiPipeline<TData> where TData : new()
+    public class UiPipelineBuilder<TData> where TData : new()
     {
         private List<Action<UiContext<TData>>> _actions = new List<Action<UiContext<TData>>>();
 
-        public UiPipeline<TData> Then(Action<UiContext<TData>> action)
+        public UiPipelineBuilder<TData> Then(Action<UiContext<TData>> action)
         {
             _actions.Add(action);
             return this;
@@ -26,21 +26,13 @@ namespace PochiPochiEditor2.Managers.UiControls
     {
         public object Sender { get; }
         public EventArgs EventArgs { get; }
-        public UpdateTrigger Trigger { get; }
         public TData Data { get; }
 
-        public UiContext(object sender, EventArgs e, UpdateTrigger trigger)
+        public UiContext(object sender, EventArgs e)
         {
             Sender = sender;
             EventArgs = e;
-            Trigger = trigger;
             Data = new TData();
         }
-    }
-
-    public enum UpdateTrigger
-    {
-        Ctrl,
-        Model
     }
 }

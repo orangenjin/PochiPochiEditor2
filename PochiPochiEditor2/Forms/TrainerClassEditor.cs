@@ -11,7 +11,6 @@ using System.Windows.Forms;
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Managers;
 using PochiPochiEditor2.Managers.Fields;
-using PochiPochiEditor2.Managers.UiControls;
 using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Forms
@@ -42,6 +41,12 @@ namespace PochiPochiEditor2.Forms
         // UI制御用
         private bool _isUpdatingUI = false;
         private int _currentClassIdx = 0;
+
+        public class ClassNamePipelineData
+        {
+            public string InputText { get; set; }
+            public string FormattedText { get; set; }
+        }
 
         private enum FieldKey
         {
@@ -190,12 +195,12 @@ namespace PochiPochiEditor2.Forms
         {
             // txtClassName
             {
-                var uiPipeline = new UiPipeline<ClassNamePipelineData>()
+                var uiPipeline = new UiPipelineBuilder<ClassNamePipelineData>()
                     // 入力値を取得
                     .Then(ctx =>
                     {
-                        var textBox = (TextBox)ctx.Sender;
-                        ctx.Data.InputText = textBox.Text;
+                        var txt = (TextBox)ctx.Sender;
+                        ctx.Data.InputText = txt.Text;
                     })
                     // 長さを調整
                     .Then(ctx =>
@@ -255,16 +260,67 @@ namespace PochiPochiEditor2.Forms
                     (s, e) =>
                     {
                         uiPipeline.Execute(
-                            new UiContext<ClassNamePipelineData>(s, e, UpdateTrigger.Ctrl));
+                            new UiContext<ClassNamePipelineData>(s, e));
                     });
+            }
 
-                // Undo, Redoの際に復元するもの
-                void OnStateRestored(int classIndex)
-                {
-                    if (_currentClassIdx == classIndex)
+            // nudPrizeMulti
+            {
+                var uiPipeline = new UiPipelineBuilder<ClassNamePipelineData>()
+                    // 入力値を取得、データを更新
+                    .Then(ctx =>
                     {
-                        LoadDataToUI(classIndex);
-                    }
+                        // 入力値
+                        var nud = (NumericUpDown)ctx.Sender;
+                        int newValue = (int)nud.Value;
+
+                        // 対象のインデックスを計算
+                        int calcIndex = CalcPrizeMultiIndex(_currentClassIdx);
+
+                        // 対象データ
+                        var targetField = _prizeMulti.Entries[calcIndex][FieldKey.PrizeMultiValue];
+
+                        // 変更前のバイナリデータ
+                        byte[] oldBinary = targetField.BinaryData;
+
+                        // データ更新
+                        targetField.SetData(newValue);
+
+                        // 変更後のバイナリデータ
+                        byte[] newBinary = targetField.BinaryData;
+
+                        // 異なればスタックに追加
+                        if (!oldBinary.SequenceEqual(newBinary))
+                        {
+                            var cmd = new FieldChangeCommand(
+                                targetField,
+                                oldBinary,
+                                newBinary,
+                                () => OnStateRestored(_currentClassIdx)
+                            );
+                            _undoManager.PushCommand(cmd);
+                        }
+
+                        // UI更新
+                        nudPrizeMulti.Value = newValue;
+                    });
+                // イベントハンドラーの登録
+                _eventBinder.BindCtrl(
+                    h => nudPrizeMulti.ValueChanged += h,
+                    h => nudPrizeMulti.ValueChanged -= h,
+                    (s, e) =>
+                    {
+                        uiPipeline.Execute(
+                            new UiContext<ClassNamePipelineData>(s, e));
+                    });
+            }
+
+            // Undo, Redoの際に復元・再描画するもの
+            void OnStateRestored(int classIndex)
+            {
+                if (_currentClassIdx == classIndex)
+                {
+                    LoadDataToUI(classIndex);
                 }
             }
         }
@@ -289,8 +345,6 @@ namespace PochiPochiEditor2.Forms
                 h => this.Disposed -= h);
         }
 
-
-
         private void LoadDataToUI(int index)
         {
             _isUpdatingUI = true;
@@ -303,34 +357,30 @@ namespace PochiPochiEditor2.Forms
             // クラス名
             txtClassName.Text = _className.Entries[index][FieldKey.ClassNameStr].GetData<string>();
 
-            // 賞金倍率、インデックス調整あり
+            // 賞金倍率、インデックス計算あり
+            int calcIndex = CalcPrizeMultiIndex(index);
+            nudPrizeMulti.Value = (decimal)_prizeMulti.Entries[calcIndex][FieldKey.PrizeMultiValue].GetData<int>();
+
+            _isUpdatingUI = false;
+        }
+
+        /// <summary>
+        /// 賞金倍率のインデックスを計算する。
+        /// </summary>
+        private int CalcPrizeMultiIndex(int index)
+        {
             int foundIndex = _prizeMulti.Entries
                 .FindIndex(entry => entry[FieldKey.ClassNameIndex]
                 .GetData<int>() == index);
+
             if (foundIndex == Constants.InvalidValue) // 存在せず、クラス名インデックス0xFF適用パターン
             {
                 foundIndex = _prizeMulti.Entries
                     .FindIndex(entry => entry[FieldKey.ClassNameIndex]
                     .GetData<int>() == 0xFF);
             }
-            nudPrizeMulti.Value = (decimal)_prizeMulti.Entries[foundIndex][FieldKey.PrizeMultiValue].GetData<int>();
 
-            _isUpdatingUI = false;
-        }
-
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (keyData == (Keys.Control | Keys.Z))
-            {
-                _undoManager.Undo();
-                return true; // 処理済みとする
-            }
-            if (keyData == (Keys.Control | Keys.Y))
-            {
-                _undoManager.Redo();
-                return true;
-            }
-            return base.ProcessCmdKey(ref msg, keyData);
+            return foundIndex;
         }
     }
 }

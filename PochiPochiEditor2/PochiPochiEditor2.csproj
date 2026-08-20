@@ -65,8 +65,7 @@
     <Compile Include="Managers\Fields\FieldChangeCommand.cs" />
     <Compile Include="Managers\FormGroupManager.cs" />
     <Compile Include="Managers\TblManager.cs" />
-    <Compile Include="Managers\UiControls\PipelineData.cs" />
-    <Compile Include="Managers\UiControls\UiPipeline.cs" />
+    <Compile Include="Utilities\UiPipelineBuilder.cs" />
     <Compile Include="Managers\UndoManager.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Helpers\CalcHelper.cs" />
