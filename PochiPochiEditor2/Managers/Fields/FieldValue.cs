@@ -8,24 +8,24 @@ namespace PochiPochiEditor2.Managers.Fields
     {
         public Enum Name { get; }
         public int EntryLength { get; }
-        public int AllowedLength { get; } // string用
+        public int AllowedLength { get; } // ほぼstring用
         public bool IsSigned { get; }
         public bool IsPointer { get; }
-        public int ValueCount { get; } // nibble, bit用
-        public int RomOffset { get; set; }
+        public int ValueCount { get; } // ほぼnibble, bit用
+        public int Offset { get; set; }
         public byte[] BinaryData
         {
             get
             {
                 // RomDataから現在のデータを取得
                 byte[] data = new byte[EntryLength];
-                Array.Copy(_sharedData.RomData, RomOffset, data, Constants.DefaultIndex, EntryLength);
+                Array.Copy(_sharedData.RomData, Offset, data, Constants.DefaultIndex, EntryLength);
                 return data;
             }
             set
             {
                 // RomDataへ書き込み
-                Array.Copy(value, Constants.DefaultIndex, _sharedData.RomData, RomOffset, EntryLength);
+                Array.Copy(value, Constants.DefaultIndex, _sharedData.RomData, Offset, EntryLength);
             }
         }
 
@@ -54,15 +54,14 @@ namespace PochiPochiEditor2.Managers.Fields
             // ない場合は実行されない
             foreach (var attr in metaData.Attrs)
             {
+                // 属性引数の数を格納
                 switch (attr.Kind)
                 {
                     case FieldExtensions.AttrKind.StringAttr:
                         ValueCount = FieldExtensions.AttrKind.StringAttr.GetAttrSize(); // 一応
 
                         // 属性引数AllowedLengthがない場合がある
-                        int maxCount = Math.Min(
-                            attr.Args.Length,
-                            FieldExtensions.AttrKind.StringAttr.GetAttrSize());
+                        int maxCount = Math.Min(attr.Args.Length, ValueCount);
 
                         int[] lengths = new int[maxCount];
                         for (int i = 0; i < maxCount; i++)

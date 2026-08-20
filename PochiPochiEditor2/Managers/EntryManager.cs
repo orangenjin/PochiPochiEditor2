@@ -69,12 +69,11 @@ namespace PochiPochiEditor2.Managers
 
             // エントリーのオフセット
             int entryStartOffset = baseOffset + (EntryIndex * EntrySize);
-
-            // 各フィールドのオフセットを計算
+            // 各フィールドのオフセットを格納
             int currentRelativeOffset = 0;
             foreach (var field in Fields)
             {
-                field.RomOffset = entryStartOffset + currentRelativeOffset;
+                field.Offset = entryStartOffset + currentRelativeOffset;
                 currentRelativeOffset += field.EntryLength;
             }
         }

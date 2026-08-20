@@ -30,6 +30,8 @@ namespace PochiPochiEditor2
         private EventBinder _eventBinder = new EventBinder();
         // 共有データ用
         private SharedData _sharedData = null;
+        // 変更履歴管理用
+        private UndoManager _undoManager = new UndoManager();
 
         public MainForm()
         {
@@ -82,6 +84,16 @@ namespace PochiPochiEditor2
                     h => btn.Click -= h,
                     EditorButton_Click);
             }
+
+            // 変更履歴関連
+            _eventBinder.BindCtrl(
+                h => _undoManager.StateChanged += h,
+                h => _undoManager.StateChanged -= h,
+                (_, __) =>
+                {
+                    MainFormUIUpdate();
+                    _formGroupManager?.RefreshForms();
+                });
 
             // 解除タイミング指定
             _eventBinder.BindCtrl(
@@ -178,7 +190,7 @@ namespace PochiPochiEditor2
             if (!Enum.TryParse(groupName, out FormGroup group)) return;
 
             // フォーム生成
-            _formGroupManager = new FormGroupManager(this, group, _sharedData);
+            _formGroupManager = new FormGroupManager(this, group, _sharedData, _undoManager);
             _formGroupManager.Closed += (_, __) =>
             {
                 _formGroupManager = null;

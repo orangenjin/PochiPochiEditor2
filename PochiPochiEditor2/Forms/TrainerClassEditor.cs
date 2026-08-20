@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
@@ -16,14 +10,14 @@ using PochiPochiEditor2.Utilities;
 namespace PochiPochiEditor2.Forms
 {
     [FormGroup(FormGroup.TrainerClass)]
-    public partial class TrainerClassEditor : Form
+    public partial class TrainerClassEditor : Form, IEditorRefresh
     {
         // イベント登録・解除用
         private EventBinder _eventBinder = new EventBinder();
-        // 変更履歴管理用
-        private UndoManager _undoManager = new UndoManager();
         // 共有データ用
         private SharedData _sharedData = null;
+        // 共有データ用
+        private UndoManager _undoManager = null;
         // 各テーブル用
         private EntryManager _className = null;
         private EntryManager _prizeMulti = null;
@@ -91,10 +85,11 @@ namespace PochiPochiEditor2.Forms
             public static string TrainerClassBaseIVTableOffset = nameof(TrainerClassBaseIVTableOffset);
         }
 
-        public TrainerClassEditor(SharedData sharedData)
+        public TrainerClassEditor(SharedData sharedData, UndoManager undoManager)
         {
             InitializeComponent();
             _sharedData = sharedData;
+            _undoManager = undoManager;
 
             InitializeEntries();
             InitializeControls();
@@ -159,11 +154,7 @@ namespace PochiPochiEditor2.Forms
 
         private void InitializeControls()
         {
-            // クラス名をcmbに格納
-            var classNames = _className.Entries
-                .Select(entry => entry[FieldKey.ClassNameStr].GetData<string>())
-                .ToArray();
-            cmbClassNameIndex.Items.AddRange(classNames);
+            UpdateClassNameComboBox();
 
             // 追加データのctrlの無効化
             if (!_isEncounterMusicEnabled)
@@ -189,6 +180,15 @@ namespace PochiPochiEditor2.Forms
                 lblBaseIv.Enabled = false;
                 nudBaseIv.Enabled = false;
             }
+        }
+
+        private void UpdateClassNameComboBox()
+        {
+            // クラス名をcmbに格納
+            var classNames = _className.Entries
+                .Select(entry => entry[FieldKey.ClassNameStr].GetData<string>())
+                .ToArray();
+            cmbClassNameIndex.Items.AddRange(classNames);
         }
 
         private void InitializePipelines()
@@ -232,9 +232,7 @@ namespace PochiPochiEditor2.Forms
                             var cmd = new FieldChangeCommand(
                                 targetField,
                                 oldBinary,
-                                newBinary,
-                                () => OnStateRestored(_currentClassIdx)
-                            );
+                                newBinary);
                             _undoManager.PushCommand(cmd);
                         }
 
@@ -295,9 +293,7 @@ namespace PochiPochiEditor2.Forms
                             var cmd = new FieldChangeCommand(
                                 targetField,
                                 oldBinary,
-                                newBinary,
-                                () => OnStateRestored(_currentClassIdx)
-                            );
+                                newBinary);
                             _undoManager.PushCommand(cmd);
                         }
 
@@ -314,15 +310,17 @@ namespace PochiPochiEditor2.Forms
                             new UiContext<ClassNamePipelineData>(s, e));
                     });
             }
+        }
 
-            // Undo, Redoの際に復元・再描画するもの
-            void OnStateRestored(int classIndex)
-            {
-                if (_currentClassIdx == classIndex)
-                {
-                    LoadDataToUI(classIndex);
-                }
-            }
+        /// <summary>
+        /// FormGroupManagerからのUI再描画用の処理。
+        /// </summary>
+        public void RefreshFromData()
+        {
+            UpdateClassNameComboBox();
+
+            // 現在のインデックスを再読み込み
+            LoadDataToUI(_currentClassIdx);
         }
 
         private void InitializeEventHandlers()
