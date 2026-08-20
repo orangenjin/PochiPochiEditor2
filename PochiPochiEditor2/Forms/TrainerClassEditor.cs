@@ -272,7 +272,6 @@ namespace PochiPochiEditor2.Forms
                     .FindIndex(entry => entry[FieldKey.ClassNameIndex]
                     .GetData<int>() == 0xFF);
             }
-
             nudPrizeMulti.Value = (decimal)_prizeMulti.Entries[foundIndex][FieldKey.PrizeMultiValue].GetData<int>();
 
             _isUpdatingUI = false;
