@@ -254,22 +254,13 @@ namespace PochiPochiEditor2.Forms
         {
             _isUpdatingUI = true;
 
+            // インデックス
             _currentClassIdx = index;
             cmbClassNameIndex.SelectedIndex = index;
             nudClassNameIndex.Value = (decimal)index;
 
-
-
-
-            _isUpdatingUI = false;
-        }
-
-        /*
-         *             _bindingManager?.Dispose();
-            _bindingManager = new BindingManager(grpBasicData);
-
             // クラス名
-            _bindingManager.AddBinding<string>(_className.Entries[index][FieldKey.ClassName]);
+            txtClassName.Text = _className.Entries[index][FieldKey.ClassNameStr].GetData<string>();
 
             // 賞金倍率、インデックス調整あり
             int foundIndex = _prizeMulti.Entries
@@ -281,11 +272,10 @@ namespace PochiPochiEditor2.Forms
                     .FindIndex(entry => entry[FieldKey.ClassNameIndex]
                     .GetData<int>() == 0xFF);
             }
-            _bindingManager.AddBinding<int>(_prizeMulti.Entries[foundIndex][FieldKey.PrizeMulti]);
-         * 
-         * 
-         * 
-         * 
-         * */
+
+            nudPrizeMulti.Value = (decimal)_prizeMulti.Entries[foundIndex][FieldKey.PrizeMultiValue].GetData<int>();
+
+            _isUpdatingUI = false;
+        }
     }
 }
