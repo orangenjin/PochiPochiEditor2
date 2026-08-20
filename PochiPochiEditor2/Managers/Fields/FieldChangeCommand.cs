@@ -1,21 +1,23 @@
-﻿using System;
-
-namespace PochiPochiEditor2.Managers.Fields
+﻿namespace PochiPochiEditor2.Managers.Fields
 {
     public class FieldChangeCommand : ICommand
     {
-        private readonly FieldValue _target = null;
-        private readonly byte[] _oldData = null;
-        private readonly byte[] _newData = null;
+        private FieldValue _target = null;
+        private byte[] _oldData = null;
+        private byte[] _newData = null;
+
+        public string Description { get; }
 
         public FieldChangeCommand
             (FieldValue target, 
             byte[] oldData, 
-            byte[] newData)
+            byte[] newData,
+            string description)
         {
             _target = target;
             _oldData = (byte[])oldData.Clone(); // 参照を切るためにCloneする
             _newData = (byte[])newData.Clone();
+            Description = description;
         }
 
         public void Undo()

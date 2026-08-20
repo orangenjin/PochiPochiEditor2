@@ -92,7 +92,22 @@ namespace PochiPochiEditor2
                 (_, __) =>
                 {
                     MainFormUIUpdate();
+                    UpdateHistoryList();
                     _formGroupManager?.RefreshForms();
+                });
+            _eventBinder.BindCtrl(
+                h => btnUndo.Click += h,
+                h => btnUndo.Click -= h,
+                (_, __) =>
+                {
+                    _undoManager.Undo();
+                });
+            _eventBinder.BindCtrl(
+                h => btnRedo.Click += h,
+                h => btnRedo.Click -= h,
+                (_, __) =>
+                {
+                    _undoManager.Redo();
                 });
 
             // 解除タイミング指定
@@ -220,6 +235,25 @@ namespace PochiPochiEditor2
             // 読み込み後、エディタ起動後
             CtrlHelper.SetControlsEnabled(grpHistory, isRomLoaded);
             CtrlHelper.SetControlsEnabled(grpAssistantTool, isRomLoaded);
+        }
+
+        private void UpdateHistoryList()
+        {
+            lstHistory.BeginUpdate();
+
+            try
+            {
+                lstHistory.Items.Clear();
+
+                foreach (var command in _undoManager.UndoHistory)
+                {
+                    lstHistory.Items.Add(command.Description);
+                }
+            }
+            finally
+            {
+                lstHistory.EndUpdate();
+            }
         }
     }
 }

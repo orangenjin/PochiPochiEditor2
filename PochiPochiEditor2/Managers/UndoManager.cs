@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PochiPochiEditor2.Managers
 {
@@ -7,6 +8,10 @@ namespace PochiPochiEditor2.Managers
     {
         private Stack<ICommand> _undoStack = new Stack<ICommand>();
         private Stack<ICommand> _redoStack = new Stack<ICommand>();
+
+        // 公開用
+        public List<ICommand> UndoHistory => _undoStack.ToList();
+        public List<ICommand> RedoHistory => _redoStack.ToList();
 
         // Undo, Redoの発生判定
         public event EventHandler StateChanged = null;
@@ -20,7 +25,7 @@ namespace PochiPochiEditor2.Managers
             ExecuteAndNotify(() =>
             {
                 _undoStack.Push(command);
-                _redoStack.Clear();
+                _redoStack.Clear(); // クリア
             });
         }
 
@@ -63,6 +68,8 @@ namespace PochiPochiEditor2.Managers
     /// </summary>
     public interface ICommand
     {
+        string Description { get; }
+
         void Undo();
         void Redo();
     }

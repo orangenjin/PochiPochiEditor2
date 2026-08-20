@@ -232,7 +232,8 @@ namespace PochiPochiEditor2.Forms
                             var cmd = new FieldChangeCommand(
                                 targetField,
                                 oldBinary,
-                                newBinary);
+                                newBinary,
+                                $"[{this.Text}]肩書き名(ID:{_currentClassIdx})を変更");
                             _undoManager.PushCommand(cmd);
                         }
 
@@ -293,7 +294,8 @@ namespace PochiPochiEditor2.Forms
                             var cmd = new FieldChangeCommand(
                                 targetField,
                                 oldBinary,
-                                newBinary);
+                                newBinary,
+                                "賞金倍率を変更");
                             _undoManager.PushCommand(cmd);
                         }
 
@@ -329,7 +331,7 @@ namespace PochiPochiEditor2.Forms
             _eventBinder.BindCtrl(
                 h => cmbClassNameIndex.SelectedIndexChanged += h,
                 h => cmbClassNameIndex.SelectedIndexChanged -= h,
-                (s, e) =>
+                (_, __) =>
                 {
                     if (_isUpdatingUI) return;
 
