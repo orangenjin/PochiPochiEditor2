@@ -223,7 +223,7 @@ namespace PochiPochiEditor2.Forms
                     (s, e) =>
                     {
                         uiPipeline.Execute(
-                            new UiContext<ClassNamePipelineData>(s, e, UpdateReason.Ctrl));
+                            new UiContext<ClassNamePipelineData>(s, e, UpdateTrigger.Ctrl));
                     });
             }
         }

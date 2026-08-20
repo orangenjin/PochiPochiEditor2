@@ -9,7 +9,8 @@ namespace PochiPochiEditor2.Managers
 {
     public class EntryManager
     {
-        public List<Entry> Entries { get; set; }
+        public List<Entry> Entries { get; }
+        public int BaseOffset { get; }
 
         public EntryManager(
             string defFileName,
@@ -23,6 +24,9 @@ namespace PochiPochiEditor2.Managers
 
             // DefReaderから定義情報を読み込む
             var defReader = new DefReader(defFileName);
+
+            // 後の書き込み用に保持
+            BaseOffset = tableOffset;
 
             // カーソル用
             int currentOffset = tableOffset;
@@ -54,7 +58,7 @@ namespace PochiPochiEditor2.Managers
                     currentOffset += fieldValue.EntryLength;
                 }
 
-                Entries.Add(new Entry(entryFields));
+                Entries.Add(new Entry(i, entryFields));
             }
         }
     }
@@ -64,10 +68,13 @@ namespace PochiPochiEditor2.Managers
         // アクセス用
         private Dictionary<Enum, FieldValue> _fieldMap = null;
 
+        // 自身のインデックスを保持
+        public int EntryIndex { get; set; }
         public List<FieldValue> Fields { get; set; }
 
-        public Entry(List<FieldValue> fields)
+        public Entry(int index, List<FieldValue> fields)
         {
+            EntryIndex = index;
             Fields = fields;
 
             // 辞書化

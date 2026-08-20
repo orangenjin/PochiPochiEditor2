@@ -26,22 +26,21 @@ namespace PochiPochiEditor2.Managers.UiControls
     {
         public object Sender { get; }
         public EventArgs EventArgs { get; }
-        public UpdateReason Reason { get; }
+        public UpdateTrigger Trigger { get; }
         public TData Data { get; }
 
-        public UiContext(object sender, EventArgs e, UpdateReason reason)
+        public UiContext(object sender, EventArgs e, UpdateTrigger trigger)
         {
             Sender = sender;
             EventArgs = e;
-            Reason = reason;
+            Trigger = trigger;
             Data = new TData();
         }
     }
 
-    public enum UpdateReason
+    public enum UpdateTrigger
     {
         Ctrl,
-        Model,
-        Init
+        Model
     }
 }

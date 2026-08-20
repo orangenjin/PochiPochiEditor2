@@ -10,6 +10,7 @@ namespace PochiPochiEditor2.Managers.Fields
 {
     public class DefReader
     {
+        // パス用
         private string _defFolder =
             Path.Combine(Application.StartupPath, Constants.DefExt);
 
@@ -59,6 +60,9 @@ namespace PochiPochiEditor2.Managers.Fields
             return splitLines;
         }
 
+        /// <summary>
+        /// 行ごとに定義を読み取る。
+        /// </summary>
         private List<FieldMetaData> ReadFields(List<string[]> splitLines)
         {
             // 戻り値用
