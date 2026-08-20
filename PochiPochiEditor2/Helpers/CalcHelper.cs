@@ -221,5 +221,39 @@ namespace PochiPochiEditor2.Helpers
 
             return result;
         }
+
+        public static string TextLengthValidate(TblManager charmap, string text, int entryLength)
+        {
+            // 空白ならそのまま返す
+            if (string.IsNullOrEmpty(text)) return text;
+
+            // 規定長を取得
+            int maxBytes = entryLength - 1;
+
+            // 現在の長さを取得
+            byte[] currentBytes = charmap.StringToBytes(text, false);
+
+            // 範囲内ならそのまま返す
+            if (currentBytes.Length <= maxBytes) return text;
+
+            // StringInfoで分割
+            StringInfo stringInfo = new StringInfo(text);
+            int count = stringInfo.LengthInTextElements;
+
+            // 一文字ずつ削る
+            string currentText = text;
+            while (count > 0)
+            {
+                // 末尾一文字を除いた文字列
+                count--;
+                currentText = stringInfo.SubstringByTextElements(0, count);
+
+                // バイト数をチェック
+                byte[] bytes = charmap.StringToBytes(currentText, false);
+                if (bytes.Length <= maxBytes) break;
+            }
+
+            return currentText;
+        }
     }
 }

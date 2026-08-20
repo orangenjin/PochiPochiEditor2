@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PochiPochiEditor2.Managers
+namespace PochiPochiEditor2.Managers.UiControls
 {
-    public class UiCtrlManager<TData> where TData : new()
+    public class UiPipeline<TData> where TData : new()
     {
         private List<Action<UiContext<TData>>> _actions = new List<Action<UiContext<TData>>>();
 
-        public UiCtrlManager<TData> Then(Action<UiContext<TData>> action)
+        public UiPipeline<TData> Then(Action<UiContext<TData>> action)
         {
             _actions.Add(action);
             return this;
@@ -42,7 +42,7 @@ namespace PochiPochiEditor2.Managers
     }
 
     public enum UpdateReason
-    { 
+    {
         Ctrl,
         Model,
         Init

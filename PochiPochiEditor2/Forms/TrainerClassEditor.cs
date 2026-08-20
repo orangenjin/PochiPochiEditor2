@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Managers;
+using PochiPochiEditor2.Managers.UiControls;
 using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Forms
@@ -59,29 +60,27 @@ namespace PochiPochiEditor2.Forms
             public static string TrainerClassNameEntry = nameof(TrainerClassNameEntry);
             public static string TrainerClassNameTableOffset = nameof(TrainerClassNameTableOffset);
             public static string TrainerClassNameCount = nameof(TrainerClassNameCount);
+            public static string TrainerClassNameEntryLength = nameof(TrainerClassNameEntryLength);
 
             public static string TrainerClassPrizeMultiEntry = nameof(TrainerClassPrizeMultiEntry);
             public static string TrainerClassPrizeMultiTableOffset = nameof(TrainerClassPrizeMultiTableOffset);
             public static string TrainerClassPrizeMultiCount = nameof(TrainerClassPrizeMultiCount);
 
+            public static string EnableTrainerClassEncMusic = nameof(EnableTrainerClassEncMusic);
             public static string TrainerClassEncMusicEntry = nameof(TrainerClassEncMusicEntry);
             public static string TrainerClassEncMusicTableOffset = nameof(TrainerClassEncMusicTableOffset);
 
+            public static string EnableTrainerClassBattleMusic = nameof(EnableTrainerClassBattleMusic);
             public static string TrainerClassBattleMusicEntry = nameof(TrainerClassBattleMusicEntry);
             public static string TrainerClassBattleMusicTableOffset = nameof(TrainerClassBattleMusicTableOffset);
 
+            public static string EnableTrainerClassPokeBall = nameof(EnableTrainerClassPokeBall);
             public static string TrainerClassPokeBallEntry = nameof(TrainerClassPokeBallEntry);
             public static string TrainerClassPokeBallTableOffset = nameof(TrainerClassPokeBallTableOffset);
 
+            public static string EnableTrainerClassBaseIV = nameof(EnableTrainerClassBaseIV);
             public static string TrainerClassBaseIvEntry = nameof(TrainerClassBaseIvEntry);
             public static string TrainerClassBaseIVTableOffset = nameof(TrainerClassBaseIVTableOffset);
-        }
-
-        public class ClassNamePipelineData
-        {
-            public string InputText { get; set; }
-            public string FormattedText { get; set; }
-            public bool IsValid { get; set; }
         }
 
         public TrainerClassEditor(SharedData sharedData)
@@ -91,6 +90,7 @@ namespace PochiPochiEditor2.Forms
 
             InitializeEntries();
             InitializeControls();
+            InitializePipelines();
             InitializeEventHandlers();
 
             LoadDataToUI(_currentClassIdx);
@@ -105,10 +105,10 @@ namespace PochiPochiEditor2.Forms
             _className = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // 追加データのbool判定
-            _isEncounterMusicEnabled = _sharedData.Config.ReadBool("EnableTrainerClassEncMusic");
-            _isBattleMusicEnabled = _sharedData.Config.ReadBool("EnableTrainerClassBattleMusic");
-            _isPokeBallEnabled = _sharedData.Config.ReadBool("EnableTrainerClassPokeBall");
-            _isBaseIvEnabled = _sharedData.Config.ReadBool("EnableTrainerClassBaseIV");
+            _isEncounterMusicEnabled = _sharedData.Config.ReadBool(IniKey.EnableTrainerClassEncMusic);
+            _isBattleMusicEnabled = _sharedData.Config.ReadBool(IniKey.EnableTrainerClassBattleMusic);
+            _isPokeBallEnabled = _sharedData.Config.ReadBool(IniKey.EnableTrainerClassPokeBall);
+            _isBaseIvEnabled = _sharedData.Config.ReadBool(IniKey.EnableTrainerClassBaseIV);
 
             if (_isEncounterMusicEnabled)
             {
@@ -183,18 +183,64 @@ namespace PochiPochiEditor2.Forms
             }
         }
 
+        private void InitializePipelines()
+        {
+            // txtClassName
+            {
+                var uiPipeline = new UiPipeline<ClassNamePipelineData>()
+                    // 入力値を取得
+                    .Then(ctx =>
+                    {
+                        var textBox = (TextBox)ctx.Sender;
+                        ctx.Data.InputText = textBox.Text;
+                    })
+                    // 長さを調整
+                    .Then(ctx =>
+                    {
+                        int entryLength = _sharedData.Config.ReadInt(
+                            IniKey.TrainerClassNameEntryLength);
+                        ctx.Data.FormattedText = CalcHelper.TextLengthValidate(
+                            _sharedData.Charmap,
+                            ctx.Data.InputText,
+                            entryLength);
+                    })
+                    // データとテキストボックスを更新
+                    .Then(ctx =>
+                    {
+                        _className.Entries[_currentClassIdx][FieldKey.ClassNameStr].SetData(ctx.Data.FormattedText);
+                        txtClassName.Text = ctx.Data.FormattedText;
+                        CtrlHelper.MoveCursorToEnd(txtClassName); // カーソル位置
+                    })
+                    // コンボボックスを更新
+                    .Then(ctx =>
+                    {
+                        cmbClassNameIndex.Items[_currentClassIdx] = ctx.Data.FormattedText;
+                    });
+                // イベントハンドラーの登録
+                _eventBinder.BindCtrl(
+                    h => txtClassName.TextChanged += h,
+                    h => txtClassName.TextChanged -= h,
+                    (s, e) =>
+                    {
+                        uiPipeline.Execute(
+                            new UiContext<ClassNamePipelineData>(s, e, UpdateReason.Ctrl));
+                    });
+            }
+        }
+
         private void InitializeEventHandlers()
         {
             // クラス名インデックスcmb
             _eventBinder.BindCtrl(
                 h => cmbClassNameIndex.SelectedIndexChanged += h,
                 h => cmbClassNameIndex.SelectedIndexChanged -= h,
-                cmbClassNameIndex_SelectedIndexChanged);
-            // クラス名txt
-            _eventBinder.BindCtrl(
-                h => txtClassName.TextChanged += h,
-                h => txtClassName.TextChanged -= h,
-                txtClassName_TextChanged);
+                (s, e) =>
+                {
+                    if (_isUpdatingUI) return;
+
+                    int newIndex = cmbClassNameIndex.SelectedIndex;
+                    LoadDataToUI(newIndex);
+                });
 
             // 解除タイミング指定
             _eventBinder.BindCtrl(
@@ -202,29 +248,7 @@ namespace PochiPochiEditor2.Forms
                 h => this.Disposed -= h);
         }
 
-        private void InitializePipelines()
-        {
-            var txtClassNameOrder = new UiCtrlManager<ClassNamePipelineData>()
-                // input
-                .Then(ctx =>
-                {
-                    var textBox = (TextBox)ctx.Sender;
-                    ctx.Data.InputText = textBox.Text;
-                })
-                // calc
-                .Then(ctx =>
-                {
-                    ctx.Data.FormattedText = ctx.Data.InputText.Trim().ToUpper();
-                    ctx.Data.IsValid = ctx.Data.FormattedText.Length > 0;
-                });
 
-            // イベントハンドラーの登録
-            txtClassName.TextChanged += (s, e) =>
-            {
-                txtClassNameOrder.Execute(
-                    new UiContext<ClassNamePipelineData>(s, e, UpdateReason.Ctrl));
-            };
-        }
 
         private void LoadDataToUI(int index)
         {
@@ -238,22 +262,6 @@ namespace PochiPochiEditor2.Forms
 
 
             _isUpdatingUI = false;
-        }
-
-        private void cmbClassNameIndex_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_isUpdatingUI) return;
-
-            int newIndex = cmbClassNameIndex.SelectedIndex;
-            LoadDataToUI(newIndex);
-        }
-
-        private void txtClassName_TextChanged(object sender, EventArgs e)
-        {
-            if (_isUpdatingUI) return;
-
-            string validName = _className.Entries[_currentClassIdx][FieldKey.ClassNameStr].GetData<string>();
-            cmbClassNameIndex.Items[_currentClassIdx] = validName;
         }
 
         /*
