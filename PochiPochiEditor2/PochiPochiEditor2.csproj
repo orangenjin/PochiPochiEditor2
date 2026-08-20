@@ -64,6 +64,7 @@
     <Compile Include="Managers\EntryManager.cs" />
     <Compile Include="Managers\FormGroupManager.cs" />
     <Compile Include="Managers\TblManager.cs" />
+    <Compile Include="Managers\UiCtrlManager.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Helpers\CalcHelper.cs" />
     <Compile Include="Helpers\CtrlHelper.cs" />

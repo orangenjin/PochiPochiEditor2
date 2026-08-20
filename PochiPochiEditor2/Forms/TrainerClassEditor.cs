@@ -39,7 +39,7 @@ namespace PochiPochiEditor2.Forms
         private bool _isUpdatingUI = false;
         private int _currentClassIdx = 0;
 
-        public enum FieldKey
+        private enum FieldKey
         {
             ClassNameStr,
 
@@ -52,6 +52,36 @@ namespace PochiPochiEditor2.Forms
             BattleMusicIndex,
             PokeBallIndex,
             BaseIvValue
+        }
+
+        private static class IniKey 
+        {
+            public static string TrainerClassNameEntry = nameof(TrainerClassNameEntry);
+            public static string TrainerClassNameTableOffset = nameof(TrainerClassNameTableOffset);
+            public static string TrainerClassNameCount = nameof(TrainerClassNameCount);
+
+            public static string TrainerClassPrizeMultiEntry = nameof(TrainerClassPrizeMultiEntry);
+            public static string TrainerClassPrizeMultiTableOffset = nameof(TrainerClassPrizeMultiTableOffset);
+            public static string TrainerClassPrizeMultiCount = nameof(TrainerClassPrizeMultiCount);
+
+            public static string TrainerClassEncMusicEntry = nameof(TrainerClassEncMusicEntry);
+            public static string TrainerClassEncMusicTableOffset = nameof(TrainerClassEncMusicTableOffset);
+
+            public static string TrainerClassBattleMusicEntry = nameof(TrainerClassBattleMusicEntry);
+            public static string TrainerClassBattleMusicTableOffset = nameof(TrainerClassBattleMusicTableOffset);
+
+            public static string TrainerClassPokeBallEntry = nameof(TrainerClassPokeBallEntry);
+            public static string TrainerClassPokeBallTableOffset = nameof(TrainerClassPokeBallTableOffset);
+
+            public static string TrainerClassBaseIvEntry = nameof(TrainerClassBaseIvEntry);
+            public static string TrainerClassBaseIVTableOffset = nameof(TrainerClassBaseIVTableOffset);
+        }
+
+        public class ClassNamePipelineData
+        {
+            public string InputText { get; set; }
+            public string FormattedText { get; set; }
+            public bool IsValid { get; set; }
         }
 
         public TrainerClassEditor(SharedData sharedData)
@@ -69,9 +99,9 @@ namespace PochiPochiEditor2.Forms
         private void InitializeEntries()
         {
             // 肩書名テーブルを作成
-            string defFileName = "TrainerClassNameEntry";
-            int tableOffset = _sharedData.Config.ReadInt("TrainerClassNameTableOffset");
-            int entrycount = _sharedData.Config.ReadInt("TrainerClassNameCount");
+            string defFileName = IniKey.TrainerClassNameEntry;
+            int tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassNameTableOffset);
+            int entrycount = _sharedData.Config.ReadInt(IniKey.TrainerClassNameCount);
             _className = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // 追加データのbool判定
@@ -83,39 +113,39 @@ namespace PochiPochiEditor2.Forms
             if (_isEncounterMusicEnabled)
             {
                 // 戦闘前BGMテーブルを作成
-                defFileName = "TrainerClassEncMusicEntry";
-                tableOffset = _sharedData.Config.ReadInt("TrainerClassEncMusicTableOffset");
+                defFileName = IniKey.TrainerClassEncMusicEntry;
+                tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassEncMusicTableOffset);
                 _encMusic = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             if (_isBattleMusicEnabled)
             {
                 // 戦闘中BGMテーブルを作成
-                defFileName = "TrainerClassBattleMusicEntry";
-                tableOffset = _sharedData.Config.ReadInt("TrainerClassBattleMusicTableOffset");
+                defFileName = IniKey.TrainerClassBattleMusicEntry;
+                tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassBattleMusicTableOffset);
                 _battleMusic = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             if (_isPokeBallEnabled)
             {
                 // 使用ボールIDテーブルを作成
-                defFileName = "TrainerClassPokeBallEntry";
-                tableOffset = _sharedData.Config.ReadInt("TrainerClassPokeBallTableOffset");
+                defFileName = IniKey.TrainerClassPokeBallEntry;
+                tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassPokeBallTableOffset);
                 _pokeBall = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             if (_isBaseIvEnabled)
             {
                 // 基礎個体値テーブルを作成
-                defFileName = "TrainerClassBaseIvEntry";
-                tableOffset = _sharedData.Config.ReadInt("TrainerClassBaseIVTableOffset");
+                defFileName = IniKey.TrainerClassBaseIvEntry;
+                tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassBaseIVTableOffset);
                 _baseIv = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             // 賞金倍率テーブルを作成
-            defFileName = "TrainerClassPrizeMultiEntry";
-            tableOffset = _sharedData.Config.ReadInt("TrainerClassPrizeMultiTableOffset");
-            entrycount = _sharedData.Config.ReadInt("TrainerClassPrizeMultiCount");
+            defFileName = IniKey.TrainerClassPrizeMultiEntry;
+            tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassPrizeMultiTableOffset);
+            entrycount = _sharedData.Config.ReadInt(IniKey.TrainerClassPrizeMultiCount);
             _prizeMulti = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
         }
 
@@ -170,6 +200,30 @@ namespace PochiPochiEditor2.Forms
             _eventBinder.BindCtrl(
                 h => this.Disposed += h,
                 h => this.Disposed -= h);
+        }
+
+        private void InitializePipelines()
+        {
+            var txtClassNameOrder = new UiCtrlManager<ClassNamePipelineData>()
+                // input
+                .Then(ctx =>
+                {
+                    var textBox = (TextBox)ctx.Sender;
+                    ctx.Data.InputText = textBox.Text;
+                })
+                // calc
+                .Then(ctx =>
+                {
+                    ctx.Data.FormattedText = ctx.Data.InputText.Trim().ToUpper();
+                    ctx.Data.IsValid = ctx.Data.FormattedText.Length > 0;
+                });
+
+            // イベントハンドラーの登録
+            txtClassName.TextChanged += (s, e) =>
+            {
+                txtClassNameOrder.Execute(
+                    new UiContext<ClassNamePipelineData>(s, e, UpdateReason.Ctrl));
+            };
         }
 
         private void LoadDataToUI(int index)
