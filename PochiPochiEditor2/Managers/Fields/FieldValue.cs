@@ -11,7 +11,7 @@ namespace PochiPochiEditor2.Managers.Fields
         public int AllowedLength { get; } // ほぼstring用
         public bool IsSigned { get; }
         public bool IsPointer { get; }
-        public int ValueCount { get; } // ほぼnibble, bit用
+        public int ArgCount { get; } // ほぼnibble, bit用
         public int Offset { get; set; }
         public byte[] BinaryData
         {
@@ -47,7 +47,7 @@ namespace PochiPochiEditor2.Managers.Fields
             Name = (Enum)Enum.Parse(enumType, metaData.Name);
 
             // 属性を確認、仮入れ
-            ValueCount = default;
+            ArgCount = default;
             EntryLength = metaData.Field.GetFieldSize();
             AllowedLength = Constants.InvalidValue;
 
@@ -58,18 +58,19 @@ namespace PochiPochiEditor2.Managers.Fields
                 switch (attr.Kind)
                 {
                     case FieldExtensions.AttrKind.StringAttr:
-                        ValueCount = FieldExtensions.AttrKind.StringAttr.GetAttrSize(); // 一応
+                        ArgCount = FieldExtensions.AttrKind.StringAttr.GetAttrSize(); // 最大
 
                         // 属性引数AllowedLengthがない場合がある
-                        int maxCount = Math.Min(attr.Args.Length, ValueCount);
+                        int maxCount = Math.Min(attr.Args.Length, ArgCount);
 
+                        // 長さintを格納する
                         int[] lengths = new int[maxCount];
                         for (int i = 0; i < maxCount; i++)
                         {
                             lengths[i] = sharedData.Config.ReadInt(attr.Args[i]);
                         }
 
-                        // 存在しない場合、同値を入れる
+                        // AllowedLengthが存在しない場合、同値を入れる
                         EntryLength = lengths[(int)FieldExtensions.StringAttrArgs.EntryLengthArg];
                         AllowedLength = lengths.Length > 1
                             ? lengths[(int)FieldExtensions.StringAttrArgs.AllowedLengthArg]
@@ -77,11 +78,11 @@ namespace PochiPochiEditor2.Managers.Fields
                         break;
 
                     case FieldExtensions.AttrKind.NibbleAttr:
-                        ValueCount = FieldExtensions.AttrKind.NibbleAttr.GetAttrSize();
+                        ArgCount = FieldExtensions.AttrKind.NibbleAttr.GetAttrSize();
                         break;
 
                     case FieldExtensions.AttrKind.BitAttr:
-                        ValueCount = FieldExtensions.AttrKind.BitAttr.GetAttrSize();
+                        ArgCount = FieldExtensions.AttrKind.BitAttr.GetAttrSize();
                         break;
                 }
             }
@@ -99,13 +100,13 @@ namespace PochiPochiEditor2.Managers.Fields
         /// BinaryDataから型Tの値を取得する。
         /// </summary>
         public T GetData<T>(
-            int valueindex = Constants.DefaultIndex,
+            int argIndex = Constants.DefaultIndex,
             Func<FieldValue, int, TblManager, T> converter = null)
         {
             // 特殊処理があれば渡す
             return converter != null
-                ? converter(this, valueindex, _sharedData.Charmap)
-                : CalcHelper.BytesToModelConv<T>(this, valueindex, _sharedData.Charmap);
+                ? converter(this, argIndex, _sharedData.Charmap)
+                : CalcHelper.BytesToModelConv<T>(this, argIndex, _sharedData.Charmap);
         }
 
         /// <summary>
@@ -113,13 +114,13 @@ namespace PochiPochiEditor2.Managers.Fields
         /// </summary>
         public void SetData<T>(
             T rawData,
-            int valueindex = Constants.DefaultIndex,
+            int argIndex = Constants.DefaultIndex,
             Func<T, FieldValue, int, TblManager, byte[]> converter = null)
         {
             // 特殊処理があれば渡す
             byte[] newBytes = converter != null
-                    ? converter(rawData, this, valueindex, _sharedData.Charmap)
-                    : CalcHelper.ModelToBytesConv(rawData, this, valueindex, _sharedData.Charmap);
+                    ? converter(rawData, this, argIndex, _sharedData.Charmap)
+                    : CalcHelper.ModelToBytesConv(rawData, this, argIndex, _sharedData.Charmap);
 
             // 新しいbyte[]を代入
             BinaryData = newBytes;

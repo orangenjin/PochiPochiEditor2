@@ -6,7 +6,7 @@
         private byte[] _oldData = null;
         private byte[] _newData = null;
 
-        public string Description { get; }
+        public string Desc { get; }
 
         public FieldChangeCommand
             (FieldValue target, 
@@ -17,7 +17,7 @@
             _target = target;
             _oldData = (byte[])oldData.Clone(); // 参照を切るためにCloneする
             _newData = (byte[])newData.Clone();
-            Description = description;
+            Desc = description;
         }
 
         public void Undo()

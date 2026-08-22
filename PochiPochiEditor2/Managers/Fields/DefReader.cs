@@ -33,8 +33,8 @@ namespace PochiPochiEditor2.Managers.Fields
 
             // defフォルダ階層下から指定したファイルを探す
             var foundFiles = Directory.GetFiles(
-                _defFolder, 
-                $"{fileName}{Constants.DotChar}{Constants.DefExt}", 
+                _defFolder,
+                Path.ChangeExtension(fileName, Constants.DefExt), 
                 SearchOption.AllDirectories);
 
             // 最初にヒットしたもの
@@ -42,14 +42,11 @@ namespace PochiPochiEditor2.Managers.Fields
 
             foreach (var line in allLines)
             {
-                // 念のため
-                var trimmedLine = line.Trim();
-
                 // 空行をスキップ
-                if (string.IsNullOrWhiteSpace(trimmedLine)) continue;
+                if (string.IsNullOrWhiteSpace(line)) continue;
 
                 // コロン分割
-                var parts = trimmedLine
+                var parts = line
                     .Split(Constants.ColonChar)
                     .Select(p => p.Trim())
                     .ToArray();
@@ -81,21 +78,21 @@ namespace PochiPochiEditor2.Managers.Fields
                 var attrs = new List<FieldAttribute>();
                 for (int i = (int)FieldExtensions.DefName.AttrName; i < line.Length; i++)
                 {
-                    // 対象を取り出す
+                    // 解析対象を取り出す
                     var attrText = line[i];
 
                     // "("の位置を探す
                     var openParenIndex = attrText.IndexOf(Constants.OpenParenChar);
 
                     // 属性名のみ
-                    if (openParenIndex < 0)
+                    if (openParenIndex == Constants.InvalidValue)
                     {
                         // 属性名を取得
                         var attrName = (FieldExtensions.AttrKind)Enum.Parse(
                             typeof(FieldExtensions.AttrKind),
                             attrText);
 
-                        // 引数なし
+                        // 属性引数なし（要素数0を格納）
                         attrs.Add(new FieldAttribute(attrName, Array.Empty<string>()));
 
                         continue;

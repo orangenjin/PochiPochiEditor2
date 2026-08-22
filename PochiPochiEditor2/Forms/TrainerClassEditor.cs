@@ -16,7 +16,7 @@ namespace PochiPochiEditor2.Forms
         private EventBinder _eventBinder = new EventBinder();
         // 共有データ用
         private SharedData _sharedData = null;
-        // 共有データ用
+        // 変更履歴用
         private UndoManager _undoManager = null;
         // 各テーブル用
         private EntryManager _className = null;

@@ -30,7 +30,6 @@
         public const char ColonChar = ':';
         public const char EqualChar = '=';
         public const char SpaceChar = ' ';
-        public const char DotChar = '.';
         public const char AsteriskChar = '*';
 
         public const string DefExt = "def";

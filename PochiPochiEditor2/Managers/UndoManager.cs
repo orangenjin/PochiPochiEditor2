@@ -68,7 +68,7 @@ namespace PochiPochiEditor2.Managers
     /// </summary>
     public interface ICommand
     {
-        string Description { get; }
+        string Desc { get; }
 
         void Undo();
         void Redo();
