@@ -14,7 +14,7 @@ namespace PochiPochiEditor2.Managers
         private List<Form> _forms = null;
 
         // メイン画面のUI状態更新用
-        public event EventHandler Closed = null;
+        public EventHandler Closed = null;
 
         public FormGroupManager(
             Form ownerForm,
@@ -52,8 +52,6 @@ namespace PochiPochiEditor2.Managers
         /// <summary>
         /// 同じフォームグループを閉じるようにする。
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SingleForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             foreach (var form in _forms)
@@ -74,7 +72,7 @@ namespace PochiPochiEditor2.Managers
         }
 
         /// <summary>
-        /// 各エディタのUI再描画を行う。
+        /// Undo, Redo時、各エディタのUI再描画を行う。
         /// </summary>
         public void RefreshForms()
         {
@@ -88,6 +86,14 @@ namespace PochiPochiEditor2.Managers
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Undo, Redo時にUIを再描画するため。
+    /// </summary>
+    public interface IEditorRefresh
+    {
+        void RefreshFromData();
     }
 
     /// <summary>
@@ -111,13 +117,5 @@ namespace PochiPochiEditor2.Managers
     {
         TrainerClass,
         TrainerSprite
-    }
-
-    /// <summary>
-    /// Undo, Redo時にUIを再描画するため。
-    /// </summary>
-    public interface IEditorRefresh
-    {
-        void RefreshFromData();
     }
 }

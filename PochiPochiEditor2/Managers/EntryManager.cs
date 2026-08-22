@@ -9,14 +9,13 @@ namespace PochiPochiEditor2.Managers
 {
     public class EntryManager
     {
-        public List<Entry> Entries { get; }
-        public int BaseOffset { get; }
+        public List<Entry> Entries { get; set; }
 
         public EntryManager(
             string defFileName,
             Type enumType,
             SharedData sharedData,
-            int tableOffset, 
+            int baseOffset, 
             int entryCount)
         {
             // 初期化
@@ -25,13 +24,10 @@ namespace PochiPochiEditor2.Managers
             // DefReaderから定義情報を読み込む
             var defReader = new DefReader(defFileName);
 
-            // 後の書き込み用に保持
-            BaseOffset = tableOffset;
-
-            // 現在のエントリーのインデックス
+            // 現在のエントリーのインデックスについて
             for (int i = 0; i < entryCount; i++)
             {
-                //　単一エントリーに対するフィールド
+                //　単一エントリーに対するフィールドリスト
                 var entryFields = new List<FieldValue>();
 
                 for (int j = 0; j < defReader.FieldDefs.Count; j++)
@@ -45,21 +41,21 @@ namespace PochiPochiEditor2.Managers
                     entryFields.Add(fieldValue);
                 }
 
-                Entries.Add(new Entry(i, BaseOffset, entryFields));
+                Entries.Add(new Entry(baseOffset, i,  entryFields));
             }
         }
     }
 
     public class Entry
     {
-        // アクセス用
+        // 簡易アクセス用
         private Dictionary<Enum, FieldValue> _fieldMap = null;
 
         // 自身のインデックスを保持
         public int EntryIndex { get; set; }
         public List<FieldValue> Fields { get; set; }
 
-        public Entry(int index, int baseOffset, List<FieldValue> fields)
+        public Entry(int baseOffset, int index,  List<FieldValue> fields)
         {
             EntryIndex = index;
             Fields = fields;
@@ -67,8 +63,9 @@ namespace PochiPochiEditor2.Managers
             // 辞書化
             _fieldMap = Fields.ToDictionary(f => f.Name);
 
-            // エントリーのオフセット
+            // 現在のエントリーのオフセットを計算
             int entryStartOffset = baseOffset + (EntryIndex * EntrySize);
+
             // 各フィールドのオフセットを格納
             int currentRelativeOffset = 0;
             foreach (var field in Fields)

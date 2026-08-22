@@ -2,30 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using PochiPochiEditor2.Utilities;
+
 namespace PochiPochiEditor2.Managers
 {
     public class UndoManager
     {
-        private Stack<ICommand> _undoStack = new Stack<ICommand>();
-        private Stack<ICommand> _redoStack = new Stack<ICommand>();
-
-        // 公開用
-        public List<ICommand> UndoHistory => _undoStack.ToList();
-        public List<ICommand> RedoHistory => _redoStack.ToList();
+        private readonly List<ICommand> _history = new List<ICommand>();
+        private int _currentIndex = 0;
 
         // Undo, Redoの発生判定
         public event EventHandler StateChanged = null;
 
+        // 公開用
+        public List<ICommand> History => _history.ToList();
+
         // 実行可能かどうか、チェック用
-        public bool CanUndo => _undoStack.Count > 0;
-        public bool CanRedo => _redoStack.Count > 0;
+        public bool CanUndo => _currentIndex > Constants.DefaultIndex;
+        public bool CanRedo => _currentIndex < _history.Count;
 
         public void PushCommand(ICommand command)
         {
             ExecuteAndNotify(() =>
             {
-                _undoStack.Push(command);
-                _redoStack.Clear(); // クリア
+                // Undo済みの位置から新しい操作を行った場合
+                // そこから先のRedo履歴は破棄
+                if (_currentIndex < _history.Count)
+                {
+                    _history.RemoveRange(
+                        _currentIndex,
+                        _history.Count - _currentIndex);
+                }
+
+                _history.Add(command);
+                _currentIndex++;
             });
         }
 
@@ -35,9 +45,8 @@ namespace PochiPochiEditor2.Managers
 
             ExecuteAndNotify(() =>
             {
-                var command = _undoStack.Pop();
-                command.Undo();
-                _redoStack.Push(command);
+                _currentIndex--;
+                _history[_currentIndex].Undo();
             });
         }
 
@@ -47,9 +56,8 @@ namespace PochiPochiEditor2.Managers
 
             ExecuteAndNotify(() =>
             {
-                var command = _redoStack.Pop();
-                command.Redo();
-                _undoStack.Push(command);
+                _history[_currentIndex].Redo();
+                _currentIndex++;
             });
         }
 
@@ -60,6 +68,22 @@ namespace PochiPochiEditor2.Managers
         {
             action();
             StateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 指定した履歴位置まで移動する。
+        /// </summary>
+        public void MoveTo(int targetIndex)
+        {
+            while (_currentIndex > targetIndex)
+            {
+                Undo();
+            }
+
+            while (_currentIndex < targetIndex)
+            {
+                Redo();
+            }
         }
     }
 

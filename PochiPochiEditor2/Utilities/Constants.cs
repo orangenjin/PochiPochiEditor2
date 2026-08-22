@@ -40,6 +40,12 @@
         public const byte StrNewlineByte = 0xFE;
         public const byte StrTerminatorByte = 0xFF;
 
+        public enum PartName
+        {
+            Key,
+            Value
+        }
+
         public const int PalColorCount = 16;
         public const int BytesPerColor = 2;
         public const int ColorChannelMulti = 8;

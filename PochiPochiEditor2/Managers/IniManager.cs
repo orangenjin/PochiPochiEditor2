@@ -42,7 +42,7 @@ namespace PochiPochiEditor2.Managers
         {
             if (!Directory.Exists(folderPath)) return;
 
-            var ext = $"{Constants.AsteriskChar}{Constants.DotChar}{Constants.IniExt}";
+            var ext = Path.ChangeExtension(Constants.AsteriskChar.ToString(), Constants.IniExt);
 
             foreach (string filePath in Directory.EnumerateFiles(folderPath, ext))
             {
@@ -76,7 +76,7 @@ namespace PochiPochiEditor2.Managers
             // 設定値を解析
             foreach (string line in File.ReadLines(filePath, Encoding.UTF8))
             {
-                // 空行とコメントをスキップ
+                // 空行とコメントをスキップして、分割
                 if (!TryParseLine(line, out string key, out string rawString)) continue;
 
                 // boolかどうか
@@ -87,12 +87,12 @@ namespace PochiPochiEditor2.Managers
                 }
 
                 // ポインタかどうか
-                if (rawString.StartsWith(Constants.AsteriskChar.ToString()))
+                var asteStr = Constants.AsteriskChar.ToString();
+                if (rawString.StartsWith(asteStr))
                 {
-                    if (TryParseNumber(
-                        rawString.Substring(Constants.AsteriskChar.ToString().Length), 
-                        out int ptrOffset))
+                    if (TryParseNumber(rawString.Substring(asteStr.Length), out int ptrOffset))
                     {
+                        // ポインタとして読み取る
                         if (IoHelper.TryReadPtr(data, ptrOffset, out int resultOffset))
                         {
                             _iniCacheInt[key] = resultOffset;
@@ -123,8 +123,8 @@ namespace PochiPochiEditor2.Managers
             // イコールで分割
             string[] parts = line.Split(Constants.EqualChar);
 
-            key = parts[(int)PartName.Key].Trim();
-            rawValue = parts[(int)PartName.Value].Trim();
+            key = parts[(int)Constants.PartName.Key].Trim();
+            rawValue = parts[(int)Constants.PartName.Value].Trim();
             return true;
         }
 
@@ -140,12 +140,6 @@ namespace PochiPochiEditor2.Managers
             }
 
             return int.TryParse(rawString, out parsedValue); // 10進数
-        }
-
-        private enum PartName 
-        {
-            Key,
-            Value
         }
     }
 }

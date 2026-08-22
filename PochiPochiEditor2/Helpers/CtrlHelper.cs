@@ -407,7 +407,7 @@ namespace PochiPochiEditor2.Helpers
         /// </summary>
         public static void SetupCmbItems(
             ComboBox cmb,
-            int defaultIndex,
+            int defaultIndex = Constants.DefaultIndex,
             params string[] items)
         {
             cmb.BeginUpdate();

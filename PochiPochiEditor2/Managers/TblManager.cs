@@ -10,8 +10,8 @@ namespace PochiPochiEditor2.Managers
     public class TblManager
     {
         // 対応探索用
-        private readonly ByteTrieNode _byteTrieRoot = new ByteTrieNode();
-        private readonly StringTrieNode _stringTrieRoot = new StringTrieNode();
+        private readonly ByteTrieNode _byteTrieRoot = null;
+        private readonly StringTrieNode _stringTrieRoot = null;
 
         /// <summary>
         /// ファイルパスを指定して、charmapを作成する。
@@ -25,8 +25,9 @@ namespace PochiPochiEditor2.Managers
                 if (string.IsNullOrEmpty(line) || line.StartsWith(Constants.CommentChar.ToString())) continue;
 
                 string[] parts = line.Split(Constants.EqualChar);
-                string hexKey = parts[0].Replace(Constants.SpaceChar.ToString(), string.Empty); // 2バイト以上の場合想定
-                string value = parts[1]; // 文字部分
+                // 2バイト以上の場合を想定
+                string hexKey = parts[(int)Constants.PartName.Key].Replace(Constants.SpaceChar.ToString(), string.Empty); 
+                string value = parts[(int)Constants.PartName.Value]; // 文字部分
 
                 // キーをstringからbyteへ
                 int byteLen = hexKey.Length / Constants.CharPerByte;
@@ -38,6 +39,7 @@ namespace PochiPochiEditor2.Managers
                 }
 
                 // バイト -> 文字
+                _byteTrieRoot = new ByteTrieNode();
                 ByteTrieNode currentByteNode = _byteTrieRoot;
                 foreach (byte b in bytes)
                 {
@@ -54,6 +56,7 @@ namespace PochiPochiEditor2.Managers
                 // 文字 -> バイト
                 if (!string.IsNullOrEmpty(value))
                 {
+                    _stringTrieRoot = new StringTrieNode();
                     StringTrieNode currentStrNode = _stringTrieRoot;
                     foreach (char c in value)
                     {
@@ -73,15 +76,17 @@ namespace PochiPochiEditor2.Managers
         /// <summary>
         /// 通常は StrTerminatorByte = 0xFF 手前まで読み取る。
         /// </summary>
-        public string BytesToString(byte[] bytes, int offset = 0, int? maxLength = null)
+        public string BytesToString(
+            byte[] bytes, 
+            int offset = 0, 
+            int? maxLength = null)
         {
             if (bytes == null) return string.Empty;
             StringBuilder result = new StringBuilder();
 
             // 範囲を定める
             int calcLength = bytes.Length - offset;
-            int length =
-                maxLength.HasValue
+            int length = maxLength.HasValue
                 ? Math.Min(calcLength, maxLength.Value)
                 : calcLength;
 
@@ -220,16 +225,30 @@ namespace PochiPochiEditor2.Managers
 
         private class ByteTrieNode
         {
-            public Dictionary<byte, ByteTrieNode> Children { get; } = new Dictionary<byte, ByteTrieNode>();
+            public Dictionary<byte, ByteTrieNode> Children { get; }
             public string Value { get; set; }
             public bool IsTerminal { get; set; }
+
+            public ByteTrieNode(string value = null, bool isTerminal = false)
+            {
+                Children = new Dictionary<byte, ByteTrieNode>();
+                Value = value;
+                IsTerminal = isTerminal;
+            }
         }
 
         private class StringTrieNode
         {
-            public Dictionary<char, StringTrieNode> Children { get; } = new Dictionary<char, StringTrieNode>();
+            public Dictionary<char, StringTrieNode> Children { get; }
             public byte[] Value { get; set; }
             public bool IsTerminal { get; set; }
+
+            public StringTrieNode(byte[] value = null, bool isTerminal = false)
+            {
+                Children = new Dictionary<char, StringTrieNode>();
+                Value = value;
+                IsTerminal = isTerminal;
+            }
         }
     }
 }
