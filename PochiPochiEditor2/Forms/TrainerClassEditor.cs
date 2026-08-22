@@ -233,7 +233,7 @@ namespace PochiPochiEditor2.Forms
                                 targetField,
                                 oldBinary,
                                 newBinary,
-                                $"[{this.Text}]肩書き名(ID:{_currentClassIdx})を変更");
+                                $"肩書き名(ID:{_currentClassIdx})を変更");
                             _undoManager.PushCommand(cmd);
                         }
 

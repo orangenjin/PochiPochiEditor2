@@ -462,6 +462,7 @@ namespace PochiPochiEditor2
             // 
             // lstHistory
             // 
+            this.lstHistory.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.lstHistory.FormattingEnabled = true;
             this.lstHistory.ItemHeight = 15;
             this.lstHistory.Location = new System.Drawing.Point(20, 88);

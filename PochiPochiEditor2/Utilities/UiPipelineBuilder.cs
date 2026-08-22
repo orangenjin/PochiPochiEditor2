@@ -7,6 +7,9 @@ namespace PochiPochiEditor2.Utilities
     {
         private List<Action<UiContext<TData>>> _actions = new List<Action<UiContext<TData>>>();
 
+        /// <summary>
+        /// 連鎖的な記述を可能にするため。
+        /// </summary>
         public UiPipelineBuilder<TData> Then(Action<UiContext<TData>> action)
         {
             _actions.Add(action);

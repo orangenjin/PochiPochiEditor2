@@ -45,7 +45,7 @@ namespace PochiPochiEditor2.Helpers
                         binaryData,
                         Constants.DefaultIndex,
                         Constants.ByteSize);
-                    switch (fieldValue.ValueCount)
+                    switch (fieldValue.ArgCount)
                     {
                         // ニブル
                         case Constants.CharPerByte:
@@ -148,7 +148,7 @@ namespace PochiPochiEditor2.Helpers
                 case Constants.ByteSize:
                     byte rawByte = result[Constants.DefaultIndex];
 
-                    switch (fieldValue.ValueCount)
+                    switch (fieldValue.ArgCount)
                     {
                         // ニブル（上位/下位のニブルのみ更新）
                         case Constants.CharPerByte:

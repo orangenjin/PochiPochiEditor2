@@ -16,6 +16,7 @@ namespace PochiPochiEditor2.Managers
 
         // 公開用
         public List<ICommand> History => _history.ToList();
+        public int CurrentIndex => _currentIndex;
 
         // 実行可能かどうか、チェック用
         public bool CanUndo => _currentIndex > Constants.DefaultIndex;

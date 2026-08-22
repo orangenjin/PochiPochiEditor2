@@ -18,6 +18,10 @@ namespace PochiPochiEditor2.Managers
         /// </summary>
         public TblManager(string filePath)
         {
+            // 初期化
+            _byteTrieRoot = new ByteTrieNode();
+            _stringTrieRoot = new StringTrieNode();
+
             if (!File.Exists(filePath)) return;
 
             foreach (string line in File.ReadLines(filePath, Encoding.UTF8))
@@ -39,7 +43,6 @@ namespace PochiPochiEditor2.Managers
                 }
 
                 // バイト -> 文字
-                _byteTrieRoot = new ByteTrieNode();
                 ByteTrieNode currentByteNode = _byteTrieRoot;
                 foreach (byte b in bytes)
                 {
@@ -56,7 +59,6 @@ namespace PochiPochiEditor2.Managers
                 // 文字 -> バイト
                 if (!string.IsNullOrEmpty(value))
                 {
-                    _stringTrieRoot = new StringTrieNode();
                     StringTrieNode currentStrNode = _stringTrieRoot;
                     foreach (char c in value)
                     {

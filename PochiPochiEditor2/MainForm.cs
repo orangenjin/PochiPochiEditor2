@@ -36,22 +36,27 @@ namespace PochiPochiEditor2
         public MainForm()
         {
             InitializeComponent();
-            InitializeEventHandlers();
 
             // 先にこれらを初期化（設定名のコンボボックスの初期化が必要）
             var config = new IniManager(_iniFolder, cmbConfig);
             var charmap = new TblManager(_tblPath);
             _sharedData = new SharedData(config, charmap);
 
+            InitializeControls();
+            InitializeEventHandlers();
+
+            // UI状態の更新
+            MainFormUIUpdate();
+        }
+
+        private void InitializeControls()
+        {
             // タグ付加
             btnSaveOver.Tag = SaveMode.SaveOver;
             btnSaveAs.Tag = SaveMode.SaveAs;
 
             // 画像表示
             picPoke.Image = Image.FromFile(_imagePath);
-
-            // UI状態の更新
-            MainFormUIUpdate();
         }
 
         private void InitializeEventHandlers()
@@ -109,6 +114,13 @@ namespace PochiPochiEditor2
                 {
                     _undoManager.Redo();
                 });
+            _eventBinder.BindCustom(
+                () => lstHistory.DrawItem += lstHistory_DrawItem,
+                () => lstHistory.DrawItem -= lstHistory_DrawItem);
+            _eventBinder.BindCtrl(
+                h => lstHistory.Click += h,
+                h => lstHistory.Click -= h,
+                lstHistory_Click);
 
             // 解除タイミング指定
             _eventBinder.BindCtrl(
@@ -224,7 +236,11 @@ namespace PochiPochiEditor2
 
             // 読み込み前、エディタ起動前
             bool canLoadConfig = !isRomLoaded && !isEditorOpen;
-            CtrlHelper.SetControlsEnabled(grpLoadRom, canLoadConfig, includeSelf: false, new[] { nameof(btnClearRom) });
+            CtrlHelper.SetControlsEnabled(
+                grpLoadRom, 
+                canLoadConfig, 
+                includeSelf: false, 
+                new[] { nameof(btnClearRom) });
 
             // 読み込み後、エディタ起動前
             bool canOpenEditor = isRomLoaded && !isEditorOpen;
@@ -245,15 +261,62 @@ namespace PochiPochiEditor2
             {
                 lstHistory.Items.Clear();
 
-                foreach (var command in _undoManager.UndoHistory)
+                foreach (var command in _undoManager.History)
                 {
-                    lstHistory.Items.Add(command.Description);
+                    lstHistory.Items.Add(command);
                 }
             }
             finally
             {
                 lstHistory.EndUpdate();
             }
+
+            lstHistory.Invalidate();
+        }
+
+        private void lstHistory_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0) return;
+
+            var command = _undoManager.History[e.Index];
+            bool isFuture = e.Index >= _undoManager.CurrentIndex;
+
+            e.DrawBackground();
+            Color textColor = GetHistoryTextColor();
+
+            using (var brush = new SolidBrush(textColor))
+            {
+                e.Graphics.DrawString(
+                    command.Desc,
+                    e.Font,
+                    brush,
+                    e.Bounds);
+            }
+
+            e.DrawFocusRectangle();
+
+            // 色ヘルパー
+            Color GetHistoryTextColor()
+            {
+                if (!isFuture) return lstHistory.ForeColor;
+
+                Color baseColor = lstHistory.ForeColor;
+                Color backColor = lstHistory.BackColor;
+
+                // 淡色化
+                return Color.FromArgb(
+                    (baseColor.R + backColor.R) / 2,
+                    (baseColor.G + backColor.G) / 2,
+                    (baseColor.B + backColor.B) / 2);
+            }
+        }
+
+        private void lstHistory_Click(object sender, EventArgs e)
+        {
+            int index = lstHistory.SelectedIndex;
+
+            if (index < 0) return;
+            _undoManager.MoveTo(index + 1);
         }
     }
 }
