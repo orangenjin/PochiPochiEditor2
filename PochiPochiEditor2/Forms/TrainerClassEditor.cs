@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -25,6 +26,13 @@ namespace PochiPochiEditor2.Forms
         private EntryManager _battleMusic = null;
         private EntryManager _pokeBall = null;
         private EntryManager _baseIv = null;
+        // パイプライン用
+        private UiPipelineBuilder _classNamePipeline = null;
+        private UiPipelineBuilder _prizeMultiPipeline = null;
+        private UiPipelineBuilder _encMusicPipeline = null;
+        private UiPipelineBuilder _battleMusicPipeline = null;
+        private UiPipelineBuilder _pokeBallPipeline = null;
+        private UiPipelineBuilder _baseIvPipeline = null;
 
         // 追加データ判定用
         private bool _isEncounterMusicEnabled = false;
@@ -35,12 +43,6 @@ namespace PochiPochiEditor2.Forms
         // UI制御用
         private bool _isUpdatingUI = false;
         private int _currentClassIdx = 0;
-
-        public class ClassNamePipelineData
-        {
-            public string InputText { get; set; }
-            public string FormattedText { get; set; }
-        }
 
         private enum FieldKey
         {
@@ -62,7 +64,6 @@ namespace PochiPochiEditor2.Forms
             public static string TrainerClassNameEntry = nameof(TrainerClassNameEntry);
             public static string TrainerClassNameTableOffset = nameof(TrainerClassNameTableOffset);
             public static string TrainerClassNameCount = nameof(TrainerClassNameCount);
-            public static string TrainerClassNameEntryLength = nameof(TrainerClassNameEntryLength);
 
             public static string TrainerClassPrizeMultiEntry = nameof(TrainerClassPrizeMultiEntry);
             public static string TrainerClassPrizeMultiTableOffset = nameof(TrainerClassPrizeMultiTableOffset);
@@ -194,90 +195,152 @@ namespace PochiPochiEditor2.Forms
         private void InitializePipelines()
         {
             // txtClassName
-            {
-                var uiPipeline = new UiPipelineBuilder<ClassNamePipelineData>()
-                    // 入力値を取得
-                    .Then(ctx =>
-                    {
-                        var txt = (TextBox)ctx.Sender;
-                        ctx.Data.InputText = txt.Text;
-                    })
-                    // 長さを調整
-                    .Then(ctx =>
-                    {
-                        int entryLength = _sharedData.Config.ReadInt(
-                            IniKey.TrainerClassNameEntryLength);
-                        ctx.Data.FormattedText = CalcHelper.TextLengthValidate(
+            _classNamePipeline = new UiPipelineBuilder()
+                // 入力値を取得
+                .Then(ctx =>
+                {
+                    ctx.Set((TextBox)ctx.Sender); // テキストボックス
+                    ctx.Set(ctx.Get<TextBox>().Text); // 入力されたテキスト
+                })
+                // 長さを調整
+                .Then(ctx =>
+                {
+                    // AlloewedLengthはない
+                    int entryLength = _className.Entries[_currentClassIdx][FieldKey.ClassNameStr].EntryLength;
+                    var formattedText = CalcHelper.TextLengthValidate(
                             _sharedData.Charmap,
-                            ctx.Data.InputText,
+                            ctx.Get<string>(),
                             entryLength);
-                    })
-                    // データを更新
-                    .Then(ctx =>
+                    ctx.Set(formattedText); // トリムされたテキスト
+                })
+                // データを更新
+                .Then(ctx =>
+                {
+                    var targetField = _className.Entries[_currentClassIdx][FieldKey.ClassNameStr];
+
+                    // 変更前のバイナリデータ
+                    byte[] oldBinary = targetField.BinaryData;
+
+                    // データ更新
+                    targetField.SetData(ctx.Get<string>());
+
+                    // 変更後のバイナリデータ
+                    byte[] newBinary = targetField.BinaryData;
+
+                    // 異なればスタックに追加
+                    if (!oldBinary.SequenceEqual(newBinary))
                     {
-                        var targetField = _className.Entries[_currentClassIdx][FieldKey.ClassNameStr];
-
-                        // 変更前のバイナリデータ
-                        byte[] oldBinary = targetField.BinaryData;
-
-                        // データ更新
-                        targetField.SetData(ctx.Data.FormattedText);
-
-                        // 変更後のバイナリデータ
-                        byte[] newBinary = targetField.BinaryData;
-
-                        // 異なればスタックに追加
-                        if (!oldBinary.SequenceEqual(newBinary))
-                        {
-                            var cmd = new FieldChangeCommand(
-                                targetField,
-                                oldBinary,
-                                newBinary,
-                                $"肩書き名(ID:{_currentClassIdx})を変更");
-                            _undoManager.PushCommand(cmd);
-                        }
-
-                        // UI更新
-                        txtClassName.Text = ctx.Data.FormattedText;
-                        CtrlHelper.MoveCursorToEnd(txtClassName);
-                    })
-                    // テキストボックスを更新
-                    .Then(ctx => 
-                    {
-                        txtClassName.Text = ctx.Data.FormattedText;
-                        CtrlHelper.MoveCursorToEnd(txtClassName); // カーソル位置
-                    })
-                    // コンボボックスを更新
-                    .Then(ctx =>
-                    {
-                        cmbClassNameIndex.Items[_currentClassIdx] = ctx.Data.FormattedText;
-                    });
-                // イベントハンドラーの登録
-                _eventBinder.BindCtrl(
-                    h => txtClassName.TextChanged += h,
-                    h => txtClassName.TextChanged -= h,
-                    (s, e) =>
-                    {
-                        uiPipeline.Execute(
-                            new UiContext<ClassNamePipelineData>(s, e));
-                    });
-            }
+                        var cmd = new FieldChangeCommand(
+                            targetField,
+                            oldBinary,
+                            newBinary,
+                            $"[{this.Text}]肩書き名(ID:{_currentClassIdx})");
+                        _undoManager.PushCommand(cmd);
+                    }
+                })
+                // テキストボックスを更新
+                .Then(ctx =>
+                {
+                    ctx.Get<TextBox>().Text = ctx.Get<string>();
+                    CtrlHelper.MoveCursorToEnd(ctx.Get<TextBox>()); // カーソル位置
+                })
+                // コンボボックスを更新（副次的）
+                .Then(ctx =>
+                {
+                    cmbClassNameIndex.Items[_currentClassIdx] = ctx.Get<string>();
+                });
 
             // nudPrizeMulti
+            _prizeMultiPipeline = new UiPipelineBuilder()
+                // 入力値を取得、データを更新
+                .Then(ctx =>
+                {
+                    // 入力値
+                    var nud = (NumericUpDown)ctx.Sender;
+                    int newValue = (int)nud.Value;
+
+                    // 対象のインデックスを計算
+                    int calcIndex = CalcPrizeMultiIndex(_currentClassIdx);
+
+                    // 対象データ
+                    var targetField = _prizeMulti.Entries[calcIndex][FieldKey.PrizeMultiValue];
+
+                    // 変更前のバイナリデータ
+                    byte[] oldBinary = targetField.BinaryData;
+
+                    // データ更新
+                    targetField.SetData(newValue);
+
+                    // 変更後のバイナリデータ
+                    byte[] newBinary = targetField.BinaryData;
+
+                    // 異なればスタックに追加
+                    if (!oldBinary.SequenceEqual(newBinary))
+                    {
+                        var cmd = new FieldChangeCommand(
+                            targetField,
+                            oldBinary,
+                            newBinary,
+                            $"[{this.Text}]賞金倍率(ID:{_currentClassIdx})");
+                        _undoManager.PushCommand(cmd);
+                    }
+
+                    // UI更新
+                    nud.Value = newValue;
+                });
+
+            // ループで回すためのタプル
+            var pipelineConfigs = new (
+                bool IsEnabled,
+                EntryManager Entry,
+                FieldKey Key,
+                Func<string> DescGenerator,
+                Action<UiPipelineBuilder> AssignPipeline)[]
             {
-                var uiPipeline = new UiPipelineBuilder<ClassNamePipelineData>()
-                    // 入力値を取得、データを更新
+                (_isEncounterMusicEnabled, 
+                    _encMusic, 
+                    FieldKey.EncounterMusicIndex,
+                    () => $"[{this.Text}]戦闘前BGM(ID:{_currentClassIdx})",
+                    p => _encMusicPipeline = p),
+                (_isBattleMusicEnabled, 
+                    _battleMusic, 
+                    FieldKey.BattleMusicIndex,
+                    () => $"[{this.Text}]戦闘中BGM(ID:{_currentClassIdx})",
+                    p => _battleMusicPipeline = p),
+                (_isPokeBallEnabled, 
+                    _pokeBall,
+                    FieldKey.PokeBallIndex,
+                    () => $"[{this.Text}]使用ボールID(ID:{_currentClassIdx})",
+                    p => _pokeBallPipeline = p),
+                (_isBaseIvEnabled, 
+                    _baseIv, 
+                    FieldKey.BaseIvValue,
+                    () => $"[{this.Text}]基礎個体値(ID:{_currentClassIdx})", 
+                    p => _baseIvPipeline = p)
+            };
+
+            // 追加データのループ処理
+            foreach (var config in pipelineConfigs)
+            {
+                if (config.IsEnabled)
+                {
+                    var pipeline = BuildPipeline(config.Entry, config.Key, config.DescGenerator);
+                    config.AssignPipeline(pipeline);
+                }
+            }
+
+            // ループヘルパー
+            UiPipelineBuilder BuildPipeline(EntryManager entry, FieldKey key, Func<string> descGen)
+            {
+                return new UiPipelineBuilder()
                     .Then(ctx =>
                     {
                         // 入力値
                         var nud = (NumericUpDown)ctx.Sender;
                         int newValue = (int)nud.Value;
 
-                        // 対象のインデックスを計算
-                        int calcIndex = CalcPrizeMultiIndex(_currentClassIdx);
-
                         // 対象データ
-                        var targetField = _prizeMulti.Entries[calcIndex][FieldKey.PrizeMultiValue];
+                        var targetField = entry.Entries[_currentClassIdx][key];
 
                         // 変更前のバイナリデータ
                         byte[] oldBinary = targetField.BinaryData;
@@ -295,34 +358,15 @@ namespace PochiPochiEditor2.Forms
                                 targetField,
                                 oldBinary,
                                 newBinary,
-                                "賞金倍率を変更");
+                                descGen());
+
                             _undoManager.PushCommand(cmd);
                         }
 
                         // UI更新
-                        nudPrizeMulti.Value = newValue;
-                    });
-                // イベントハンドラーの登録
-                _eventBinder.BindCtrl(
-                    h => nudPrizeMulti.ValueChanged += h,
-                    h => nudPrizeMulti.ValueChanged -= h,
-                    (s, e) =>
-                    {
-                        uiPipeline.Execute(
-                            new UiContext<ClassNamePipelineData>(s, e));
+                        nud.Value = newValue;
                     });
             }
-        }
-
-        /// <summary>
-        /// FormGroupManagerからのUI再描画用の処理。
-        /// </summary>
-        public void RefreshFromData()
-        {
-            UpdateClassNameComboBox();
-
-            // 現在のインデックスを再読み込み
-            LoadDataToUI(_currentClassIdx);
         }
 
         private void InitializeEventHandlers()
@@ -338,6 +382,69 @@ namespace PochiPochiEditor2.Forms
                     int newIndex = cmbClassNameIndex.SelectedIndex;
                     LoadDataToUI(newIndex);
                 });
+
+            // 肩書き名
+            _eventBinder.BindCtrl(
+                h => txtClassName.TextChanged += h,
+                h => txtClassName.TextChanged -= h,
+                (s, e) =>
+                {
+                    _classNamePipeline.Execute(new UiContext(s, e));
+                });
+
+            // 賞金倍率
+            _eventBinder.BindCtrl(
+                h => nudPrizeMulti.ValueChanged += h,
+                h => nudPrizeMulti.ValueChanged -= h,
+                (s, e) =>
+                {
+                    _prizeMultiPipeline.Execute(new UiContext(s, e));
+                });
+
+            // 追加データ関連
+            if (_isEncounterMusicEnabled)
+            {
+                _eventBinder.BindCtrl(
+                    h => nudEncMusic.ValueChanged += h,
+                    h => nudEncMusic.ValueChanged -= h,
+                    (s, e) =>
+                    {
+                        _encMusicPipeline.Execute(new UiContext(s, e));
+                    });
+            }
+
+            if (_isBattleMusicEnabled)
+            {
+                _eventBinder.BindCtrl(
+                    h => nudBattleMusic.ValueChanged += h,
+                    h => nudBattleMusic.ValueChanged -= h,
+                    (s, e) =>
+                    {
+                        _battleMusicPipeline.Execute(new UiContext(s, e));
+                    });
+            }
+
+            if (_isPokeBallEnabled)
+            {
+                _eventBinder.BindCtrl(
+                    h => nudPokeBall.ValueChanged += h,
+                    h => nudPokeBall.ValueChanged -= h,
+                    (s, e) =>
+                    {
+                        _pokeBallPipeline.Execute(new UiContext(s, e));
+                    });
+            }
+
+            if (_isBaseIvEnabled)
+            {
+                _eventBinder.BindCtrl(
+                    h => nudBaseIv.ValueChanged += h,
+                    h => nudBaseIv.ValueChanged -= h,
+                    (s, e) =>
+                    {
+                        _baseIvPipeline.Execute(new UiContext(s, e));
+                    });
+            }
 
             // 解除タイミング指定
             _eventBinder.BindCtrl(
@@ -361,6 +468,27 @@ namespace PochiPochiEditor2.Forms
             int calcIndex = CalcPrizeMultiIndex(index);
             nudPrizeMulti.Value = (decimal)_prizeMulti.Entries[calcIndex][FieldKey.PrizeMultiValue].GetData<int>();
 
+            // 追加データ
+            if (_isEncounterMusicEnabled)
+            {
+                nudEncMusic.Value = (decimal)_encMusic.Entries[index][FieldKey.EncounterMusicIndex].GetData<int>();
+            }
+
+            if (_isBattleMusicEnabled)
+            {
+                nudBattleMusic.Value = (decimal)_battleMusic.Entries[index][FieldKey.BattleMusicIndex].GetData<int>();
+            }
+
+            if (_isPokeBallEnabled)
+            {
+                nudPokeBall.Value = (decimal)_pokeBall.Entries[index][FieldKey.PokeBallIndex].GetData<int>();
+            }
+
+            if (_isBaseIvEnabled)
+            {
+                nudBaseIv.Value = (decimal)_baseIv.Entries[index][FieldKey.BaseIvValue].GetData<int>();
+            }
+
             _isUpdatingUI = false;
         }
 
@@ -369,6 +497,7 @@ namespace PochiPochiEditor2.Forms
         /// </summary>
         private int CalcPrizeMultiIndex(int index)
         {
+            // 総エントリーからindexを含むエントリーを探す
             int foundIndex = _prizeMulti.Entries
                 .FindIndex(entry => entry[FieldKey.ClassNameIndex]
                 .GetData<int>() == index);
@@ -381,6 +510,17 @@ namespace PochiPochiEditor2.Forms
             }
 
             return foundIndex;
+        }
+
+        /// <summary>
+        /// FormGroupManagerからのUI再描画用の処理。
+        /// </summary>
+        public void RefreshFromData()
+        {
+            UpdateClassNameComboBox();
+
+            // 現在のインデックスを再読み込み
+            LoadDataToUI(_currentClassIdx);
         }
     }
 }
