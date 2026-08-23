@@ -32,6 +32,7 @@
         public const char SpaceChar = ' ';
         public const char AsteriskChar = '*';
 
+        public const string BmpExt = "bmp";
         public const string DefExt = "def";
         public const string IniExt = "ini";
 
