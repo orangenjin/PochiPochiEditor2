@@ -22,7 +22,7 @@ namespace PochiPochiEditor2.Helpers
         /// </summary>
         public static T BytesToModelConv<T>(
             FieldValue fieldValue,
-            int valueindex,
+            int argIndex,
             TblManager charmap)
         {
             int entryLength = fieldValue.EntryLength;
@@ -50,14 +50,14 @@ namespace PochiPochiEditor2.Helpers
                         // ニブル
                         case Constants.CharPerByte:
                             int nibbleValue =
-                                valueindex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg // high
+                                argIndex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg // high
                                 ? (rawByte >> Constants.NibbleShift) & Constants.NibbleMask
                                 : rawByte & Constants.NibbleMask;
                             return (T)Convert.ChangeType(nibbleValue, typeof(T));
 
                         // ビット
                         case Constants.BitsPerByte:
-                            int bitValue = (rawByte >> valueindex) & 1;
+                            int bitValue = (rawByte >> argIndex) & 1;
                             return (T)Convert.ChangeType(bitValue, typeof(T));
 
                         default:
@@ -107,7 +107,7 @@ namespace PochiPochiEditor2.Helpers
         public static byte[] ModelToBytesConv<T>(
            T value,
            FieldValue fieldValue,
-           int ctrlNameindex,
+           int argIndex,
            TblManager charmap)
         {
             int entryLength = fieldValue.EntryLength;
@@ -153,7 +153,7 @@ namespace PochiPochiEditor2.Helpers
                         // ニブル（上位/下位のニブルのみ更新）
                         case Constants.CharPerByte:
                             byte nibbleValue = Convert.ToByte(value);
-                            if (ctrlNameindex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg) // high
+                            if (argIndex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg) // high
                             {
                                 // 下位ニブルを残し、上位ニブルに値をセット
                                 rawByte = (byte)((rawByte & ~(Constants.NibbleMask << Constants.NibbleShift))
@@ -173,11 +173,11 @@ namespace PochiPochiEditor2.Helpers
                             byte bitValue = Convert.ToByte(value);
                             if ((bitValue & 1) == 1)
                             {
-                                rawByte |= (byte)(1 << ctrlNameindex);
+                                rawByte |= (byte)(1 << argIndex);
                             }
                             else
                             {
-                                rawByte &= (byte)~(1 << ctrlNameindex);
+                                rawByte &= (byte)~(1 << argIndex);
                             }
                             result[Constants.DefaultIndex] = rawByte;
                             break;
@@ -222,13 +222,13 @@ namespace PochiPochiEditor2.Helpers
             return result;
         }
 
-        public static string TextLengthValidate(TblManager charmap, string text, int entryLength)
+        public static string TextLengthValidate(TblManager charmap, string text, int length)
         {
             // 空白ならそのまま返す
             if (string.IsNullOrEmpty(text)) return text;
 
             // 規定長を取得
-            int maxBytes = entryLength - 1;
+            int maxBytes = length - 1;
 
             // 現在の長さを取得
             byte[] currentBytes = charmap.StringToBytes(text, false);
@@ -244,9 +244,9 @@ namespace PochiPochiEditor2.Helpers
             string currentText = text;
             while (count > 0)
             {
-                // 末尾一文字を除いた文字列
+                // 末尾一文字を削った文字列
                 count--;
-                currentText = stringInfo.SubstringByTextElements(0, count);
+                currentText = stringInfo.SubstringByTextElements(Constants.DefaultIndex, count);
 
                 // バイト数をチェック
                 byte[] bytes = charmap.StringToBytes(currentText, false);

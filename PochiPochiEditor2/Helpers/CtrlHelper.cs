@@ -89,7 +89,7 @@ namespace PochiPochiEditor2.Helpers
                         nud.Value = Math.Max(nud.Minimum, 0);
                         break;
                     case ComboBox comboBox:
-                        comboBox.SelectedIndex = -1;
+                        comboBox.SelectedIndex = Constants.InvalidValue;
                         break;
                     case CheckBox checkBox:
                         checkBox.Checked = false;
@@ -436,7 +436,8 @@ namespace PochiPochiEditor2.Helpers
 
                 // 行解析
                 int closeBracketIndex = line.IndexOf(Constants.CloseBracketChar);
-                string hex = line.Substring(1, closeBracketIndex - 1); // "["を除外
+                string hex = line.Substring(
+                    Constants.OpenBracketChar.ToString().Length, closeBracketIndex - 1); // "["を除外
                 if (CalcHelper.TryParseValue(hex, out int index))
                 {
                     var entry = new KeyValuePair<byte, string>((byte)index, line.Trim());

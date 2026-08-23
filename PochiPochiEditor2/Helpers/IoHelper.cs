@@ -82,7 +82,7 @@ namespace PochiPochiEditor2.Helpers
         }
 
         /// <summary>
-        /// 4の倍数サイズでないバイト配列を、アライメント調整して書き込む。
+        /// 4の倍数サイズでないバイト配列（画像など）を、アライメント調整して書き込む。
         /// </summary>
         public static void WriteBytesToData(
             byte[] data,
@@ -90,7 +90,7 @@ namespace PochiPochiEditor2.Helpers
             byte[] bytes,
             byte alignPaddingByte = Constants.PaddingByte)
         {
-            Array.Copy(bytes, 0, data, offset, bytes.Length);
+            Array.Copy(bytes, Constants.DefaultIndex, data, offset, bytes.Length);
             int endOffset = offset + bytes.Length;
             int remainder = endOffset % Constants.UIntSize;
 
