@@ -429,7 +429,6 @@ namespace PochiPochiEditor2.Helpers
 
                 // .bmp
                 var ext = Path.ChangeExtension(null, Constants.BmpExt);
-
                 var format = Path.GetExtension(filePath).ToLower() == ext
                     ? ImageFormat.Bmp
                     : ImageFormat.Png;

@@ -66,6 +66,12 @@
     <Compile Include="Managers\Fields\FieldChangeCommand.cs" />
     <Compile Include="Managers\FormGroupManager.cs" />
     <Compile Include="Managers\TblManager.cs" />
+    <Compile Include="Utilities\QuickInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\QuickInput.Designer.cs">
+      <DependentUpon>QuickInput.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\UiPipelineBuilder.cs" />
     <Compile Include="Managers\UndoManager.cs" />
     <Compile Include="Utilities\Constants.cs" />
@@ -105,6 +111,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Utilities\QuickInput.resx">
+      <DependentUpon>QuickInput.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="charmap.tbl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
