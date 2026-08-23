@@ -11,9 +11,6 @@ namespace PochiPochiEditor2.Helpers
 {
     public static class CtrlHelper
     {
-        // AttachAutoFormatの整形桁数を保持
-        private static Dictionary<TextBox, int> _showDigits = new Dictionary<TextBox, int>();
-
         // AttachExternalBorderの対象コントロールを保持
         private static Dictionary<Control, List<Control>> _drawBorders = new Dictionary<Control, List<Control>>();
 
@@ -159,65 +156,6 @@ namespace PochiPochiEditor2.Helpers
                    ctrl is GroupBox ||
                    ctrl is TabControl ||
                    ctrl is TabPage;
-        }
-
-        /// <summary>
-        /// テキスト自動整形機能を追加する。
-        /// </summary>
-        public static void AttachAutoFormat(int digits = 8, params TextBox[] textBoxes)
-        {
-            foreach (var textBox in textBoxes)
-            {
-                _showDigits[textBox] = digits; // 桁数を仮置き
-                textBox.Leave += FormatTextBox;
-            }
-        }
-
-        /// <summary>
-        /// テキスト自動整形機能を解除する。
-        /// </summary>
-        public static void DetachAutoFormat(params TextBox[] textBoxes)
-        {
-            foreach (var textBox in textBoxes)
-            {
-                textBox.Leave -= FormatTextBox;
-                _showDigits.Remove(textBox);
-            }
-        }
-
-        /// <summary>
-        /// 無効な文字列なら空白にするため、追加処理が必要。
-        /// </summary>
-        private static void FormatTextBox(object sender, EventArgs e)
-        {
-            // 型変換を兼ねる
-            if (!(sender is TextBox textBox)) return;
-
-            // 空白ならそのまま
-            if (string.IsNullOrWhiteSpace(textBox.Text)) return;
-
-            // 一応トリミング
-            var trimmedText = textBox.Text.Trim();
-
-            // 小文字の "null" に統一する
-            if (trimmedText.Equals(Constants.InvalidOffsetString, StringComparison.OrdinalIgnoreCase))
-            {
-                textBox.Text = Constants.InvalidOffsetString;
-                return;
-            }
-
-            // 変換テスト
-            if (CalcHelper.TryParseValue(textBox.Text.Trim(), out int resultValue))
-            {
-                // 桁数を参照
-                int digits = _showDigits[textBox];
-
-                textBox.Text = resultValue.ToString($"X{digits}");
-            }
-            else
-            {
-                textBox.Text = string.Empty; // ※空白にする
-            }
         }
 
         /// <summary>

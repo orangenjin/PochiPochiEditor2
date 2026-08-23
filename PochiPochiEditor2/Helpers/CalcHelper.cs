@@ -255,5 +255,34 @@ namespace PochiPochiEditor2.Helpers
 
             return currentText;
         }
+
+        /// <summary>
+        /// アドレスなどのstringを桁数整形、"null"変換を行う。
+        /// </summary>
+        public static string FormatValueText(
+            string input,
+            int digits = Constants.UIntSize * Constants.CharPerByte)
+        {
+            // 空白ならそのまま戻る
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return default;
+            }
+
+            // 字詰め
+            var trimStr = input.Replace(Constants.SpaceChar.ToString(), string.Empty);
+
+            // "null" は8桁の場合のみ許可
+            if (digits == Constants.UIntSize * Constants.CharPerByte &&
+                trimStr.Equals(Constants.InvalidOffsetString, StringComparison.OrdinalIgnoreCase))
+            {
+                return Constants.InvalidOffsetString;
+            }
+
+            // 16進数に変換できない場合は空白
+            return CalcHelper.TryParseValue(trimStr, out int valueOffset)
+                ? valueOffset.ToString($"X{digits}")
+                : default;
+        }
     }
 }
