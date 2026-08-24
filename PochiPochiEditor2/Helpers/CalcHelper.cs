@@ -10,14 +10,6 @@ namespace PochiPochiEditor2.Helpers
     public static class CalcHelper
     {
         /// <summary>
-        /// stringからintへ16進数を変換する。
-        /// </summary>
-        public static bool TryParseValue(string str, out int val)
-        {
-            return int.TryParse(str, NumberStyles.HexNumber, null, out val);
-        }
-
-        /// <summary>
         /// byte[]を型Tとして変換する。
         /// </summary>
         public static T BytesToModelConv<T>(
@@ -257,32 +249,70 @@ namespace PochiPochiEditor2.Helpers
         }
 
         /// <summary>
-        /// アドレスなどのstringを桁数整形、"null"変換を行う。
+        /// 16進数stringを桁数整形、"null"小文字統一を行う。
         /// </summary>
         public static string FormatValueText(
             string input,
-            int digits = Constants.UIntSize * Constants.CharPerByte)
+            int digits = Constants.OffsetDigits)
         {
-            // 空白ならそのまま戻る
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                return default;
-            }
-
             // 字詰め
             var trimStr = input.Replace(Constants.SpaceChar.ToString(), string.Empty);
 
             // "null" は8桁の場合のみ許可
-            if (digits == Constants.UIntSize * Constants.CharPerByte &&
+            if (digits == Constants.OffsetDigits &&
                 trimStr.Equals(Constants.InvalidOffsetString, StringComparison.OrdinalIgnoreCase))
             {
                 return Constants.InvalidOffsetString;
             }
 
-            // 16進数に変換できない場合は空白
-            return CalcHelper.TryParseValue(trimStr, out int valueOffset)
-                ? valueOffset.ToString($"X{digits}")
-                : default;
+            // 16進数に変換できない場合は0
+            int result = ParseStringToInt(trimStr);
+            return result.ToString($"X{digits}");
+
+        }
+
+        /// <summary>
+        /// 整形済み16進数stringからintへ変換する。
+        /// </summary>
+        public static int ParseStringToInt(
+            this string str,
+            int digits = Constants.OffsetDigits)
+        {
+            // "null"かつ8桁整形の場合
+            if (str == Constants.InvalidOffsetString && digits == Constants.OffsetDigits)
+            {
+                return Constants.InvalidValue;
+            }
+
+            return int.TryParse(str, NumberStyles.HexNumber, null, out int value)
+                ? value
+                : 0;
+        }
+
+        /// <summary>
+        /// intから16進数stringから変換する。（nullを考慮）
+        /// </summary>
+        public static string ParseIntToString(
+            this int val,
+            int digits = Constants.OffsetDigits)
+        {
+            return val == Constants.InvalidValue
+                ? Constants.InvalidOffsetString
+                : val.ToString($"X{digits}");
+        }
+
+
+
+
+
+
+
+        /// <summary>
+        /// stringからintへ16進数を変換する。
+        /// </summary>
+        public static bool TryParseValue(string str, out int val)
+        {
+            return int.TryParse(str, NumberStyles.HexNumber, null, out val);
         }
     }
 }

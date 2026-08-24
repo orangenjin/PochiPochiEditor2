@@ -12,7 +12,7 @@ using PochiPochiEditor2.Utilities;
 namespace PochiPochiEditor2.Forms
 {
     [FormGroup(FormGroup.TrainerSprite)]
-    public partial class TrainerSpriteEditor : Form
+    public partial class TrainerSpriteEditor : Form, IEditorRefresh
     {
         // イベント登録・解除用
         private EventBinder _eventBinder = new EventBinder();
@@ -128,7 +128,7 @@ namespace PochiPochiEditor2.Forms
 
         private void InitializePipelines()
         {
-            // txtClassName
+            // txtImageOffset
             _imagePipeline = new UiPipelineBuilder()
                 // 入力値を取得
                 .Then(ctx =>
@@ -139,8 +139,8 @@ namespace PochiPochiEditor2.Forms
                 // 整形
                 .Then(ctx =>
                 {
-                    ctx.Get<TextBox>().Text = CalcHelper.FormatValueText(ctx.Get<string>());
-                    CtrlHelper.MoveCursorToEnd(ctx.Get<TextBox>()); // カーソル位置
+                    ctx.Set(CalcHelper.FormatValueText(ctx.Get<string>())); // 整形
+                    ctx.Set(CalcHelper.ParseStringToInt(ctx.Get<string>())); // int変換
                 })
                 // データを更新
                 .Then(ctx =>
@@ -166,6 +166,12 @@ namespace PochiPochiEditor2.Forms
                             $"[{this.Text}]画像アドレス(ID:{_currentSpriteIndex})");
                         _undoManager.PushCommand(cmd);
                     }
+                })
+                // テキストボックスを更新
+                .Then(ctx =>
+                {
+                    ctx.Get<TextBox>().Text = ctx.Get<string>();
+                    CtrlHelper.MoveCursorToEnd(ctx.Get<TextBox>()); // カーソル位置
                 });
         }
 
@@ -205,14 +211,31 @@ namespace PochiPochiEditor2.Forms
                 h => this.Disposed -= h);
         }
 
+        /// <summary>
+        /// FormGroupManagerからのUI再描画用の処理。
+        /// </summary>
+        public void RefreshFromData()
+        {
+            // UpdateClassNameComboBox();
+
+            // 現在のインデックスを再読み込み
+            LoadDataToUI(_currentSpriteIndex);
+        }
+
         private void LoadDataToUI(int index)
         {
             _currentSpriteIndex = index;
 
             // 画像アドレス
-            txtImageOffset.Text = _image.Entries[index][FieldKey.ImageOffset].GetData<string>();
+            txtImageOffset.Text =
+                _image.Entries[index][FieldKey.ImageOffset]
+                .GetData<int>()
+                .ParseIntToString();
             // パレットアドレス
-            txtPaletteOffset.Text = _palette.Entries[index][FieldKey.PaletteOffset].GetData<string>();
+            txtPaletteOffset.Text = 
+                _palette.Entries[index][FieldKey.PaletteOffset]
+                .GetData<int>()
+                .ParseIntToString();
 
 
 
