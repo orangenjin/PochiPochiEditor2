@@ -25,7 +25,7 @@ namespace PochiPochiEditor2.Forms
         private EntryManager _yPos = null;
         private EntryManager _animPointer = null;
         // パイプライン用
-        private UiPipelineBuilder _imagePipeline = null;
+        private UiPipelineBuilder _imageOffsetValidated = null;
         private UiPipelineBuilder _palettePipeline = null;
         private UiPipelineBuilder _yPosPipeline = null;
 
@@ -128,7 +128,7 @@ namespace PochiPochiEditor2.Forms
         private void InitializePipelines()
         {
             // txtImageOffset
-            _imagePipeline = new UiPipelineBuilder()
+            _imageOffsetValidated = new UiPipelineBuilder()
                 // 入力値を取得
                 .Then(ctx =>
                 {
@@ -138,28 +138,11 @@ namespace PochiPochiEditor2.Forms
                 // データを更新
                 .Then(ctx =>
                 {
-                    var targetField = _image.Entries[_currentSpriteIndex][FieldKey.ImageOffset];
+                    var parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
+                    var desc = $"[{this.Text}]画像アドレス(ID:{_currentSpriteIndex})";
 
-                    // 変更前のバイナリデータ
-                    byte[] oldBinary = targetField.BinaryData;
-
-                    // int変換、データ更新
-                    int parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
-                    targetField.SetData(parsedValue);
-
-                    // 変更後のバイナリデータ
-                    byte[] newBinary = targetField.BinaryData;
-
-                    // 異なればスタックに追加
-                    if (!oldBinary.SequenceEqual(newBinary))
-                    {
-                        var cmd = new FieldChangeCommand(
-                            targetField,
-                            oldBinary,
-                            newBinary,
-                            $"[{this.Text}]画像アドレス(ID:{_currentSpriteIndex})");
-                        _undoManager.PushCommand(cmd);
-                    }
+                    _image.Entries[_currentSpriteIndex][FieldKey.ImageOffset]
+                        .UpdateData(_undoManager, parsedValue, desc);
                 });
         }
 
@@ -189,8 +172,8 @@ namespace PochiPochiEditor2.Forms
                 h => txtImageOffset.Validated -= h,
                 (s, e) =>
                 {
-                    _imagePipeline.Execute(new UiContext(s, e));
-                    // DisplayTrainerSprite();
+                    _imageOffsetValidated.Execute(new UiContext(s, e));
+                    
                 });
 
             // 解除タイミング指定
@@ -204,13 +187,13 @@ namespace PochiPochiEditor2.Forms
         /// </summary>
         public void RefreshFromData()
         {
-            // UpdateClassNameComboBox();
-
             // 現在のインデックスを再読み込み
             LoadDataToUI(_currentSpriteIndex);
 
             // カーソル位置
-            CtrlHelper.MoveCursorToEnd(txtImageOffset); 
+            CtrlHelper.MoveCursorToEnd(txtImageOffset);
+
+            // DisplayTrainerSprite();
         }
 
         private void LoadDataToUI(int index)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Utilities;
@@ -124,6 +125,30 @@ namespace PochiPochiEditor2.Managers.Fields
 
             // 新しいbyte[]を代入
             BinaryData = newBytes;
+        }
+
+        public void UpdateData<T>(
+            UndoManager undoManager,
+            T data,
+            string desc)
+        {
+            // 変更前のバイナリデータ
+            byte[] oldBinary = BinaryData;
+            // データ更新
+            SetData(data);
+            // 変更後のバイナリデータ
+            byte[] newBinary = BinaryData;
+
+            // 異なればスタックに追加
+            if (!oldBinary.SequenceEqual(newBinary))
+            {
+                var cmd = new FieldChangeCommand(
+                    this,
+                    oldBinary,
+                    newBinary,
+                    desc);
+                undoManager.PushCommand(cmd);
+            }
         }
     }
 }
