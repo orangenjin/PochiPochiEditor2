@@ -41,7 +41,7 @@ namespace PochiPochiEditor2.Forms
         private bool _isBaseIvEnabled = false;
 
         // UI制御用
-        private int _currentClassIdx = 0;
+        private int _currentClassIndex = 0;
 
         private enum FieldKey
         {
@@ -96,7 +96,7 @@ namespace PochiPochiEditor2.Forms
             InitializePipelines();
             InitializeEventHandlers();
 
-            LoadDataToUI(_currentClassIdx);
+            LoadDataToUI(_currentClassIndex);
         }
 
         private void InitializeEntries()
@@ -205,7 +205,7 @@ namespace PochiPochiEditor2.Forms
                 .Then(ctx =>
                 {
                     // AlloewedLengthはない
-                    int entryLength = _className.Entries[_currentClassIdx][FieldKey.ClassNameStr].EntryLength;
+                    int entryLength = _className.Entries[_currentClassIndex][FieldKey.ClassNameStr].EntryLength;
                     var formattedText = CalcHelper.TextLengthValidate(
                             _sharedData.Charmap,
                             ctx.Get<string>(),
@@ -215,7 +215,7 @@ namespace PochiPochiEditor2.Forms
                 // データを更新
                 .Then(ctx =>
                 {
-                    var targetField = _className.Entries[_currentClassIdx][FieldKey.ClassNameStr];
+                    var targetField = _className.Entries[_currentClassIndex][FieldKey.ClassNameStr];
 
                     // 変更前のバイナリデータ
                     byte[] oldBinary = targetField.BinaryData;
@@ -233,7 +233,7 @@ namespace PochiPochiEditor2.Forms
                             targetField,
                             oldBinary,
                             newBinary,
-                            $"[{this.Text}]肩書き名(ID:{_currentClassIdx})");
+                            $"[{this.Text}]肩書き名(ID:{_currentClassIndex})");
                         _undoManager.PushCommand(cmd);
                     }
                 })
@@ -246,7 +246,7 @@ namespace PochiPochiEditor2.Forms
                 // コンボボックスを更新（副次的）
                 .Then(ctx =>
                 {
-                    cmbClassNameIndex.Items[_currentClassIdx] = ctx.Get<string>();
+                    cmbClassNameIndex.Items[_currentClassIndex] = ctx.Get<string>();
                 });
 
             // nudPrizeMulti
@@ -259,7 +259,7 @@ namespace PochiPochiEditor2.Forms
                     int newValue = (int)nud.Value;
 
                     // 対象のインデックスを計算
-                    int calcIndex = CalcPrizeMultiIndex(_currentClassIdx);
+                    int calcIndex = CalcPrizeMultiIndex(_currentClassIndex);
 
                     // 対象データ
                     var targetField = _prizeMulti.Entries[calcIndex][FieldKey.PrizeMultiValue];
@@ -280,7 +280,7 @@ namespace PochiPochiEditor2.Forms
                             targetField,
                             oldBinary,
                             newBinary,
-                            $"[{this.Text}]賞金倍率(ID:{_currentClassIdx})");
+                            $"[{this.Text}]賞金倍率(ID:{_currentClassIndex})");
                         _undoManager.PushCommand(cmd);
                     }
 
@@ -299,22 +299,22 @@ namespace PochiPochiEditor2.Forms
                 (_isEncounterMusicEnabled, 
                     _encMusic, 
                     FieldKey.EncounterMusicIndex,
-                    () => $"[{this.Text}]戦闘前BGM(ID:{_currentClassIdx})",
+                    () => $"[{this.Text}]戦闘前BGM(ID:{_currentClassIndex})",
                     p => _encMusicPipeline = p),
                 (_isBattleMusicEnabled, 
                     _battleMusic, 
                     FieldKey.BattleMusicIndex,
-                    () => $"[{this.Text}]戦闘中BGM(ID:{_currentClassIdx})",
+                    () => $"[{this.Text}]戦闘中BGM(ID:{_currentClassIndex})",
                     p => _battleMusicPipeline = p),
                 (_isPokeBallEnabled, 
                     _pokeBall,
                     FieldKey.PokeBallIndex,
-                    () => $"[{this.Text}]使用ボールID(ID:{_currentClassIdx})",
+                    () => $"[{this.Text}]使用ボールID(ID:{_currentClassIndex})",
                     p => _pokeBallPipeline = p),
                 (_isBaseIvEnabled, 
                     _baseIv, 
                     FieldKey.BaseIvValue,
-                    () => $"[{this.Text}]基礎個体値(ID:{_currentClassIdx})", 
+                    () => $"[{this.Text}]基礎個体値(ID:{_currentClassIndex})", 
                     p => _baseIvPipeline = p)
             };
 
@@ -339,7 +339,7 @@ namespace PochiPochiEditor2.Forms
                         int newValue = (int)nud.Value;
 
                         // 対象データ
-                        var targetField = entry.Entries[_currentClassIdx][key];
+                        var targetField = entry.Entries[_currentClassIndex][key];
 
                         // 変更前のバイナリデータ
                         byte[] oldBinary = targetField.BinaryData;
@@ -452,7 +452,7 @@ namespace PochiPochiEditor2.Forms
         private void LoadDataToUI(int index)
         {
             // インデックス
-            _currentClassIdx = index;
+            _currentClassIndex = index;
             cmbClassNameIndex.SelectedIndex = index;
             nudClassNameIndex.Value = (decimal)index;
 
@@ -513,7 +513,7 @@ namespace PochiPochiEditor2.Forms
             UpdateClassNameComboBox();
 
             // 現在のインデックスを再読み込み
-            LoadDataToUI(_currentClassIdx);
+            LoadDataToUI(_currentClassIndex);
         }
     }
 }

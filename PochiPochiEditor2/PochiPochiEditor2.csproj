@@ -155,6 +155,18 @@
     <Content Include="def\Trainer\TrainerClassPrizeMultiEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="def\Trainer\TrainerSpriteAnimationPointerEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Trainer\TrainerSpriteImageEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Trainer\TrainerSpritePaletteEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Trainer\TrainerSpriteYPosEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="img\poochyena.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
