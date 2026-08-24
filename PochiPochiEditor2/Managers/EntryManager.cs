@@ -24,7 +24,7 @@ namespace PochiPochiEditor2.Managers
             // DefReaderから定義情報を読み込む
             var defReader = new DefReader(defFileName);
 
-            // 現在のエントリーのインデックスについて
+            // 各エントリーに対して
             for (int i = 0; i < entryCount; i++)
             {
                 //　単一エントリーに対するフィールドリスト
@@ -41,7 +41,7 @@ namespace PochiPochiEditor2.Managers
                     entryFields.Add(fieldValue);
                 }
 
-                Entries.Add(new Entry(baseOffset, i,  entryFields));
+                Entries.Add(new Entry(baseOffset, i, entryFields));
             }
         }
     }

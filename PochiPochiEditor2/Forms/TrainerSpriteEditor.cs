@@ -136,11 +136,13 @@ namespace PochiPochiEditor2.Forms
                     ctx.Set((TextBox)ctx.Sender); // テキストボックス
                     ctx.Set(ctx.Get<TextBox>().Text); // 入力されたテキスト
                 })
-                // 整形
+                // 整形と変換
                 .Then(ctx =>
                 {
-                    ctx.Set(CalcHelper.FormatValueText(ctx.Get<string>())); // 整形
-                    ctx.Set(CalcHelper.ParseStringToInt(ctx.Get<string>())); // int変換
+                    // 整形
+                    ctx.Set(CalcHelper.FormatValueText(ctx.Get<string>()));
+                    // int変換
+                    ctx.Set(CalcHelper.ParseStringToInt(ctx.Get<string>()));
                 })
                 // データを更新
                 .Then(ctx =>
@@ -166,12 +168,6 @@ namespace PochiPochiEditor2.Forms
                             $"[{this.Text}]画像アドレス(ID:{_currentSpriteIndex})");
                         _undoManager.PushCommand(cmd);
                     }
-                })
-                // テキストボックスを更新
-                .Then(ctx =>
-                {
-                    ctx.Get<TextBox>().Text = ctx.Get<string>();
-                    CtrlHelper.MoveCursorToEnd(ctx.Get<TextBox>()); // カーソル位置
                 });
         }
 
@@ -197,8 +193,8 @@ namespace PochiPochiEditor2.Forms
 
             // 画像アドレス
             _eventBinder.BindCtrl(
-                h => txtImageOffset.TextChanged += h,
-                h => txtImageOffset.TextChanged -= h,
+                h => txtImageOffset.Validated += h,
+                h => txtImageOffset.Validated -= h,
                 (s, e) =>
                 {
                     _imagePipeline.Execute(new UiContext(s, e));
@@ -220,6 +216,9 @@ namespace PochiPochiEditor2.Forms
 
             // 現在のインデックスを再読み込み
             LoadDataToUI(_currentSpriteIndex);
+
+            // カーソル位置
+            CtrlHelper.MoveCursorToEnd(txtImageOffset); 
         }
 
         private void LoadDataToUI(int index)

@@ -7,7 +7,7 @@ namespace PochiPochiEditor2.Managers.Fields
     public class FieldValue
     {
         public Enum Name { get; }
-        public int EntryLength { get; }
+        public int EntryLength { get; } // 最大値として
         public int AllowedLength { get; } // ほぼstring用
         public bool IsSigned { get; }
         public bool IsPointer { get; }
@@ -54,18 +54,18 @@ namespace PochiPochiEditor2.Managers.Fields
             // ない場合は実行されない
             foreach (var attr in metaData.Attrs)
             {
-                // 属性引数の数を格納
+                // 場合分け後、属性引数の数を格納
                 switch (attr.Kind)
                 {
                     case FieldExtensions.AttrKind.StringAttr:
-                        ArgCount = FieldExtensions.AttrKind.StringAttr.GetAttrSize(); // 最大
-
                         // 属性引数AllowedLengthがない場合がある
-                        int maxCount = Math.Min(attr.Args.Length, ArgCount);
+                        ArgCount = Math.Min(
+                            attr.Args.Length, 
+                            FieldExtensions.AttrKind.StringAttr.GetAttrSize()); // 最大値と比較
 
                         // 長さintを格納する
-                        int[] lengths = new int[maxCount];
-                        for (int i = 0; i < maxCount; i++)
+                        int[] lengths = new int[ArgCount];
+                        for (int i = 0; i < ArgCount; i++)
                         {
                             lengths[i] = sharedData.Config.ReadInt(attr.Args[i]);
                         }
@@ -103,7 +103,7 @@ namespace PochiPochiEditor2.Managers.Fields
             int argIndex = Constants.DefaultIndex,
             Func<FieldValue, int, TblManager, T> converter = null)
         {
-            // 特殊処理があれば渡す
+            // 型Tで対応できない特殊処理があれば渡す
             return converter != null
                 ? converter(this, argIndex, _sharedData.Charmap)
                 : CalcHelper.BytesToModelConv<T>(this, argIndex, _sharedData.Charmap);
@@ -117,7 +117,7 @@ namespace PochiPochiEditor2.Managers.Fields
             int argIndex = Constants.DefaultIndex,
             Func<T, FieldValue, int, TblManager, byte[]> converter = null)
         {
-            // 特殊処理があれば渡す
+            // 型Tで対応できない特殊処理があれば渡す
             byte[] newBytes = converter != null
                     ? converter(rawData, this, argIndex, _sharedData.Charmap)
                     : CalcHelper.ModelToBytesConv(rawData, this, argIndex, _sharedData.Charmap);

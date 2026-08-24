@@ -10,7 +10,7 @@ namespace PochiPochiEditor2.Helpers
     public static class CalcHelper
     {
         /// <summary>
-        /// byte[]を型Tとして変換する。
+        /// byte[](FieldValue.BinaryData)を型Tとして変換する。
         /// </summary>
         public static T BytesToModelConv<T>(
             FieldValue fieldValue,
@@ -36,34 +36,39 @@ namespace PochiPochiEditor2.Helpers
                     byte rawByte = (byte)IoHelper.ReadByteValue(
                         binaryData,
                         Constants.DefaultIndex,
-                        Constants.ByteSize);
-                    switch (fieldValue.ArgCount)
+                        entryLength);
+
+                    // サイズ取得
+                    int nibbleSize = FieldExtensions.AttrKind.NibbleAttr.GetAttrSize();
+                    int bitSize = FieldExtensions.AttrKind.BitAttr.GetAttrSize();
+
+                    // ニブル
+                    if (fieldValue.ArgCount == nibbleSize)
                     {
-                        // ニブル
-                        case Constants.CharPerByte:
-                            int nibbleValue =
-                                argIndex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg // high
-                                ? (rawByte >> Constants.NibbleShift) & Constants.NibbleMask
-                                : rawByte & Constants.NibbleMask;
-                            return (T)Convert.ChangeType(nibbleValue, typeof(T));
+                        int nibbleValue = argIndex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg
+                            ? (rawByte >> Constants.NibbleShift) & Constants.NibbleMask
+                            : rawByte & Constants.NibbleMask;
 
-                        // ビット
-                        case Constants.BitsPerByte:
-                            int bitValue = (rawByte >> argIndex) & 1;
-                            return (T)Convert.ChangeType(bitValue, typeof(T));
-
-                        default:
-                            return isSigned
-                                ? (T)Convert.ChangeType((sbyte)rawByte, typeof(T))
-                                : (T)Convert.ChangeType(rawByte, typeof(T));
+                        return (T)Convert.ChangeType(nibbleValue, typeof(T));
                     }
+                    // ビット
+                    else if (fieldValue.ArgCount == bitSize)
+                    {
+                        int bitValue = (rawByte >> argIndex) & 1;
+                        return (T)Convert.ChangeType(bitValue, typeof(T));
+                    }
+
+                    // デフォルト
+                    return isSigned
+                        ? (T)Convert.ChangeType((sbyte)rawByte, typeof(T))
+                        : (T)Convert.ChangeType(rawByte, typeof(T));
 
                 // 2バイト
                 case Constants.UShortSize:
                     ushort rawUShort = (ushort)IoHelper.ReadByteValue(
                         binaryData,
                         Constants.DefaultIndex,
-                        Constants.UShortSize);
+                        entryLength);
                     return isSigned
                         ? (T)Convert.ChangeType((short)rawUShort, typeof(T))
                         : (T)Convert.ChangeType(rawUShort, typeof(T));
@@ -73,7 +78,7 @@ namespace PochiPochiEditor2.Helpers
                     uint rawUInt = IoHelper.ReadByteValue(
                         binaryData,
                         Constants.DefaultIndex,
-                        Constants.UIntSize);
+                        entryLength);
 
                     // ポインタ
                     if (fieldValue.IsPointer)
@@ -94,7 +99,7 @@ namespace PochiPochiEditor2.Helpers
         }
 
         /// <summary>
-        /// 型Tの値をbyte[]に変換する。
+        /// 型Tの値をbyte[](FieldValue.BinaryData)に変換する。
         /// </summary>
         public static byte[] ModelToBytesConv<T>(
            T value,
@@ -138,31 +143,36 @@ namespace PochiPochiEditor2.Helpers
             {
                 // 1バイト
                 case Constants.ByteSize:
-                    byte rawByte = result[Constants.DefaultIndex];
+                    byte rawByte = result[Constants.DefaultIndex]; // マージするため
 
                     switch (fieldValue.ArgCount)
                     {
                         // ニブル（上位/下位のニブルのみ更新）
                         case Constants.CharPerByte:
                             byte nibbleValue = Convert.ToByte(value);
-                            if (argIndex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg) // high
+
+                            // high
+                            if (argIndex == (int)FieldExtensions.NibbleAttrArgs.HighValueArg)
                             {
                                 // 下位ニブルを残し、上位ニブルに値をセット
                                 rawByte = (byte)((rawByte & ~(Constants.NibbleMask << Constants.NibbleShift))
                                                | ((nibbleValue & Constants.NibbleMask) << Constants.NibbleShift));
                             }
-                            else // low
+                            // low
+                            else
                             {
                                 // 上位ニブルを残し、下位ニブルに値をセット
                                 rawByte = (byte)((rawByte & (Constants.NibbleMask << Constants.NibbleShift))
                                                | (nibbleValue & Constants.NibbleMask));
                             }
+
                             result[Constants.DefaultIndex] = rawByte;
                             break;
 
                         // ビット（特定の1ビットのみ更新）
                         case Constants.BitsPerByte:
                             byte bitValue = Convert.ToByte(value);
+
                             if ((bitValue & 1) == 1)
                             {
                                 rawByte |= (byte)(1 << argIndex);
@@ -171,6 +181,7 @@ namespace PochiPochiEditor2.Helpers
                             {
                                 rawByte &= (byte)~(1 << argIndex);
                             }
+
                             result[Constants.DefaultIndex] = rawByte;
                             break;
 
@@ -214,6 +225,9 @@ namespace PochiPochiEditor2.Helpers
             return result;
         }
 
+        /// <summary>
+        /// 文字列の長さを最大長まで削る。
+        /// </summary>
         public static string TextLengthValidate(TblManager charmap, string text, int length)
         {
             // 空白ならそのまま返す
@@ -249,70 +263,35 @@ namespace PochiPochiEditor2.Helpers
         }
 
         /// <summary>
-        /// 16進数stringを桁数整形、"null"小文字統一を行う。
+        /// 16進数stringからintへ変換する。
         /// </summary>
-        public static string FormatValueText(
-            string input,
-            int digits = Constants.OffsetDigits)
+        public static int ParseStringToInt(this string str)
         {
-            // 字詰め
-            var trimStr = input.Replace(Constants.SpaceChar.ToString(), string.Empty);
-
-            // "null" は8桁の場合のみ許可
-            if (digits == Constants.OffsetDigits &&
-                trimStr.Equals(Constants.InvalidOffsetString, StringComparison.OrdinalIgnoreCase))
-            {
-                return Constants.InvalidOffsetString;
-            }
-
-            // 16進数に変換できない場合は0
-            int result = ParseStringToInt(trimStr);
-            return result.ToString($"X{digits}");
-
-        }
-
-        /// <summary>
-        /// 整形済み16進数stringからintへ変換する。
-        /// </summary>
-        public static int ParseStringToInt(
-            this string str,
-            int digits = Constants.OffsetDigits)
-        {
-            // "null"かつ8桁整形の場合
-            if (str == Constants.InvalidOffsetString && digits == Constants.OffsetDigits)
+            // null, 空白である場合
+            if (string.IsNullOrEmpty(str))
             {
                 return Constants.InvalidValue;
             }
 
-            return int.TryParse(str, NumberStyles.HexNumber, null, out int value)
-                ? value
-                : 0;
+            // 字詰め
+            var trimStr = str.Replace(Constants.SpaceChar.ToString(), string.Empty);
+
+            // 変換テスト
+            return int.TryParse(trimStr, NumberStyles.HexNumber, null, out int value)
+                    ? value
+                    : Constants.InvalidValue; // 変換失敗時
         }
 
         /// <summary>
-        /// intから16進数stringから変換する。（nullを考慮）
+        /// intから16進数stringから変換する。
         /// </summary>
         public static string ParseIntToString(
-            this int val,
+            this int val, 
             int digits = Constants.OffsetDigits)
         {
             return val == Constants.InvalidValue
-                ? Constants.InvalidOffsetString
+                ? string.Empty
                 : val.ToString($"X{digits}");
-        }
-
-
-
-
-
-
-
-        /// <summary>
-        /// stringからintへ16進数を変換する。
-        /// </summary>
-        public static bool TryParseValue(string str, out int val)
-        {
-            return int.TryParse(str, NumberStyles.HexNumber, null, out val);
         }
     }
 }

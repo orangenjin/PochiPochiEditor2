@@ -83,7 +83,7 @@ namespace PochiPochiEditor2.Managers
             int offset = 0, 
             int? maxLength = null)
         {
-            if (bytes == null) return string.Empty;
+            if (bytes == null) return string.Empty; // 空文字を返す
             StringBuilder result = new StringBuilder();
 
             // 範囲を定める
