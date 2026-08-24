@@ -26,9 +26,8 @@ namespace PochiPochiEditor2.Forms
         private EntryManager _animPointer = null;
         // パイプライン用
         private UiPipelineBuilder _imageOffsetValidated = null;
-        private UiPipelineBuilder _palettePipeline = null;
-        private UiPipelineBuilder _yPosPipeline = null;
-
+        private UiPipelineBuilder _paletteOffsetValidated = null;
+        private UiPipelineBuilder _yPosValueValidated = null;
         // UI制御用
         private int _currentSpriteIndex = 0;
 
@@ -144,6 +143,42 @@ namespace PochiPochiEditor2.Forms
                     _image.Entries[_currentSpriteIndex][FieldKey.ImageOffset]
                         .UpdateData(_undoManager, parsedValue, desc);
                 });
+
+            // txtPaletteOffset
+            _paletteOffsetValidated = new UiPipelineBuilder()
+                // 入力値を取得
+                .Then(ctx =>
+                {
+                    ctx.Set((TextBox)ctx.Sender); // テキストボックス
+                    ctx.Set(ctx.Get<TextBox>().Text); // 入力されたテキスト
+                })
+                // データを更新
+                .Then(ctx =>
+                {
+                    var parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
+                    var desc = $"[{this.Text}]パレットアドレス(ID:{_currentSpriteIndex})";
+
+                    _palette.Entries[_currentSpriteIndex][FieldKey.PaletteOffset]
+                        .UpdateData(_undoManager, parsedValue, desc);
+                });
+
+            // nudYPosValue
+            _yPosValueValidated = new UiPipelineBuilder()
+                // 入力値を取得
+                .Then(ctx =>
+                {
+                    ctx.Set((NumericUpDown)ctx.Sender); // ニューメリックアップダウン
+                    ctx.Set(ctx.Get<NumericUpDown>().Value); // 入力された値
+                })
+                // データを更新
+                .Then(ctx =>
+                {
+                    var parsedValue = (int)ctx.Get<decimal>();
+                    var desc = $"[{this.Text}]Y座標位置(ID:{_currentSpriteIndex})";
+
+                    _yPos.Entries[_currentSpriteIndex][FieldKey.YPosValue]
+                        .UpdateData(_undoManager, parsedValue, desc);
+                });
         }
 
         private void InitializeEventHandlers()
@@ -151,8 +186,7 @@ namespace PochiPochiEditor2.Forms
             // 枠描画
             _eventBinder.BindCustom(
                 () => CtrlHelper.AttachBorder(this, picSprite),
-                () => CtrlHelper.DetachBorder(this)
-            );
+                () => CtrlHelper.DetachBorder(this));
 
             // nudにbtnを対応付ける
             _eventBinder.BindCustom(
@@ -163,8 +197,7 @@ namespace PochiPochiEditor2.Forms
                 () => CtrlHelper.DetachBtnsToNud(
                     nudSpriteIndex,
                     btnSpriteIndexPrev,
-                    btnSpriteIndexNext)
-            );
+                    btnSpriteIndexNext));
 
             // 画像アドレス
             _eventBinder.BindCtrl(
@@ -174,6 +207,26 @@ namespace PochiPochiEditor2.Forms
                 {
                     _imageOffsetValidated.Execute(new UiContext(s, e));
                     
+                });
+
+            // パレットアドレス
+            _eventBinder.BindCtrl(
+                h => txtPaletteOffset.Validated += h,
+                h => txtPaletteOffset.Validated -= h,
+                (s, e) =>
+                {
+                    _paletteOffsetValidated.Execute(new UiContext(s, e));
+
+                });
+
+            // Y座標位置
+            _eventBinder.BindCtrl(
+                h => nudYPosValue.ValueChanged += h,
+                h => nudYPosValue.ValueChanged -= h,
+                (s, e) =>
+                {
+                    _yPosValueValidated.Execute(new UiContext(s, e));
+
                 });
 
             // 解除タイミング指定
@@ -192,8 +245,7 @@ namespace PochiPochiEditor2.Forms
 
             // カーソル位置
             CtrlHelper.MoveCursorToEnd(txtImageOffset);
-
-            // DisplayTrainerSprite();
+            CtrlHelper.MoveCursorToEnd(txtPaletteOffset);
         }
 
         private void LoadDataToUI(int index)
@@ -210,11 +262,31 @@ namespace PochiPochiEditor2.Forms
                 _palette.Entries[index][FieldKey.PaletteOffset]
                 .GetData<int>()
                 .ParseIntToString();
+            // Y座標位置
+            nudYPosValue.Value =
+                _yPos.Entries[index][FieldKey.YPosValue]
+                .GetData<int>();
 
+            // アニメーションポインタアドレス
+            txtAnimPointerOffset.Text =
+                _animPointer.Entries[index][FieldKey.AnimPointerOffset]
+                .GetData<int>()
+                .ParseIntToString();
 
-
+            // アニメーションデータアドレス
+            int targetOffset = 
+                _animPointer.Entries[index][FieldKey.AnimPointerOffset]
+                .GetData<int>();
+            if (IoHelper.TryReadPtr(_sharedData.RomData, targetOffset, out int result) 
+                && result != Constants.InvalidValue)
+            {
+                txtAnimDataOffset.Text = result.ParseIntToString();
+            }
+            else
+            {
+                txtAnimDataOffset.Text = string.Empty;
+            }
         }
-
 
 
 

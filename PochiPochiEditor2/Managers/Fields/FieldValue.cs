@@ -127,6 +127,9 @@ namespace PochiPochiEditor2.Managers.Fields
             BinaryData = newBytes;
         }
 
+        /// <summary>
+        /// 簡易的に値を更新する。
+        /// </summary>
         public void UpdateData<T>(
             UndoManager undoManager,
             T data,
