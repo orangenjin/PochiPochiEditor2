@@ -70,6 +70,12 @@ namespace PochiPochiEditor2.Forms
             public static string TrainerSpriteCount = nameof(TrainerSpriteCount);
         }
 
+        private enum ImportKind
+        {
+            Image,
+            Palette
+        }
+
         public TrainerSpriteEditor(SharedData sharedData, UndoManager undoManager)
         {
             InitializeComponent();
@@ -82,6 +88,72 @@ namespace PochiPochiEditor2.Forms
             InitializeEventHandlers();
 
             LoadDataToUI(_currentSpriteIndex);
+        }
+
+        private void InitializeEntries()
+        {
+            // 画像テーブルを作成
+            string defFileName = IniKey.TrainerSpriteImageEntry;
+            int tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpriteImageTableOffset);
+            int entrycount = _sharedData.Config.ReadInt(IniKey.TrainerSpriteCount);
+            _image = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+
+            // パレットテーブルを作成
+            defFileName = IniKey.TrainerSpritePaletteEntry;
+            tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpritePaletteTableOffset);
+            _palette = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+
+            // Y座標位置テーブルを作成
+            defFileName = IniKey.TrainerSpriteYPosEntry;
+            tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpriteYPosTableOffset);
+            _yPos = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+
+            // アニメポインタテーブルを作成
+            defFileName = IniKey.TrainerSpriteAnimationPointerEntry;
+            tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpriteAnimPointerTableOffset);
+            _animPointer = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+        }
+
+        private void InitializeControls()
+        {
+            // nudの最大値
+            int spriteCount = _sharedData.Config.ReadInt(IniKey.TrainerSpriteCount);
+            nudSpriteIndex.Maximum = spriteCount - 1;
+
+            // タグ設定
+            btnImportImage.Tag = ImportKind.Image;
+            btnImportPalette.Tag = ImportKind.Palette;
+        }
+
+        private void InitializePipelines()
+        {
+
+        }
+
+        private void InitializeEventHandlers()
+        {
+            // 枠描画
+            _eventBinder.BindCustom(
+                () => CtrlHelper.AttachBorder(this, picSprite),
+                () => CtrlHelper.DetachBorder(this)
+            );
+
+            // nudにbtnを対応付ける
+            _eventBinder.BindCustom(
+                () => CtrlHelper.AttachBtnsToNud(
+                    nudSpriteIndex, 
+                    btnSpriteIndexPrev,
+                    btnSpriteIndexNext),
+                () => CtrlHelper.DetachBtnsToNud(
+                    nudSpriteIndex,
+                    btnSpriteIndexPrev,
+                    btnSpriteIndexNext)
+            );
+        }
+
+        private void LoadDataToUI(int index)
+        {
+
         }
     }
 }
