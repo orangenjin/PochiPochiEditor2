@@ -187,7 +187,6 @@ namespace PochiPochiEditor2.Forms
             _eventBinder.BindCustom(
                 () => CtrlHelper.AttachBorder(this, picSprite),
                 () => CtrlHelper.DetachBorder(this));
-
             // nudにbtnを対応付ける
             _eventBinder.BindCustom(
                 () => CtrlHelper.AttachBtnsToNud(
@@ -208,7 +207,6 @@ namespace PochiPochiEditor2.Forms
                     _imageOffsetValidated.Execute(new UiContext(s, e));
                     
                 });
-
             // パレットアドレス
             _eventBinder.BindCtrl(
                 h => txtPaletteOffset.Validated += h,
@@ -218,7 +216,6 @@ namespace PochiPochiEditor2.Forms
                     _paletteOffsetValidated.Execute(new UiContext(s, e));
 
                 });
-
             // Y座標位置
             _eventBinder.BindCtrl(
                 h => nudYPosValue.ValueChanged += h,
@@ -227,6 +224,16 @@ namespace PochiPochiEditor2.Forms
                 {
                     _yPosValueValidated.Execute(new UiContext(s, e));
 
+                });
+
+            // 画像インデックスnud
+            _eventBinder.BindCtrl(
+                h => nudSpriteIndex.ValueChanged += h,
+                h => nudSpriteIndex.ValueChanged -= h,
+                (_, __) =>
+                {
+                    int newIndex = (int)nudSpriteIndex.Value;
+                    LoadDataToUI(newIndex);
                 });
 
             // 解除タイミング指定
@@ -272,7 +279,6 @@ namespace PochiPochiEditor2.Forms
                 _animPointer.Entries[index][FieldKey.AnimPointerOffset]
                 .GetData<int>()
                 .ParseIntToString();
-
             // アニメーションデータアドレス
             int targetOffset = 
                 _animPointer.Entries[index][FieldKey.AnimPointerOffset]
@@ -286,9 +292,52 @@ namespace PochiPochiEditor2.Forms
             {
                 txtAnimDataOffset.Text = string.Empty;
             }
+
+            // 画像の再描画
+            DisplayTrainerSprite();
         }
 
+        private void DisplayTrainerSprite()
+        {
+            var isImageValid = !string.IsNullOrEmpty(txtImageOffset.Text);
+            var isPaletteValid = !string.IsNullOrEmpty(txtPaletteOffset.Text);
 
+            // 無効なアドレスの場合は何も描画しない
+            if (!isImageValid || !isPaletteValid)
+            {
+                picSprite.Image?.Dispose();
+                picSprite.Image = null;
+                return;
+            }
+
+            try
+            {
+                var imageData = ImageHelper.DecompressLZ77(
+                    _sharedData.RomData,
+                    txtImageOffset.Text.ParseStringToInt());
+                var paletteData = ImageHelper.DecompressPalette(
+                    _sharedData.RomData,
+                    txtPaletteOffset.Text.ParseStringToInt(), 
+                    isCompressed: true);
+
+                var sprite = ImageHelper.CreateBitmap(
+                    imageData,
+                    paletteData,
+                    Constants.SpriteSize,
+                    Constants.SpriteSize,
+                    showBackColor: true);
+                var scaled = ImageHelper.ScaleBitmap(sprite);
+
+                picSprite.Image?.Dispose();
+                picSprite.Image = scaled;
+                picSprite.Refresh();
+            }
+            catch
+            {
+                picSprite.Image?.Dispose();
+                picSprite.Image = null;
+            }
+        }
 
 
 
