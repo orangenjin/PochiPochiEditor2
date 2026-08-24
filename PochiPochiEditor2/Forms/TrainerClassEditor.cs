@@ -41,7 +41,6 @@ namespace PochiPochiEditor2.Forms
         private bool _isBaseIvEnabled = false;
 
         // UI制御用
-        private bool _isUpdatingUI = false;
         private int _currentClassIdx = 0;
 
         private enum FieldKey
@@ -377,8 +376,6 @@ namespace PochiPochiEditor2.Forms
                 h => cmbClassNameIndex.SelectedIndexChanged -= h,
                 (_, __) =>
                 {
-                    if (_isUpdatingUI) return;
-
                     int newIndex = cmbClassNameIndex.SelectedIndex;
                     LoadDataToUI(newIndex);
                 });
@@ -454,8 +451,6 @@ namespace PochiPochiEditor2.Forms
 
         private void LoadDataToUI(int index)
         {
-            _isUpdatingUI = true;
-
             // インデックス
             _currentClassIdx = index;
             cmbClassNameIndex.SelectedIndex = index;
@@ -488,8 +483,6 @@ namespace PochiPochiEditor2.Forms
             {
                 nudBaseIv.Value = (decimal)_baseIv.Entries[index][FieldKey.BaseIvValue].GetData<int>();
             }
-
-            _isUpdatingUI = false;
         }
 
         /// <summary>
