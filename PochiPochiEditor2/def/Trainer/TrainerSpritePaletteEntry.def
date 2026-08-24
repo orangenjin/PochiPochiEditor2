@@ -1,4 +1,4 @@
-PaletteOffset: UInt32
+PaletteOffset: Pointer
 PaletteIndex: Byte
 PaletteUnk1: Byte
 PaletteUnk2: Byte

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -127,7 +128,45 @@ namespace PochiPochiEditor2.Forms
 
         private void InitializePipelines()
         {
+            // txtClassName
+            _imagePipeline = new UiPipelineBuilder()
+                // 入力値を取得
+                .Then(ctx =>
+                {
+                    ctx.Set((TextBox)ctx.Sender); // テキストボックス
+                    ctx.Set(ctx.Get<TextBox>().Text); // 入力されたテキスト
+                })
+                // 整形
+                .Then(ctx =>
+                {
+                    ctx.Get<TextBox>().Text = CalcHelper.FormatValueText(ctx.Get<string>());
+                    CtrlHelper.MoveCursorToEnd(ctx.Get<TextBox>()); // カーソル位置
+                })
+                // データを更新
+                .Then(ctx =>
+                {
+                    var targetField = _image.Entries[_currentSpriteIndex][FieldKey.ImageOffset];
 
+                    // 変更前のバイナリデータ
+                    byte[] oldBinary = targetField.BinaryData;
+
+                    // データ更新
+                    targetField.SetData(ctx.Get<int>());
+
+                    // 変更後のバイナリデータ
+                    byte[] newBinary = targetField.BinaryData;
+
+                    // 異なればスタックに追加
+                    if (!oldBinary.SequenceEqual(newBinary))
+                    {
+                        var cmd = new FieldChangeCommand(
+                            targetField,
+                            oldBinary,
+                            newBinary,
+                            $"[{this.Text}]画像アドレス(ID:{_currentSpriteIndex})");
+                        _undoManager.PushCommand(cmd);
+                    }
+                });
         }
 
         private void InitializeEventHandlers()
@@ -149,11 +188,85 @@ namespace PochiPochiEditor2.Forms
                     btnSpriteIndexPrev,
                     btnSpriteIndexNext)
             );
+
+            // 画像アドレス
+            _eventBinder.BindCtrl(
+                h => txtImageOffset.TextChanged += h,
+                h => txtImageOffset.TextChanged -= h,
+                (s, e) =>
+                {
+                    _imagePipeline.Execute(new UiContext(s, e));
+                    // DisplayTrainerSprite();
+                });
+
+            // 解除タイミング指定
+            _eventBinder.BindCtrl(
+                h => this.Disposed += h,
+                h => this.Disposed -= h);
         }
 
         private void LoadDataToUI(int index)
         {
+            _currentSpriteIndex = index;
 
+            // 画像アドレス
+            txtImageOffset.Text = _image.Entries[index][FieldKey.ImageOffset].GetData<string>();
+            // パレットアドレス
+            txtPaletteOffset.Text = _palette.Entries[index][FieldKey.PaletteOffset].GetData<string>();
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private void SpriteImport_Click(object sender, EventArgs e)
+        {
+            if (!(sender is Button btn) || !(btn.Tag is ImportKind importKind)) return;
+
+            using (var popup = new QuickInput(
+                defaultOffset: 0,
+                fileFilter: Constants.ImageImportFilter))
+            {
+                if (popup.ShowDialog() == DialogResult.OK)
+                {
+                    int offset = popup.Offset;
+                    string filePath = popup.FilePath;
+
+                    using (Bitmap bmp = new Bitmap(filePath))
+                    {
+                        TextBox targetTextBox;
+
+                        if (!ImageHelper.ExtractImageAndPalette(
+                            bmp,
+                            Constants.SpriteSize,
+                            Constants.SpriteSize,
+                            out byte[] imageData,
+                            out byte[] paletteData)) return;
+
+                        if (importKind == ImportKind.Image)
+                        {
+                            targetTextBox = txtImageOffset;
+                        }
+                        else if(importKind == ImportKind.Palette)
+                        {
+                            targetTextBox = txtPaletteOffset;
+                        }
+                    }
+
+                    // DisplayTrainerSprite();
+                }
+            }
         }
     }
 }

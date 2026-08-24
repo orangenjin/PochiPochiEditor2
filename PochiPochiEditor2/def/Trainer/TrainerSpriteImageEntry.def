@@ -1,4 +1,4 @@
-ImageOffset: UInt32
+ImageOffset: Pointer
 ImageDecompSize: UInt16
 ImageIndex: Byte
 ImageUnk1: Byte
