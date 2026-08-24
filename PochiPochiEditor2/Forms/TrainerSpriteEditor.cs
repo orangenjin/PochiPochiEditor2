@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -136,14 +135,6 @@ namespace PochiPochiEditor2.Forms
                     ctx.Set((TextBox)ctx.Sender); // テキストボックス
                     ctx.Set(ctx.Get<TextBox>().Text); // 入力されたテキスト
                 })
-                // 整形と変換
-                .Then(ctx =>
-                {
-                    // 整形
-                    ctx.Set(CalcHelper.FormatValueText(ctx.Get<string>()));
-                    // int変換
-                    ctx.Set(CalcHelper.ParseStringToInt(ctx.Get<string>()));
-                })
                 // データを更新
                 .Then(ctx =>
                 {
@@ -152,8 +143,9 @@ namespace PochiPochiEditor2.Forms
                     // 変更前のバイナリデータ
                     byte[] oldBinary = targetField.BinaryData;
 
-                    // データ更新
-                    targetField.SetData(ctx.Get<int>());
+                    // int変換、データ更新
+                    int parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
+                    targetField.SetData(parsedValue);
 
                     // 変更後のバイナリデータ
                     byte[] newBinary = targetField.BinaryData;

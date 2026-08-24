@@ -136,7 +136,8 @@ namespace PochiPochiEditor2.Managers
             if (rawString.StartsWith(Constants.HexPrefix)) // 0x
             {
                 string hexPart = rawString.Substring(Constants.HexPrefix.Length);
-                return CalcHelper.TryParseValue(hexPart, out parsedValue);
+                parsedValue = CalcHelper.ParseStringToInt(hexPart);
+                return true;
             }
 
             return int.TryParse(rawString, out parsedValue); // 10進数

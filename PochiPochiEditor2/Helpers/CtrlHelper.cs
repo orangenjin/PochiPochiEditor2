@@ -372,15 +372,14 @@ namespace PochiPochiEditor2.Helpers
                 // 空行とコメント行をスキップ
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith(Constants.CommentChar.ToString())) continue;
 
-                // 行解析
+                // 行解析、 "["を除外
                 int closeBracketIndex = line.IndexOf(Constants.CloseBracketChar);
-                string hex = line.Substring(
-                    Constants.OpenBracketChar.ToString().Length, closeBracketIndex - 1); // "["を除外
-                if (CalcHelper.TryParseValue(hex, out int index))
-                {
-                    var entry = new KeyValuePair<byte, string>((byte)index, line.Trim());
-                    entries.Add(entry);
-                }
+                var hex = line.Substring(
+                    Constants.OpenBracketChar.ToString().Length,
+                    closeBracketIndex - 1)
+                    .ParseStringToInt();
+                var entry = new KeyValuePair<byte, string>((byte)hex, line);
+                entries.Add(entry);
             }
 
             cmb.DisplayMember = nameof(KeyValuePair<byte, string>.Value);

@@ -60,7 +60,7 @@ namespace PochiPochiEditor2.Utilities
                     string valueStr = txt.Text;
 
                     // 整形
-                    txt.Text = CalcHelper.FormatValueText(valueStr);
+                    txt.Text = valueStr.ParseStringToInt().ParseIntToString();
                     CtrlHelper.MoveCursorToEnd(txt); // カーソル位置
                 });
         }
@@ -97,10 +97,20 @@ namespace PochiPochiEditor2.Utilities
                 (s, e) =>
                 {
                     // オフセット
-                    if (txtTargetOffset.Enabled && 
-                        !CalcHelper.TryParseValue(txtTargetOffset.Text, out int offset))
+                    if (txtTargetOffset.Enabled)
                     {
-                        Offset = Constants.InvalidValue;
+                        string offsetStr = txtTargetOffset.Text;
+                        if (string.IsNullOrEmpty(offsetStr))
+                        {
+                            MessageBox.Show(
+                                "アドレスを入力してください。",
+                                "",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        Offset = offsetStr.ParseStringToInt();
                     }
 
                     // データタイプ
