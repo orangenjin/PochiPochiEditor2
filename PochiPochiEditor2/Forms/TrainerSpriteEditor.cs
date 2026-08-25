@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Managers;
-using PochiPochiEditor2.Managers.Fields;
 using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Forms
@@ -20,14 +18,14 @@ namespace PochiPochiEditor2.Forms
         // 変更履歴用
         private UndoManager _undoManager = null;
         // 各テーブル用
-        private EntryManager _image = null;
-        private EntryManager _palette = null;
-        private EntryManager _yPos = null;
-        private EntryManager _animPointer = null;
+        private EntryManager _imageEntry = null;
+        private EntryManager _paletteEntry = null;
+        private EntryManager _yPosEntry = null;
+        private EntryManager _animPointerEntry = null;
         // パイプライン用
-        private PipelineBuilder _imageOffsetValidated = null;
-        private PipelineBuilder _paletteOffsetValidated = null;
-        private PipelineBuilder _yPosValueValidated = null;
+        private PipelineBuilder _imageOffsetPipeline = null;
+        private PipelineBuilder _paletteOffsetPipeline = null;
+        private PipelineBuilder _yPosValuePipeline = null;
         // UI制御用
         private int _currentSpriteIndex = 0;
 
@@ -95,22 +93,22 @@ namespace PochiPochiEditor2.Forms
             string defFileName = IniKey.TrainerSpriteImageEntry;
             int tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpriteImageTableOffset);
             int entrycount = _sharedData.Config.ReadInt(IniKey.TrainerSpriteCount);
-            _image = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+            _imageEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // パレットテーブルを作成
             defFileName = IniKey.TrainerSpritePaletteEntry;
             tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpritePaletteTableOffset);
-            _palette = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+            _paletteEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // Y座標位置テーブルを作成
             defFileName = IniKey.TrainerSpriteYPosEntry;
             tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpriteYPosTableOffset);
-            _yPos = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+            _yPosEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // アニメポインタテーブルを作成
             defFileName = IniKey.TrainerSpriteAnimationPointerEntry;
             tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpriteAnimPointerTableOffset);
-            _animPointer = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+            _animPointerEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
         }
 
         private void InitializeControls()
@@ -127,7 +125,7 @@ namespace PochiPochiEditor2.Forms
         private void InitializePipelines()
         {
             // txtImageOffset
-            _imageOffsetValidated = new PipelineBuilder()
+            _imageOffsetPipeline = new PipelineBuilder()
                 // 入力値を取得
                 .Then(ctx =>
                 {
@@ -140,12 +138,12 @@ namespace PochiPochiEditor2.Forms
                     var parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
                     var desc = $"[{this.Text}]画像アドレス(ID:{_currentSpriteIndex})";
 
-                    _image.Entries[_currentSpriteIndex][FieldKey.ImageOffset]
+                    _imageEntry.Entries[_currentSpriteIndex][FieldKey.ImageOffset]
                         .UpdateData(_undoManager, parsedValue, desc);
                 });
 
             // txtPaletteOffset
-            _paletteOffsetValidated = new PipelineBuilder()
+            _paletteOffsetPipeline = new PipelineBuilder()
                 // 入力値を取得
                 .Then(ctx =>
                 {
@@ -158,12 +156,12 @@ namespace PochiPochiEditor2.Forms
                     var parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
                     var desc = $"[{this.Text}]パレットアドレス(ID:{_currentSpriteIndex})";
 
-                    _palette.Entries[_currentSpriteIndex][FieldKey.PaletteOffset]
+                    _paletteEntry.Entries[_currentSpriteIndex][FieldKey.PaletteOffset]
                         .UpdateData(_undoManager, parsedValue, desc);
                 });
 
             // nudYPosValue
-            _yPosValueValidated = new PipelineBuilder()
+            _yPosValuePipeline = new PipelineBuilder()
                 // 入力値を取得
                 .Then(ctx =>
                 {
@@ -176,7 +174,7 @@ namespace PochiPochiEditor2.Forms
                     var parsedValue = (int)ctx.Get<decimal>();
                     var desc = $"[{this.Text}]Y座標位置(ID:{_currentSpriteIndex})";
 
-                    _yPos.Entries[_currentSpriteIndex][FieldKey.YPosValue]
+                    _yPosEntry.Entries[_currentSpriteIndex][FieldKey.YPosValue]
                         .UpdateData(_undoManager, parsedValue, desc);
                 });
         }
@@ -204,7 +202,7 @@ namespace PochiPochiEditor2.Forms
                 h => txtImageOffset.Validated -= h,
                 (s, e) =>
                 {
-                    _imageOffsetValidated.Execute(new Context(s, e));
+                    _imageOffsetPipeline.Execute(new Context(s, e));
                     
                 });
             // パレットアドレス
@@ -213,7 +211,7 @@ namespace PochiPochiEditor2.Forms
                 h => txtPaletteOffset.Validated -= h,
                 (s, e) =>
                 {
-                    _paletteOffsetValidated.Execute(new Context(s, e));
+                    _paletteOffsetPipeline.Execute(new Context(s, e));
 
                 });
             // Y座標位置
@@ -222,7 +220,7 @@ namespace PochiPochiEditor2.Forms
                 h => nudYPosValue.ValueChanged -= h,
                 (s, e) =>
                 {
-                    _yPosValueValidated.Execute(new Context(s, e));
+                    _yPosValuePipeline.Execute(new Context(s, e));
 
                 });
 
@@ -261,27 +259,27 @@ namespace PochiPochiEditor2.Forms
 
             // 画像アドレス
             txtImageOffset.Text =
-                _image.Entries[index][FieldKey.ImageOffset]
+                _imageEntry.Entries[index][FieldKey.ImageOffset]
                 .GetData<int>()
                 .ParseIntToString();
             // パレットアドレス
             txtPaletteOffset.Text = 
-                _palette.Entries[index][FieldKey.PaletteOffset]
+                _paletteEntry.Entries[index][FieldKey.PaletteOffset]
                 .GetData<int>()
                 .ParseIntToString();
             // Y座標位置
             nudYPosValue.Value =
-                _yPos.Entries[index][FieldKey.YPosValue]
+                _yPosEntry.Entries[index][FieldKey.YPosValue]
                 .GetData<int>();
 
             // アニメーションポインタアドレス
             txtAnimPointerOffset.Text =
-                _animPointer.Entries[index][FieldKey.AnimPointerOffset]
+                _animPointerEntry.Entries[index][FieldKey.AnimPointerOffset]
                 .GetData<int>()
                 .ParseIntToString();
             // アニメーションデータアドレス
             int targetOffset = 
-                _animPointer.Entries[index][FieldKey.AnimPointerOffset]
+                _animPointerEntry.Entries[index][FieldKey.AnimPointerOffset]
                 .GetData<int>();
             if (IoHelper.TryReadPtr(_sharedData.RomData, targetOffset, out int result) 
                 && result != Constants.InvalidValue)
@@ -299,11 +297,11 @@ namespace PochiPochiEditor2.Forms
 
         private void DisplayTrainerSprite()
         {
-            var isImageValid = !string.IsNullOrEmpty(txtImageOffset.Text);
-            var isPaletteValid = !string.IsNullOrEmpty(txtPaletteOffset.Text);
+            var isImageValid = string.IsNullOrEmpty(txtImageOffset.Text);
+            var isPaletteValid = string.IsNullOrEmpty(txtPaletteOffset.Text);
 
             // 無効なアドレスの場合は何も描画しない
-            if (!isImageValid || !isPaletteValid)
+            if (isImageValid || isPaletteValid)
             {
                 picSprite.Image?.Dispose();
                 picSprite.Image = null;
