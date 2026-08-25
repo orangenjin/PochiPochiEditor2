@@ -33,8 +33,15 @@ namespace PochiPochiEditor2.Managers.Fields
             byte[] binaryData)
         {
             Offset = offset;
-            BinaryData = (byte[])binaryData.Clone();
+            BinaryData = binaryData;
+        }
 
+        public void Restore(int offset, byte[] binaryData)
+        {
+            // 自身のプロパティを更新
+            Set(offset, binaryData);
+
+            // RomData に書き戻す
             IoHelper.WriteBytesToData(
                 _sharedData.RomData,
                 Offset,
@@ -43,26 +50,33 @@ namespace PochiPochiEditor2.Managers.Fields
 
         public void Update(
             UndoManager undoManager,
-            byte[] binaryData,
+            int newOffset,
+            byte[] newBinaryData,
             string desc)
         {
             int oldOffset = Offset;
-            byte[] oldBinary = BinaryData;
 
-            Set(Offset, binaryData);
+            // 書き込み先の書き込み前状態を格納
+            byte[] oldBinary = new byte[newBinaryData.Length];
+            Array.Copy(
+                _sharedData.RomData, 
+                newOffset, 
+                oldBinary,
+                Constants.DefaultIndex,
+                newBinaryData.Length);
 
-            int newOffset = Offset;
-            byte[] newBinary = BinaryData;
+            // データの更新
+            Restore(newOffset, newBinaryData);
 
             if (oldOffset != newOffset ||
-                !oldBinary.SequenceEqual(newBinary))
+                !oldBinary.SequenceEqual(newBinaryData))
             {
                 var cmd = new RefDataChangeCommand(
                     this,
                     oldOffset,
                     oldBinary,
-                    newOffset,
-                    newBinary,
+                    Offset,
+                    BinaryData,
                     desc);
 
                 undoManager.PushCommand(cmd);

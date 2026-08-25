@@ -35,12 +35,12 @@ namespace PochiPochiEditor2.Managers.Commands
 
         public void Undo()
         {
-            _refData.Set(_oldOffset, _oldData);
+            _refData.Restore(_oldOffset, _oldData);
         }
 
         public void Redo()
         {
-            _refData.Set(_newOffset, _newData);
+            _refData.Restore(_newOffset, _newData);
         }
     }
 }

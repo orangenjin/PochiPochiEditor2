@@ -361,7 +361,12 @@ namespace PochiPochiEditor2.Forms
                     _sharedData.RomData,
                     imageoffsetValue);
                 // RefDataとして保持する
-                _imageData = new RefData(SpriteData.Image, imageoffsetValue, imageData);
+                var imageDataLz77 = ImageHelper.CompressLZ77(imageData);
+                _imageData = new RefData(
+                    SpriteData.Image, 
+                    imageoffsetValue,
+                    imageDataLz77, 
+                    _sharedData);
 
                 // オフセットを取得
                 var paletteoffsetValue = paletteOffsetStr.ParseStringToInt();
@@ -370,7 +375,12 @@ namespace PochiPochiEditor2.Forms
                     paletteoffsetValue, 
                     isCompressed: true);
                 // RefDataとして保持する
-                _paletteData = new RefData(SpriteData.Palette, paletteoffsetValue, paletteData);
+                var paletteDataLz77 = ImageHelper.CompressPalette(paletteData, true);
+                _paletteData = new RefData(
+                    SpriteData.Palette, 
+                    paletteoffsetValue,
+                    paletteDataLz77,
+                    _sharedData);
 
                 var sprite = ImageHelper.CreateBitmap(
                     imageData,
@@ -401,7 +411,7 @@ namespace PochiPochiEditor2.Forms
             {
                 if (popup.ShowDialog() == DialogResult.OK)
                 {
-                    int offset = popup.Offset;
+                    int newOffset = popup.Offset;
                     string filePath = popup.FilePath;
 
                     using (Bitmap bmp = new Bitmap(filePath))
@@ -416,20 +426,40 @@ namespace PochiPochiEditor2.Forms
 
                         if (importKind == SpriteData.Image)
                         {
-                            // データを保持
-                            _imageData.BinaryData = ImageHelper.CompressLZ77(imageData);
-                            txtImageOffset.Text = offset.ParseIntToString();
+                            // LZ77圧縮を適用
+                            var compressdData = ImageHelper.CompressLZ77(imageData);
+
+                            // コマンド表示名
+                            var desc = $"[{this.Text}]画像インポート(ID:{_currentSpriteIndex:D4})";
+
+                            // データを更新
+                            _imageData.Update(
+                                _undoManager,
+                                newOffset,
+                                compressdData,
+                                desc);
+
+                            // テキストボックスを更新
+                            txtImageOffset.Text = newOffset.ParseIntToString();
                         }
                         else
                         {
-                            _paletteData.BinaryData = ImageHelper.CompressPalette(paletteData, true);
-                            txtPaletteOffset.Text = offset.ParseIntToString();
+                            // LZ77圧縮を適用
+                            var compressdData = ImageHelper.CompressPalette(paletteData, true);
+
+                            // コマンド表示名
+                            var desc = $"[{this.Text}]パレットインポート(ID:{_currentSpriteIndex:D4})";
+
+                            // データを更新
+                            _paletteData.Update(
+                                _undoManager,
+                                newOffset,
+                                compressdData,
+                                desc);
+
+                            // テキストボックスを更新
+                            txtPaletteOffset.Text = newOffset.ParseIntToString();
                         };
-
-
- 
-
-
                     }
 
                     DisplayTrainerSprite();
