@@ -62,6 +62,7 @@
       <DependentUpon>TrainerSpriteEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Managers\Commands\CombineCommand.cs" />
     <Compile Include="Managers\Commands\RefDataChangeCommand.cs" />
     <Compile Include="Managers\EntryManager.cs" />
     <Compile Include="Managers\Commands\FieldChangeCommand.cs" />

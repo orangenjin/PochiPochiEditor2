@@ -4,18 +4,18 @@ namespace PochiPochiEditor2.Managers.Commands
 {
     public class RefDataChangeCommand : ICommand
     {
-        private RefData _refData;
+        private RefData _refData = null;
 
         // RefDataの変更前
-        private int _oldOffset;
-        private byte[] _oldData;
+        private int _oldOffset = default;
+        private byte[] _oldData = null;
 
         // RefDataの変更後
-        private int _newOffset;
-        private byte[] _newData;
+        private int _newOffset = default;
+        private byte[] _newData = null;
 
         // newOffsetに元々存在していたデータ
-        private byte[] _oldTargetData;
+        private byte[] _oldTargetData = null;
 
         public string Desc { get; }
 

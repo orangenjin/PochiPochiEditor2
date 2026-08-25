@@ -14,7 +14,7 @@ namespace PochiPochiEditor2.Managers.Fields
         public byte[] BinaryData { get; set; }
 
         // 共有データ
-        private SharedData _sharedData;
+        private SharedData _sharedData = null;
 
         public RefData(
             Enum enumKey,

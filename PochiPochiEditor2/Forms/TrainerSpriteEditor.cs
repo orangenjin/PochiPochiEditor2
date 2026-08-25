@@ -406,7 +406,7 @@ namespace PochiPochiEditor2.Forms
             if (!(sender is Button btn) || !(btn.Tag is SpriteData importKind)) return;
 
             using (var popup = new QuickInput(
-                defaultOffset: 0,
+                defaultOffset: default,
                 fileFilter: Constants.ImageImportFilter))
             {
                 if (popup.ShowDialog() == DialogResult.OK)
