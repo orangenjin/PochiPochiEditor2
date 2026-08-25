@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Managers;
+using PochiPochiEditor2.Managers.Commands;
 using PochiPochiEditor2.Managers.Fields;
 using PochiPochiEditor2.Utilities;
 
@@ -342,11 +344,11 @@ namespace PochiPochiEditor2.Forms
         {
             var imageOffsetStr = txtImageOffset.Text;
             var paletteOffsetStr = txtPaletteOffset.Text;
-            var isImageValid = string.IsNullOrEmpty(imageOffsetStr);
-            var isPaletteValid = string.IsNullOrEmpty(paletteOffsetStr);
+            var isImageInvalid = string.IsNullOrEmpty(imageOffsetStr);
+            var isPaletteInValid = string.IsNullOrEmpty(paletteOffsetStr);
 
             // 無効なアドレスの場合は何も描画しない
-            if (isImageValid || isPaletteValid)
+            if (isImageInvalid || isPaletteInValid)
             {
                 picSprite.Image?.Dispose();
                 picSprite.Image = null;
@@ -356,29 +358,29 @@ namespace PochiPochiEditor2.Forms
             try
             {
                 // オフセットを取得
-                var imageoffsetValue = imageOffsetStr.ParseStringToInt();
+                var imageOffsetValue = imageOffsetStr.ParseStringToInt();
                 var imageData = ImageHelper.DecompressLZ77(
                     _sharedData.RomData,
-                    imageoffsetValue);
+                    imageOffsetValue);
                 // RefDataとして保持する
                 var imageDataLz77 = ImageHelper.CompressLZ77(imageData);
                 _imageData = new RefData(
-                    SpriteData.Image, 
-                    imageoffsetValue,
+                    SpriteData.Image,
+                    imageOffsetValue,
                     imageDataLz77, 
                     _sharedData);
 
                 // オフセットを取得
-                var paletteoffsetValue = paletteOffsetStr.ParseStringToInt();
+                var paletteOffsetValue = paletteOffsetStr.ParseStringToInt();
                 var paletteData = ImageHelper.DecompressPalette(
                     _sharedData.RomData,
-                    paletteoffsetValue, 
+                    paletteOffsetValue, 
                     isCompressed: true);
                 // RefDataとして保持する
                 var paletteDataLz77 = ImageHelper.CompressPalette(paletteData, true);
                 _paletteData = new RefData(
-                    SpriteData.Palette, 
-                    paletteoffsetValue,
+                    SpriteData.Palette,
+                    paletteOffsetValue,
                     paletteDataLz77,
                     _sharedData);
 
@@ -406,7 +408,7 @@ namespace PochiPochiEditor2.Forms
             if (!(sender is Button btn) || !(btn.Tag is SpriteData importKind)) return;
 
             using (var popup = new QuickInput(
-                defaultOffset: default,
+                defaultOffset: 0,
                 fileFilter: Constants.ImageImportFilter))
             {
                 if (popup.ShowDialog() == DialogResult.OK)
@@ -427,42 +429,54 @@ namespace PochiPochiEditor2.Forms
                         if (importKind == SpriteData.Image)
                         {
                             // LZ77圧縮を適用
-                            var compressdData = ImageHelper.CompressLZ77(imageData);
-
+                            var compressedData = ImageHelper.CompressLZ77(imageData);
                             // コマンド表示名
-                            var desc = $"[{this.Text}]画像インポート(ID:{_currentSpriteIndex:D4})";
+                            string desc = $"[{this.Text}]画像インポート(ID:{_currentSpriteIndex:D4})";
 
-                            // データを更新
-                            _imageData.Update(
-                                _undoManager,
-                                newOffset,
-                                compressdData,
-                                desc);
-
-                            // テキストボックスを更新
-                            txtImageOffset.Text = newOffset.ParseIntToString();
+                            // コマンドを統合する
+                            var combine = new CombineCommand(desc);
+                            // FieldValueの変更コマンド
+                            combine.Add(
+                                _imageEntry.Entries[_currentSpriteIndex][FieldKey.ImageOffset]
+                                .CreateUpdateCommand(newOffset, desc));
+                            // RefDataの変更コマンド
+                            combine.Add(
+                                _imageData.CreateUpdateCommand(
+                                    newOffset,
+                                    compressedData,
+                                    desc));
+                            // 要素数が0より大きければ
+                            if (combine.HasCommands)
+                            {
+                                _undoManager.PushCommand(combine);
+                            }
                         }
                         else
                         {
                             // LZ77圧縮を適用
-                            var compressdData = ImageHelper.CompressPalette(paletteData, true);
-
+                            var compressedData = ImageHelper.CompressPalette(paletteData, true);
                             // コマンド表示名
                             var desc = $"[{this.Text}]パレットインポート(ID:{_currentSpriteIndex:D4})";
 
-                            // データを更新
-                            _paletteData.Update(
-                                _undoManager,
-                                newOffset,
-                                compressdData,
-                                desc);
-
-                            // テキストボックスを更新
-                            txtPaletteOffset.Text = newOffset.ParseIntToString();
-                        };
+                            // コマンドを統合する
+                            var combine = new CombineCommand(desc);
+                            // FieldValueの変更コマンド
+                            combine.Add(
+                                _paletteEntry.Entries[_currentSpriteIndex][FieldKey.PaletteOffset]
+                                .CreateUpdateCommand(newOffset, desc));
+                            // RefDataの変更コマンド
+                            combine.Add(
+                                _paletteData.CreateUpdateCommand(
+                                    newOffset,
+                                    compressedData,
+                                    desc));
+                            // 要素数が0より大きければ
+                            if (combine.HasCommands)
+                            {
+                                _undoManager.PushCommand(combine);
+                            }
+                        }
                     }
-
-                    DisplayTrainerSprite();
                 }
             }
         }

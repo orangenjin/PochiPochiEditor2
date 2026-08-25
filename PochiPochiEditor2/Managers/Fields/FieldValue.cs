@@ -138,6 +138,25 @@ namespace PochiPochiEditor2.Managers.Fields
             string desc,
             int argIndex = Constants.DefaultIndex)
         {
+            var command = CreateUpdateCommand(
+                data,
+                desc,
+                argIndex);
+
+            if (command != null)
+            {
+                undoManager.PushCommand(command);
+            }
+        }
+
+        /// <summary>
+        /// コマンドを生成する。複数コマンド統合用。
+        /// </summary>
+        public ICommand CreateUpdateCommand<T>(
+            T data,
+            string desc,
+            int argIndex = Constants.DefaultIndex)
+        {
             // 変更前のバイナリデータ
             byte[] oldBinary = BinaryData;
             // データ更新
@@ -145,16 +164,14 @@ namespace PochiPochiEditor2.Managers.Fields
             // 変更後のバイナリデータ
             byte[] newBinary = BinaryData;
 
-            // 異なればスタックに追加
-            if (!oldBinary.SequenceEqual(newBinary))
-            {
-                var cmd = new FieldChangeCommand(
-                    this,
-                    oldBinary,
-                    newBinary,
-                    desc);
-                undoManager.PushCommand(cmd);
-            }
+            // 同じなら無視
+            if (oldBinary.SequenceEqual(newBinary)) return null;
+
+            return new FieldChangeCommand(
+                this,
+                oldBinary,
+                newBinary,
+                desc);
         }
     }
 }

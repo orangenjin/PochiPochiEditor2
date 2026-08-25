@@ -47,7 +47,7 @@ namespace PochiPochiEditor2.Managers.Commands
             _refData.WriteData(_newOffset, _oldTargetData);
 
             // RefDataを元に戻す
-            _refData.Set(_oldOffset, _oldData);
+            _refData.SetData(_oldOffset, _oldData);
         }
 
         public void Redo()
@@ -56,7 +56,7 @@ namespace PochiPochiEditor2.Managers.Commands
             _refData.WriteData(_newOffset, _newData);
 
             // RefDataを新しい状態にする
-            _refData.Set(_newOffset, _newData);
+            _refData.SetData(_newOffset, _newData);
         }
     }
 }

@@ -25,10 +25,10 @@ namespace PochiPochiEditor2.Managers.Fields
             Name = enumKey;
             _sharedData = sharedData;
 
-            Set(offset, binaryData);
+            SetData(offset, binaryData);
         }
 
-        public void Set(int offset, byte[] binaryData)
+        public void SetData(int offset, byte[] binaryData)
         {
             Offset = offset;
             BinaryData = binaryData;
@@ -42,20 +42,39 @@ namespace PochiPochiEditor2.Managers.Fields
                 binaryData);
         }
 
-        public void Update(
+        public void UpdateData(
             UndoManager undoManager,
             int newOffset,
             byte[] newBinaryData,
             string desc)
         {
+            var command = CreateUpdateCommand(
+                newOffset,
+                newBinaryData,
+                desc);
+
+            if (command != null)
+            {
+                undoManager.PushCommand(command);
+            }
+        }
+
+        /// <summary>
+        /// コマンドを生成する。複数コマンド統合用。
+        /// </summary>
+        public ICommand CreateUpdateCommand(
+            int newOffset,
+            byte[] newBinaryData,
+            string desc)
+        {
             int oldOffset = Offset;
-            byte[] oldBinaryData = BinaryData;
+            byte[] oldBinaryData = (byte[])BinaryData.Clone();
 
-            // 同一の場合
+            // 同一なら無視
             if (oldOffset == newOffset &&
-                oldBinaryData.SequenceEqual(newBinaryData)) return;
+                oldBinaryData.SequenceEqual(newBinaryData)) return null;
 
-            // 書き込み先の状態を保持する
+            // 新しい書き込み先の変更前データ
             byte[] oldTargetData = new byte[newBinaryData.Length];
             Array.Copy(
                 _sharedData.RomData,
@@ -64,10 +83,11 @@ namespace PochiPochiEditor2.Managers.Fields
                 Constants.DefaultIndex,
                 newBinaryData.Length);
 
+            // データを更新
             WriteData(newOffset, newBinaryData);
-            Set(newOffset, newBinaryData);
+            SetData(newOffset, newBinaryData);
 
-            var command = new RefDataChangeCommand(
+            return new RefDataChangeCommand(
                 this,
                 oldOffset,
                 oldBinaryData,
@@ -75,8 +95,6 @@ namespace PochiPochiEditor2.Managers.Fields
                 newBinaryData,
                 oldTargetData,
                 desc);
-
-            undoManager.PushCommand(command);
         }
     }
 }
