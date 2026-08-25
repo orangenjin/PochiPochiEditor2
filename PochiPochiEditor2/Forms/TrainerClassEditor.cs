@@ -386,7 +386,7 @@ namespace PochiPochiEditor2.Forms
                 h => txtClassName.TextChanged -= h,
                 (s, e) =>
                 {
-                    _classNamePipeline.Execute(new UiContext(s, e));
+                    _classNamePipeline.Execute(new Context(s, e));
                 });
 
             // 賞金倍率
@@ -395,7 +395,7 @@ namespace PochiPochiEditor2.Forms
                 h => nudPrizeMulti.ValueChanged -= h,
                 (s, e) =>
                 {
-                    _prizeMultiPipeline.Execute(new UiContext(s, e));
+                    _prizeMultiPipeline.Execute(new Context(s, e));
                 });
 
             // 追加データ関連
@@ -406,7 +406,7 @@ namespace PochiPochiEditor2.Forms
                     h => nudEncMusic.ValueChanged -= h,
                     (s, e) =>
                     {
-                        _encMusicPipeline.Execute(new UiContext(s, e));
+                        _encMusicPipeline.Execute(new Context(s, e));
                     });
             }
 
@@ -417,7 +417,7 @@ namespace PochiPochiEditor2.Forms
                     h => nudBattleMusic.ValueChanged -= h,
                     (s, e) =>
                     {
-                        _battleMusicPipeline.Execute(new UiContext(s, e));
+                        _battleMusicPipeline.Execute(new Context(s, e));
                     });
             }
 
@@ -428,7 +428,7 @@ namespace PochiPochiEditor2.Forms
                     h => nudPokeBall.ValueChanged -= h,
                     (s, e) =>
                     {
-                        _pokeBallPipeline.Execute(new UiContext(s, e));
+                        _pokeBallPipeline.Execute(new Context(s, e));
                     });
             }
 
@@ -439,7 +439,7 @@ namespace PochiPochiEditor2.Forms
                     h => nudBaseIv.ValueChanged -= h,
                     (s, e) =>
                     {
-                        _baseIvPipeline.Execute(new UiContext(s, e));
+                        _baseIvPipeline.Execute(new Context(s, e));
                     });
             }
 

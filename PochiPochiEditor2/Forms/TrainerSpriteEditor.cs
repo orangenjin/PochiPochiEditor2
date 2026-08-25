@@ -204,7 +204,7 @@ namespace PochiPochiEditor2.Forms
                 h => txtImageOffset.Validated -= h,
                 (s, e) =>
                 {
-                    _imageOffsetValidated.Execute(new UiContext(s, e));
+                    _imageOffsetValidated.Execute(new Context(s, e));
                     
                 });
             // パレットアドレス
@@ -213,7 +213,7 @@ namespace PochiPochiEditor2.Forms
                 h => txtPaletteOffset.Validated -= h,
                 (s, e) =>
                 {
-                    _paletteOffsetValidated.Execute(new UiContext(s, e));
+                    _paletteOffsetValidated.Execute(new Context(s, e));
 
                 });
             // Y座標位置
@@ -222,7 +222,7 @@ namespace PochiPochiEditor2.Forms
                 h => nudYPosValue.ValueChanged -= h,
                 (s, e) =>
                 {
-                    _yPosValueValidated.Execute(new UiContext(s, e));
+                    _yPosValueValidated.Execute(new Context(s, e));
 
                 });
 

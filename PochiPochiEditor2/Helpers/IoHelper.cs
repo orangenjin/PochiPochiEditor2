@@ -52,7 +52,7 @@ namespace PochiPochiEditor2.Helpers
         }
 
         /// <summary>
-        /// ポインタとして読み取る。
+        /// バイト配列からポインタを読み取る。
         /// [00 00 00 00]はnullポインタとして、trueとConstants.InvalidValueを返す。
         /// ポインタとして読み取れない場合は、falseとConstants.InvalidValueを返す。
         /// </summary>

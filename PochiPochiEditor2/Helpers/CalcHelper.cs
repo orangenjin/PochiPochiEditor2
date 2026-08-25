@@ -268,7 +268,7 @@ namespace PochiPochiEditor2.Helpers
         public static int ParseStringToInt(this string str)
         {
             // null, 空白である場合
-            if (string.IsNullOrEmpty(str))
+            if (string.IsNullOrWhiteSpace(str))
             {
                 return Constants.InvalidValue;
             }
