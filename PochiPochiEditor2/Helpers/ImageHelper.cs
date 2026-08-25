@@ -24,23 +24,23 @@ namespace PochiPochiEditor2.Helpers
         /// <summary>
         /// LZ77圧縮されたデータを解凍する。
         /// </summary>
-        public static byte[] DecompressLZ77(byte[] romData, int baseOffset)
+        public static byte[] DecompressLZ77(byte[] data, int Offset)
         {
             // ヘッダの読み込み
             // 先頭1バイトは識別子(LZ77HeaderIdentifier)
-            int header = (int)IoHelper.ReadByteValue(romData, baseOffset, Constants.UIntSize);
+            int header = (int)IoHelper.ReadByteValue(data, Offset, Constants.UIntSize);
             // 残り3バイトは解凍後のサイズ
             int decompressedSize = header >> Constants.BitsPerByte;
             var result = new byte[decompressedSize];
 
-            int srcPos = baseOffset + LZ77HeaderSize;
+            int srcPos = Offset + LZ77HeaderSize;
             int dstPos = Constants.DefaultIndex;
 
             while (dstPos < decompressedSize)
             {
                 // フラグバイトを読み込む
                 // これは後続の8ブロックの圧縮状態を示す
-                byte flagByte = romData[srcPos++];
+                byte flagByte = data[srcPos++];
 
                 // 左端のビットから1ビットずつチェック
                 for (int i = 0; i < Constants.BitsPerByte; i++)
@@ -55,8 +55,8 @@ namespace PochiPochiEditor2.Helpers
                     if (isCompressed)
                     {
                         // 2バイト読み込む
-                        byte byte0 = romData[srcPos];
-                        byte byte1 = romData[srcPos + 1];
+                        byte byte0 = data[srcPos];
+                        byte byte1 = data[srcPos + 1];
                         srcPos += LZ77CompressedUnitSize;
 
                         // 上位4ビットから長さ(3〜18)を計算
@@ -77,7 +77,7 @@ namespace PochiPochiEditor2.Helpers
                     else
                     {
                         // データを1バイトコピー
-                        result[dstPos++] = romData[srcPos++];
+                        result[dstPos++] = data[srcPos++];
                     }
                 }
             }
@@ -198,15 +198,15 @@ namespace PochiPochiEditor2.Helpers
         /// <summary>
         /// データからパレットデータ（圧縮と非圧縮）を読み込む。
         /// </summary>
-        public static byte[] DecompressPalette(byte[] romData, int offset, bool isCompressed)
+        public static byte[] DecompressPalette(byte[] data, int offset, bool isCompressed)
         {
             if (isCompressed)
             {
-                return DecompressLZ77(romData, offset);
+                return DecompressLZ77(data, offset);
             }
 
             var paletteData = new byte[Constants.PalColorCount * Constants.BytesPerColor];
-            Array.Copy(romData, offset, paletteData, Constants.DefaultIndex, paletteData.Length);
+            Array.Copy(data, offset, paletteData, Constants.DefaultIndex, paletteData.Length);
             return paletteData;
         }
 

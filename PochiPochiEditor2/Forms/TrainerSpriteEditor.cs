@@ -257,12 +257,20 @@ namespace PochiPochiEditor2.Forms
                         if (sfd.ShowDialog() == DialogResult.OK)
                         {
                             // RefDataから生成
-                            var sprite = ImageHelper.CreateBitmap(
-                                _imageData.BinaryData,
+                            var imageData = ImageHelper.DecompressLZ77(
+                                _imageData.BinaryData, 
+                                Constants.DefaultIndex);
+                            var paletteData = ImageHelper.DecompressPalette(
                                 _paletteData.BinaryData,
+                                Constants.DefaultIndex,
+                                isCompressed: true);
+                            var sprite = ImageHelper.CreateBitmap(
+                                imageData,
+                                paletteData,
                                 Constants.SpriteSize,
                                 Constants.SpriteSize,
                                 showBackColor: true);
+
                             ImageHelper.ExportIndexedImage(
                                 sprite, 
                                 sfd.FileName);
