@@ -8,6 +8,10 @@ namespace PochiPochiEditor2.Managers.Commands
 
         public string Desc { get; }
 
+        /// <summary>
+        /// 複数のコマンドを単一コマンドとして扱うため。
+        /// </summary>
+        /// <param name="desc"></param>
         public CombineCommand(string desc)
         {
             _commands = new List<ICommand>();
