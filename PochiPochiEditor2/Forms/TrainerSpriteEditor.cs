@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Managers;
+using PochiPochiEditor2.Managers.Fields;
 using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Forms
@@ -26,6 +27,9 @@ namespace PochiPochiEditor2.Forms
         private PipelineBuilder _imageOffsetPipeline = null;
         private PipelineBuilder _paletteOffsetPipeline = null;
         private PipelineBuilder _yPosValuePipeline = null;
+        // 可変長データ管理用
+        private RefData _imageData = null;
+        private RefData _paletteData = null;
         // UI制御用
         private int _currentSpriteIndex = 0;
 
@@ -67,7 +71,7 @@ namespace PochiPochiEditor2.Forms
             public static string TrainerSpriteCount = nameof(TrainerSpriteCount);
         }
 
-        private enum ImportKind
+        private enum SpriteData
         {
             Image,
             Palette
@@ -118,8 +122,8 @@ namespace PochiPochiEditor2.Forms
             nudSpriteIndex.Maximum = spriteCount - 1;
 
             // タグ設定
-            btnImportImage.Tag = ImportKind.Image;
-            btnImportPalette.Tag = ImportKind.Palette;
+            btnImportImage.Tag = SpriteData.Image;
+            btnImportPalette.Tag = SpriteData.Palette;
         }
 
         private void InitializePipelines()
@@ -240,6 +244,7 @@ namespace PochiPochiEditor2.Forms
                 h => btnSpriteExport.Click -= h,
                 (_, __) =>
                 {
+                    // 正規かどうかの判定
                     if (picSprite.Image == null) return;
 
                     using (var sfd = new SaveFileDialog())
@@ -249,10 +254,28 @@ namespace PochiPochiEditor2.Forms
 
                         if (sfd.ShowDialog() == DialogResult.OK)
                         {
-                            ImageHelper.ExportIndexedImage((Bitmap)picSprite.Image, sfd.FileName);
+                            // RefDataから生成
+                            var sprite = ImageHelper.CreateBitmap(
+                                _imageData.BinaryData,
+                                _paletteData.BinaryData,
+                                Constants.SpriteSize,
+                                Constants.SpriteSize,
+                                showBackColor: true);
+                            ImageHelper.ExportIndexedImage(
+                                sprite, 
+                                sfd.FileName);
                         }
                     }
                 });
+            // インポート
+            _eventBinder.BindCtrl(
+                h => btnImportImage.Click += h,
+                h => btnImportImage.Click -= h,
+                SpriteImport_Click);
+            _eventBinder.BindCtrl(
+                h => btnImportPalette.Click += h,
+                h => btnImportPalette.Click -= h,
+                SpriteImport_Click);
 
             // 解除タイミング指定
             _eventBinder.BindCtrl(
@@ -317,8 +340,10 @@ namespace PochiPochiEditor2.Forms
 
         private void DisplayTrainerSprite()
         {
-            var isImageValid = string.IsNullOrEmpty(txtImageOffset.Text);
-            var isPaletteValid = string.IsNullOrEmpty(txtPaletteOffset.Text);
+            var imageOffsetStr = txtImageOffset.Text;
+            var paletteOffsetStr = txtPaletteOffset.Text;
+            var isImageValid = string.IsNullOrEmpty(imageOffsetStr);
+            var isPaletteValid = string.IsNullOrEmpty(paletteOffsetStr);
 
             // 無効なアドレスの場合は何も描画しない
             if (isImageValid || isPaletteValid)
@@ -330,13 +355,22 @@ namespace PochiPochiEditor2.Forms
 
             try
             {
+                // オフセットを取得
+                var imageoffsetValue = imageOffsetStr.ParseStringToInt();
                 var imageData = ImageHelper.DecompressLZ77(
                     _sharedData.RomData,
-                    txtImageOffset.Text.ParseStringToInt());
+                    imageoffsetValue);
+                // RefDataとして保持する
+                _imageData = new RefData(SpriteData.Image, imageoffsetValue, imageData);
+
+                // オフセットを取得
+                var paletteoffsetValue = paletteOffsetStr.ParseStringToInt();
                 var paletteData = ImageHelper.DecompressPalette(
                     _sharedData.RomData,
-                    txtPaletteOffset.Text.ParseStringToInt(), 
+                    paletteoffsetValue, 
                     isCompressed: true);
+                // RefDataとして保持する
+                _paletteData = new RefData(SpriteData.Palette, paletteoffsetValue, paletteData);
 
                 var sprite = ImageHelper.CreateBitmap(
                     imageData,
@@ -357,16 +391,9 @@ namespace PochiPochiEditor2.Forms
             }
         }
 
-
-
-
-
-
-
-
         private void SpriteImport_Click(object sender, EventArgs e)
         {
-            if (!(sender is Button btn) || !(btn.Tag is ImportKind importKind)) return;
+            if (!(sender is Button btn) || !(btn.Tag is SpriteData importKind)) return;
 
             using (var popup = new QuickInput(
                 defaultOffset: 0,
@@ -388,14 +415,9 @@ namespace PochiPochiEditor2.Forms
                             out byte[] imageData,
                             out byte[] paletteData)) return;
 
-                        if (importKind == ImportKind.Image)
-                        {
-                            targetTextBox = txtImageOffset;
-                        }
-                        else if(importKind == ImportKind.Palette)
-                        {
-                            targetTextBox = txtPaletteOffset;
-                        }
+                        targetTextBox = importKind == SpriteData.Image
+                            ? txtImageOffset
+                            : txtPaletteOffset;
                     }
 
                     // DisplayTrainerSprite();
