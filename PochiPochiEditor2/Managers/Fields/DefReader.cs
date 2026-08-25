@@ -68,7 +68,7 @@ namespace PochiPochiEditor2.Managers.Fields
             foreach (var line in splitLines)
             {
                 // フィールド名を読み取る
-                string name = line[(int)FieldExtensions.DefName.FieldName];
+                var name = line[(int)FieldExtensions.DefName.FieldName];
 
                 // 型を読み取る
                 var kindStr = line[(int)FieldExtensions.DefName.KindName];
@@ -84,7 +84,7 @@ namespace PochiPochiEditor2.Managers.Fields
                     // "("の位置を探す
                     var openParenIndex = attrText.IndexOf(Constants.OpenParenChar);
 
-                    // 属性名のみ
+                    // 属性名のみの場合
                     if (openParenIndex == Constants.InvalidValue)
                     {
                         // 属性名を取得
@@ -110,7 +110,7 @@ namespace PochiPochiEditor2.Managers.Fields
                         attrStr);
 
                     // 属性引数を取得
-                    var rawArgs = line[i].Substring(
+                    var rawArgs = attrText.Substring(
                         openParenIndex + 1, 
                         closeParenIndex - openParenIndex - 1);
                     // カンマで分割

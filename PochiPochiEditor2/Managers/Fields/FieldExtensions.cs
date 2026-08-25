@@ -97,7 +97,7 @@ namespace PochiPochiEditor2.Managers.Fields
         /// <summary>
         /// AttrKindに対応する引数の数を取得する。
         /// </summary>
-        public static int GetAttrSize(this AttrKind kind)
+        public static int GetAttrCount(this AttrKind kind)
         {
             // 戻り値用
             int count = default;

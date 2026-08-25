@@ -8,13 +8,13 @@ namespace PochiPochiEditor2.Managers.Fields
     public class FieldValue
     {
         public Enum Name { get; }
-        public int EntryLength { get; } // 最大値として
+        public int EntryLength { get; } // 最大長として
         public int AllowedLength { get; } // ほぼstring用
         public bool IsSigned { get; }
         public bool IsPointer { get; }
         public int ArgCount { get; } // ほぼnibble, bit用
-        public int Offset { get; set; }
-        public byte[] BinaryData
+        public int Offset { get; set; } // 読み書き用
+        public byte[] BinaryData // SharedData.RomDataと紐づいている
         {
             get
             {
@@ -52,7 +52,7 @@ namespace PochiPochiEditor2.Managers.Fields
             EntryLength = metaData.Field.GetFieldSize();
             AllowedLength = Constants.InvalidValue;
 
-            // ない場合は実行されない
+            // ない場合は実行されない（要素数0を仮置きしている）
             foreach (var attr in metaData.Attrs)
             {
                 // 場合分け後、属性引数の数を格納
@@ -62,7 +62,7 @@ namespace PochiPochiEditor2.Managers.Fields
                         // 属性引数AllowedLengthがない場合がある
                         ArgCount = Math.Min(
                             attr.Args.Length, 
-                            FieldExtensions.AttrKind.StringAttr.GetAttrSize()); // 最大値と比較
+                            FieldExtensions.AttrKind.StringAttr.GetAttrCount()); // 最大値と比較
 
                         // 長さintを格納する
                         int[] lengths = new int[ArgCount];
@@ -79,11 +79,11 @@ namespace PochiPochiEditor2.Managers.Fields
                         break;
 
                     case FieldExtensions.AttrKind.NibbleAttr:
-                        ArgCount = FieldExtensions.AttrKind.NibbleAttr.GetAttrSize();
+                        ArgCount = FieldExtensions.AttrKind.NibbleAttr.GetAttrCount();
                         break;
 
                     case FieldExtensions.AttrKind.BitAttr:
-                        ArgCount = FieldExtensions.AttrKind.BitAttr.GetAttrSize();
+                        ArgCount = FieldExtensions.AttrKind.BitAttr.GetAttrCount();
                         break;
                 }
             }
@@ -104,7 +104,7 @@ namespace PochiPochiEditor2.Managers.Fields
             int argIndex = Constants.DefaultIndex,
             Func<FieldValue, int, TblManager, T> converter = null)
         {
-            // 型Tで対応できない特殊処理があれば渡す
+            // 通常の型Tで対応できない特殊処理があれば渡す
             return converter != null
                 ? converter(this, argIndex, _sharedData.Charmap)
                 : CalcHelper.BytesToModelConv<T>(this, argIndex, _sharedData.Charmap);
@@ -118,7 +118,7 @@ namespace PochiPochiEditor2.Managers.Fields
             int argIndex = Constants.DefaultIndex,
             Func<T, FieldValue, int, TblManager, byte[]> converter = null)
         {
-            // 型Tで対応できない特殊処理があれば渡す
+            // 通常の型Tで対応できない特殊処理があれば渡す
             byte[] newBytes = converter != null
                     ? converter(rawData, this, argIndex, _sharedData.Charmap)
                     : CalcHelper.ModelToBytesConv(rawData, this, argIndex, _sharedData.Charmap);
@@ -128,17 +128,18 @@ namespace PochiPochiEditor2.Managers.Fields
         }
 
         /// <summary>
-        /// 簡易的に値を更新する。
+        /// 簡易的に値(通常)を更新する。
         /// </summary>
         public void UpdateData<T>(
             UndoManager undoManager,
             T data,
-            string desc)
+            string desc,
+            int argIndex = Constants.DefaultIndex)
         {
             // 変更前のバイナリデータ
             byte[] oldBinary = BinaryData;
             // データ更新
-            SetData(data);
+            SetData(data, argIndex);
             // 変更後のバイナリデータ
             byte[] newBinary = BinaryData;
 

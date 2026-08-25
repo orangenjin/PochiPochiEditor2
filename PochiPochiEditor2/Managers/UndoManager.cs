@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using PochiPochiEditor2.Utilities;
 
@@ -8,14 +7,14 @@ namespace PochiPochiEditor2.Managers
 {
     public class UndoManager
     {
-        private readonly List<ICommand> _history = new List<ICommand>();
+        private List<ICommand> _history = new List<ICommand>();
         private int _currentIndex = 0;
 
         // Undo, Redoの発生判定
         public event EventHandler StateChanged = null;
 
         // 公開用
-        public List<ICommand> History => _history.ToList();
+        public List<ICommand> History => _history;
         public int CurrentIndex => _currentIndex;
 
         // 実行可能かどうか、チェック用

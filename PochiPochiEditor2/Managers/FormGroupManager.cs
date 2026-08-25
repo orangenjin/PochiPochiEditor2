@@ -52,7 +52,7 @@ namespace PochiPochiEditor2.Managers
         /// <summary>
         /// 同じフォームグループを閉じるようにする。
         /// </summary>
-        private void SingleForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void SingleForm_FormClosed(object sender, EventArgs e)
         {
             foreach (var form in _forms)
             {
@@ -78,6 +78,7 @@ namespace PochiPochiEditor2.Managers
         {
             foreach (var form in _forms)
             {
+                // 念のため
                 if (form.IsDisposed) continue;
 
                 if (form is IEditorRefresh refreshable)

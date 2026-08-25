@@ -39,8 +39,8 @@ namespace PochiPochiEditor2.Helpers
                         entryLength);
 
                     // サイズ取得
-                    int nibbleSize = FieldExtensions.AttrKind.NibbleAttr.GetAttrSize();
-                    int bitSize = FieldExtensions.AttrKind.BitAttr.GetAttrSize();
+                    int nibbleSize = FieldExtensions.AttrKind.NibbleAttr.GetAttrCount();
+                    int bitSize = FieldExtensions.AttrKind.BitAttr.GetAttrCount();
 
                     // ニブル
                     if (fieldValue.ArgCount == nibbleSize)

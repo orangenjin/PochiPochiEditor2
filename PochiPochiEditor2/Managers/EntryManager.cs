@@ -55,9 +55,9 @@ namespace PochiPochiEditor2.Managers
         public int EntryIndex { get; set; }
         public List<FieldValue> Fields { get; set; }
 
-        public Entry(int baseOffset, int index,  List<FieldValue> fields)
+        public Entry(int baseOffset, int entryIndex,  List<FieldValue> fields)
         {
-            EntryIndex = index;
+            EntryIndex = entryIndex;
             Fields = fields;
 
             // 辞書化

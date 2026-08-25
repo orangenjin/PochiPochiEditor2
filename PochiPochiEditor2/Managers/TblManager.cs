@@ -10,8 +10,8 @@ namespace PochiPochiEditor2.Managers
     public class TblManager
     {
         // 対応探索用
-        private readonly ByteTrieNode _byteTrieRoot = null;
-        private readonly StringTrieNode _stringTrieRoot = null;
+        private ByteTrieNode _byteTrieRoot = null;
+        private StringTrieNode _stringTrieRoot = null;
 
         /// <summary>
         /// ファイルパスを指定して、charmapを作成する。
