@@ -88,10 +88,10 @@ namespace PochiPochiEditor2.Helpers
         /// <summary>
         /// データをLZ77に圧縮する。
         /// </summary>
-        public static byte[] CompressLZ77(byte[] imageData)
+        public static byte[] CompressLZ77(byte[] data)
         {
             // マージ用の入れ物
-            int length = imageData.Length;
+            int length = data.Length;
             var result = new List<byte>(length / Constants.PixelsPerByte4Bpp);
 
             // ヘッダの書き込み
@@ -118,7 +118,7 @@ namespace PochiPochiEditor2.Helpers
                     if (pos >= length) break;
 
                     // データから最大の距離と長さを探索する
-                    var (bestDistance, bestLength) = FindLongestMatch(imageData, pos);
+                    var (bestDistance, bestLength) = FindLongestMatch(data, pos);
 
                     if (bestLength >= LZ77MinMatchLength)
                     {
@@ -139,7 +139,7 @@ namespace PochiPochiEditor2.Helpers
                     else
                     {
                         // 一致しない場合はそのまま書き込む
-                        result.Add(imageData[pos++]);
+                        result.Add(data[pos++]);
                     }
                 }
 
