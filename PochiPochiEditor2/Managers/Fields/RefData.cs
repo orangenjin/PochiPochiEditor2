@@ -13,8 +13,8 @@ namespace PochiPochiEditor2.Managers.Fields
         public int Offset { get; set; }
         public byte[] BinaryData { get; set; }
 
-        // 共有データ用
-        private SharedData _sharedData = null;
+        // 共有データ
+        private SharedData _sharedData;
 
         public RefData(
             Enum enumKey,
@@ -28,24 +28,18 @@ namespace PochiPochiEditor2.Managers.Fields
             Set(offset, binaryData);
         }
 
-        public void Set(
-            int offset,
-            byte[] binaryData)
+        public void Set(int offset, byte[] binaryData)
         {
             Offset = offset;
             BinaryData = binaryData;
         }
 
-        public void Restore(int offset, byte[] binaryData)
+        public void WriteData(int offset, byte[] binaryData)
         {
-            // 自身のプロパティを更新
-            Set(offset, binaryData);
-
-            // RomData に書き戻す
             IoHelper.WriteBytesToData(
                 _sharedData.RomData,
-                Offset,
-                BinaryData);
+                offset,
+                binaryData);
         }
 
         public void Update(
@@ -55,32 +49,34 @@ namespace PochiPochiEditor2.Managers.Fields
             string desc)
         {
             int oldOffset = Offset;
+            byte[] oldBinaryData = BinaryData;
 
-            // 書き込み先の書き込み前状態を格納
-            byte[] oldBinary = new byte[newBinaryData.Length];
+            // 同一の場合
+            if (oldOffset == newOffset &&
+                oldBinaryData.SequenceEqual(newBinaryData)) return;
+
+            // 書き込み先の状態を保持する
+            byte[] oldTargetData = new byte[newBinaryData.Length];
             Array.Copy(
-                _sharedData.RomData, 
-                newOffset, 
-                oldBinary,
+                _sharedData.RomData,
+                newOffset,
+                oldTargetData,
                 Constants.DefaultIndex,
                 newBinaryData.Length);
 
-            // データの更新
-            Restore(newOffset, newBinaryData);
+            WriteData(newOffset, newBinaryData);
+            Set(newOffset, newBinaryData);
 
-            if (oldOffset != newOffset ||
-                !oldBinary.SequenceEqual(newBinaryData))
-            {
-                var cmd = new RefDataChangeCommand(
-                    this,
-                    oldOffset,
-                    oldBinary,
-                    Offset,
-                    BinaryData,
-                    desc);
+            var command = new RefDataChangeCommand(
+                this,
+                oldOffset,
+                oldBinaryData,
+                newOffset,
+                newBinaryData,
+                oldTargetData,
+                desc);
 
-                undoManager.PushCommand(cmd);
-            }
+            undoManager.PushCommand(command);
         }
     }
 }

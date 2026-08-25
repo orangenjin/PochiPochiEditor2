@@ -6,11 +6,16 @@ namespace PochiPochiEditor2.Managers.Commands
     {
         private RefData _refData;
 
+        // RefDataの変更前
         private int _oldOffset;
         private byte[] _oldData;
 
+        // RefDataの変更後
         private int _newOffset;
         private byte[] _newData;
+
+        // newOffsetに元々存在していたデータ
+        private byte[] _oldTargetData;
 
         public string Desc { get; }
 
@@ -20,6 +25,7 @@ namespace PochiPochiEditor2.Managers.Commands
             byte[] oldData,
             int newOffset,
             byte[] newData,
+            byte[] oldTargetData,
             string desc)
         {
             _refData = refData;
@@ -30,17 +36,27 @@ namespace PochiPochiEditor2.Managers.Commands
             _newOffset = newOffset;
             _newData = (byte[])newData.Clone();
 
+            _oldTargetData = oldTargetData;
+
             Desc = desc;
         }
 
         public void Undo()
         {
-            _refData.Restore(_oldOffset, _oldData);
+            // 新しい書き込み先を元に戻す
+            _refData.WriteData(_newOffset, _oldTargetData);
+
+            // RefDataを元に戻す
+            _refData.Set(_oldOffset, _oldData);
         }
 
         public void Redo()
         {
-            _refData.Restore(_newOffset, _newData);
+            // 新しいデータを書き戻す
+            _refData.WriteData(_newOffset, _newData);
+
+            // RefDataを新しい状態にする
+            _refData.Set(_newOffset, _newData);
         }
     }
 }
