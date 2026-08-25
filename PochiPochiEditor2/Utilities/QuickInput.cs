@@ -15,9 +15,8 @@ namespace PochiPochiEditor2.Utilities
         private EventBinder _eventBinder = new EventBinder();
         // パイプライン用
         private PipelineBuilder _targetOffsetPipeline = null;
-
         // ファイルパスを保持
-        private readonly string _fileFilter;
+        private string _fileFilter = null;
 
         /// <summary>
         /// 引数はフォームを形成するのに必要なもの。
@@ -68,8 +67,8 @@ namespace PochiPochiEditor2.Utilities
         private void InitializeEventHandlers()
         {
             _eventBinder.BindCtrl(
-                h => txtTargetOffset.TextChanged += h,
-                h => txtTargetOffset.TextChanged -= h,
+                h => txtTargetOffset.Validated += h,
+                h => txtTargetOffset.Validated -= h,
                 (s, e) =>
                 {
                     _targetOffsetPipeline.Execute(new Context(s, e));
