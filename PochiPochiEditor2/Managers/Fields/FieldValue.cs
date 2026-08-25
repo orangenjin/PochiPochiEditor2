@@ -32,7 +32,7 @@ namespace PochiPochiEditor2.Managers.Fields
                 Array.Copy(value, Constants.DefaultIndex, _sharedData.RomData, Offset, EntryLength);
             }
         }
-        public List<IRefData> RelatedData { get; set; } // 画像データなど
+        public List<IRefData> RefData { get; set; } // 画像データなど
 
         // 共有データ用
         private SharedData _sharedData = null;
@@ -101,7 +101,7 @@ namespace PochiPochiEditor2.Managers.Fields
             IsPointer = metaData.Field is FieldExtensions.FieldKind.Pointer;
 
             // 初期化
-            RelatedData = new List<IRefData>();
+            RefData = new List<IRefData>();
         }
 
         /// <summary>
