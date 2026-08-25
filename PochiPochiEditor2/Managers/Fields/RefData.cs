@@ -2,7 +2,7 @@
 
 namespace PochiPochiEditor2.Managers.Fields
 {
-    public class RefData : IRefData
+    public class RefData
     {
         public Enum Name { get; }
         public int Offset { get; set; }
@@ -25,12 +25,5 @@ namespace PochiPochiEditor2.Managers.Fields
             Offset = offset;
             BinaryData = (byte[])binaryData.Clone();
         }
-    }
-
-    public interface IRefData
-    {
-        Enum Name { get; }
-        int Offset { get; set; }
-        byte[] BinaryData { get; set; }
     }
 }
