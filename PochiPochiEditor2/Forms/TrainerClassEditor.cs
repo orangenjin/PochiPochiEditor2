@@ -27,12 +27,12 @@ namespace PochiPochiEditor2.Forms
         private EntryManager _pokeBall = null;
         private EntryManager _baseIv = null;
         // パイプライン用
-        private UiPipelineBuilder _classNamePipeline = null;
-        private UiPipelineBuilder _prizeMultiPipeline = null;
-        private UiPipelineBuilder _encMusicPipeline = null;
-        private UiPipelineBuilder _battleMusicPipeline = null;
-        private UiPipelineBuilder _pokeBallPipeline = null;
-        private UiPipelineBuilder _baseIvPipeline = null;
+        private PipelineBuilder _classNamePipeline = null;
+        private PipelineBuilder _prizeMultiPipeline = null;
+        private PipelineBuilder _encMusicPipeline = null;
+        private PipelineBuilder _battleMusicPipeline = null;
+        private PipelineBuilder _pokeBallPipeline = null;
+        private PipelineBuilder _baseIvPipeline = null;
 
         // 追加データ判定用
         private bool _isEncounterMusicEnabled = false;
@@ -194,7 +194,7 @@ namespace PochiPochiEditor2.Forms
         private void InitializePipelines()
         {
             // txtClassName
-            _classNamePipeline = new UiPipelineBuilder()
+            _classNamePipeline = new PipelineBuilder()
                 // 入力値を取得
                 .Then(ctx =>
                 {
@@ -250,7 +250,7 @@ namespace PochiPochiEditor2.Forms
                 });
 
             // nudPrizeMulti
-            _prizeMultiPipeline = new UiPipelineBuilder()
+            _prizeMultiPipeline = new PipelineBuilder()
                 // 入力値を取得、データを更新
                 .Then(ctx =>
                 {
@@ -294,7 +294,7 @@ namespace PochiPochiEditor2.Forms
                 EntryManager Entry,
                 FieldKey Key,
                 Func<string> DescGenerator,
-                Action<UiPipelineBuilder> AssignPipeline)[]
+                Action<PipelineBuilder> AssignPipeline)[]
             {
                 (_isEncounterMusicEnabled, 
                     _encMusic, 
@@ -329,9 +329,9 @@ namespace PochiPochiEditor2.Forms
             }
 
             // ループヘルパー
-            UiPipelineBuilder BuildPipeline(EntryManager entry, FieldKey key, Func<string> descGen)
+            PipelineBuilder BuildPipeline(EntryManager entry, FieldKey key, Func<string> descGen)
             {
-                return new UiPipelineBuilder()
+                return new PipelineBuilder()
                     .Then(ctx =>
                     {
                         // 入力値

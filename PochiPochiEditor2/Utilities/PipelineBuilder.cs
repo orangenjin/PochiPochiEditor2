@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace PochiPochiEditor2.Utilities
 {
-    public class UiPipelineBuilder
+    public class PipelineBuilder
     {
-        private readonly List<Action<UiContext>> _actions = new List<Action<UiContext>>();
+        private readonly List<Action<Context>> _actions = new List<Action<Context>>();
 
         /// <summary>
         /// 連鎖的な記述を可能にするため。
         /// </summary>
-        public UiPipelineBuilder Then(Action<UiContext> action)
+        public PipelineBuilder Then(Action<Context> action)
         {
             _actions.Add(action);
             return this;
         }
 
-        public void Execute(UiContext context)
+        public void Execute(Context context)
         {
             foreach (var action in _actions)
             {
@@ -25,15 +25,15 @@ namespace PochiPochiEditor2.Utilities
         }
     }
 
-    public class UiContext
+    public class Context
     {
         public object Sender { get; }
         public EventArgs EventArgs { get; }
 
-        // 一時的なデータ
+        // 一時的なデータ、キーは型名
         private readonly Dictionary<Type, object> _data = new Dictionary<Type, object>();
 
-        public UiContext(object sender, EventArgs e)
+        public Context(object sender, EventArgs e)
         {
             Sender = sender;
             EventArgs = e;

@@ -14,7 +14,7 @@ namespace PochiPochiEditor2.Utilities
         // イベント登録・解除用
         private EventBinder _eventBinder = new EventBinder();
         // パイプライン用
-        private UiPipelineBuilder _targetOffsetPipeline = null;
+        private PipelineBuilder _targetOffsetPipeline = null;
 
         // ファイルパスを保持
         private readonly string _fileFilter;
@@ -51,7 +51,7 @@ namespace PochiPochiEditor2.Utilities
 
         private void InitializePipelines()
         {
-            _targetOffsetPipeline = new UiPipelineBuilder()
+            _targetOffsetPipeline = new PipelineBuilder()
                 // 入力値を取得、整形を行う
                 .Then(ctx =>
                 {
@@ -72,7 +72,7 @@ namespace PochiPochiEditor2.Utilities
                 h => txtTargetOffset.TextChanged -= h,
                 (s, e) =>
                 {
-                    _targetOffsetPipeline.Execute(new UiContext(s, e));
+                    _targetOffsetPipeline.Execute(new Context(s, e));
                 });
 
             // btnSelectFile

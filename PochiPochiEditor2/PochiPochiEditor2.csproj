@@ -72,7 +72,7 @@
     <Compile Include="Utilities\QuickInput.Designer.cs">
       <DependentUpon>QuickInput.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\UiPipelineBuilder.cs" />
+    <Compile Include="Utilities\PipelineBuilder.cs" />
     <Compile Include="Managers\UndoManager.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Helpers\CalcHelper.cs" />

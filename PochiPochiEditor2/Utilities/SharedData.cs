@@ -8,8 +8,8 @@ namespace PochiPochiEditor2.Utilities
     {
         public byte[] RomData { get; set; }　// 後入れ
         public bool IsRomLoaded { get; set; }
-        public IniManager Config { get; set; }
-        public TblManager Charmap { get; set; }
+        public IniManager Config { get; }
+        public TblManager Charmap { get; }
 
         public SharedData(
             IniManager config,

@@ -17,7 +17,7 @@ public class EventBinder
         // 解除用の時、nullにする
         if (handler == null)
         {
-            handler = (s, e) => Dispose();
+            handler = (_, __) => Dispose();
         }
 
         adder(handler);

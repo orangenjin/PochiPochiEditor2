@@ -25,9 +25,9 @@ namespace PochiPochiEditor2.Forms
         private EntryManager _yPos = null;
         private EntryManager _animPointer = null;
         // パイプライン用
-        private UiPipelineBuilder _imageOffsetValidated = null;
-        private UiPipelineBuilder _paletteOffsetValidated = null;
-        private UiPipelineBuilder _yPosValueValidated = null;
+        private PipelineBuilder _imageOffsetValidated = null;
+        private PipelineBuilder _paletteOffsetValidated = null;
+        private PipelineBuilder _yPosValueValidated = null;
         // UI制御用
         private int _currentSpriteIndex = 0;
 
@@ -127,7 +127,7 @@ namespace PochiPochiEditor2.Forms
         private void InitializePipelines()
         {
             // txtImageOffset
-            _imageOffsetValidated = new UiPipelineBuilder()
+            _imageOffsetValidated = new PipelineBuilder()
                 // 入力値を取得
                 .Then(ctx =>
                 {
@@ -145,7 +145,7 @@ namespace PochiPochiEditor2.Forms
                 });
 
             // txtPaletteOffset
-            _paletteOffsetValidated = new UiPipelineBuilder()
+            _paletteOffsetValidated = new PipelineBuilder()
                 // 入力値を取得
                 .Then(ctx =>
                 {
@@ -163,7 +163,7 @@ namespace PochiPochiEditor2.Forms
                 });
 
             // nudYPosValue
-            _yPosValueValidated = new UiPipelineBuilder()
+            _yPosValueValidated = new PipelineBuilder()
                 // 入力値を取得
                 .Then(ctx =>
                 {

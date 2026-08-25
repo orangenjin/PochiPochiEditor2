@@ -37,8 +37,9 @@ namespace PochiPochiEditor2
         {
             InitializeComponent();
 
-            // 先にこれらを初期化（設定名のコンボボックスの初期化が必要）
+            // 設定名のコンボボックスの初期化が必要
             var config = new IniManager(_iniFolder, cmbConfig);
+            // 現在言語変更できない
             var charmap = new TblManager(_tblPath);
             _sharedData = new SharedData(config, charmap);
 
@@ -165,7 +166,7 @@ namespace PochiPochiEditor2
         {
             if (!(sender is Button btn) || !(btn.Tag is SaveMode mode)) return;
 
-            if (mode == SaveMode.SaveOver) // 上書き
+            if (mode == SaveMode.SaveOver) // 上書き保存
             {
                 SaveRom(_romPath);
             }
@@ -179,11 +180,12 @@ namespace PochiPochiEditor2
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         SaveRom(saveFileDialog.FileName);
+                        _romPath = saveFileDialog.FileName;
                     }
                 }
             }
 
-            // 保存処理
+            // 保存処理メソッド
             void SaveRom(string path)
             {
                 try
@@ -255,10 +257,9 @@ namespace PochiPochiEditor2
 
         private void UpdateHistoryList()
         {
-            lstHistory.BeginUpdate();
-
             try
             {
+                lstHistory.BeginUpdate();
                 lstHistory.Items.Clear();
 
                 foreach (var command in _undoManager.History)
@@ -269,9 +270,8 @@ namespace PochiPochiEditor2
             finally
             {
                 lstHistory.EndUpdate();
+                lstHistory.Invalidate();
             }
-
-            lstHistory.Invalidate();
         }
 
         private void lstHistory_DrawItem(object sender, DrawItemEventArgs e)
@@ -295,7 +295,7 @@ namespace PochiPochiEditor2
 
             e.DrawFocusRectangle();
 
-            // 色ヘルパー
+            // 色処理ヘルパー
             Color GetHistoryTextColor()
             {
                 if (!isFuture) return lstHistory.ForeColor;
