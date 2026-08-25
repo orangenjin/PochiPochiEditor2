@@ -136,7 +136,7 @@ namespace PochiPochiEditor2.Forms
                 .Then(ctx =>
                 {
                     var parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
-                    var desc = $"[{this.Text}]画像アドレス(ID:{_currentSpriteIndex})";
+                    var desc = $"[{this.Text}]画像アドレス(ID:{_currentSpriteIndex:D4})";
 
                     _imageEntry.Entries[_currentSpriteIndex][FieldKey.ImageOffset]
                         .UpdateData(_undoManager, parsedValue, desc);
@@ -154,7 +154,7 @@ namespace PochiPochiEditor2.Forms
                 .Then(ctx =>
                 {
                     var parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
-                    var desc = $"[{this.Text}]パレットアドレス(ID:{_currentSpriteIndex})";
+                    var desc = $"[{this.Text}]パレットアドレス(ID:{_currentSpriteIndex:D4})";
 
                     _paletteEntry.Entries[_currentSpriteIndex][FieldKey.PaletteOffset]
                         .UpdateData(_undoManager, parsedValue, desc);
@@ -172,7 +172,7 @@ namespace PochiPochiEditor2.Forms
                 .Then(ctx =>
                 {
                     var parsedValue = (int)ctx.Get<decimal>();
-                    var desc = $"[{this.Text}]Y座標位置(ID:{_currentSpriteIndex})";
+                    var desc = $"[{this.Text}]Y座標位置(ID:{_currentSpriteIndex:D4})";
 
                     _yPosEntry.Entries[_currentSpriteIndex][FieldKey.YPosValue]
                         .UpdateData(_undoManager, parsedValue, desc);

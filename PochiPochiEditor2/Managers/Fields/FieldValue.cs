@@ -2,7 +2,9 @@
 using System.Linq;
 
 using PochiPochiEditor2.Helpers;
+using PochiPochiEditor2.Managers.Commands;
 using PochiPochiEditor2.Utilities;
+
 namespace PochiPochiEditor2.Managers.Fields
 {
     public class FieldValue

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Managers;
-using PochiPochiEditor2.Managers.Fields;
+using PochiPochiEditor2.Managers.Commands;
 using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Forms
@@ -20,12 +20,12 @@ namespace PochiPochiEditor2.Forms
         // 変更履歴用
         private UndoManager _undoManager = null;
         // 各テーブル用
-        private EntryManager _className = null;
-        private EntryManager _prizeMulti = null;
-        private EntryManager _encMusic = null;
-        private EntryManager _battleMusic = null;
-        private EntryManager _pokeBall = null;
-        private EntryManager _baseIv = null;
+        private EntryManager _classNameEntry = null;
+        private EntryManager _prizeMultiEntry = null;
+        private EntryManager _encMusicEntry = null;
+        private EntryManager _battleMusicEntry = null;
+        private EntryManager _pokeBallEntry = null;
+        private EntryManager _baseIvEntry = null;
         // パイプライン用
         private PipelineBuilder _classNamePipeline = null;
         private PipelineBuilder _prizeMultiPipeline = null;
@@ -33,13 +33,11 @@ namespace PochiPochiEditor2.Forms
         private PipelineBuilder _battleMusicPipeline = null;
         private PipelineBuilder _pokeBallPipeline = null;
         private PipelineBuilder _baseIvPipeline = null;
-
         // 追加データ判定用
         private bool _isEncounterMusicEnabled = false;
         private bool _isBattleMusicEnabled = false;
         private bool _isPokeBallEnabled = false;
         private bool _isBaseIvEnabled = false;
-
         // UI制御用
         private int _currentClassIndex = 0;
 
@@ -105,7 +103,7 @@ namespace PochiPochiEditor2.Forms
             string defFileName = IniKey.TrainerClassNameEntry;
             int tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassNameTableOffset);
             int entrycount = _sharedData.Config.ReadInt(IniKey.TrainerClassNameCount);
-            _className = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+            _classNameEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // 追加データのbool判定
             _isEncounterMusicEnabled = _sharedData.Config.ReadBool(IniKey.EnableTrainerClassEncMusic);
@@ -118,7 +116,7 @@ namespace PochiPochiEditor2.Forms
                 // 戦闘前BGMテーブルを作成
                 defFileName = IniKey.TrainerClassEncMusicEntry;
                 tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassEncMusicTableOffset);
-                _encMusic = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+                _encMusicEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             if (_isBattleMusicEnabled)
@@ -126,7 +124,7 @@ namespace PochiPochiEditor2.Forms
                 // 戦闘中BGMテーブルを作成
                 defFileName = IniKey.TrainerClassBattleMusicEntry;
                 tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassBattleMusicTableOffset);
-                _battleMusic = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+                _battleMusicEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             if (_isPokeBallEnabled)
@@ -134,7 +132,7 @@ namespace PochiPochiEditor2.Forms
                 // 使用ボールIDテーブルを作成
                 defFileName = IniKey.TrainerClassPokeBallEntry;
                 tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassPokeBallTableOffset);
-                _pokeBall = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+                _pokeBallEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             if (_isBaseIvEnabled)
@@ -142,14 +140,14 @@ namespace PochiPochiEditor2.Forms
                 // 基礎個体値テーブルを作成
                 defFileName = IniKey.TrainerClassBaseIvEntry;
                 tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassBaseIVTableOffset);
-                _baseIv = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+                _baseIvEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
             }
 
             // 賞金倍率テーブルを作成
             defFileName = IniKey.TrainerClassPrizeMultiEntry;
             tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassPrizeMultiTableOffset);
             entrycount = _sharedData.Config.ReadInt(IniKey.TrainerClassPrizeMultiCount);
-            _prizeMulti = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+            _prizeMultiEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
         }
 
         private void InitializeControls()
@@ -184,11 +182,21 @@ namespace PochiPochiEditor2.Forms
 
         private void UpdateClassNameComboBox()
         {
-            // クラス名をcmbに格納
-            var classNames = _className.Entries
+            cmbClassNameIndex.BeginUpdate();
+            cmbClassNameIndex.Items.Clear();
+
+            var classNames = _classNameEntry.Entries
                 .Select(entry => entry[FieldKey.ClassNameStr].GetData<string>())
                 .ToArray();
+
             cmbClassNameIndex.Items.AddRange(classNames);
+            cmbClassNameIndex.EndUpdate();
+
+            // 再選択
+            if (cmbClassNameIndex.Items.Count > 0)
+            {
+                cmbClassNameIndex.SelectedIndex = _currentClassIndex;
+            }
         }
 
         private void InitializePipelines()
@@ -205,7 +213,7 @@ namespace PochiPochiEditor2.Forms
                 .Then(ctx =>
                 {
                     // AlloewedLengthはない
-                    int entryLength = _className.Entries[_currentClassIndex][FieldKey.ClassNameStr].EntryLength;
+                    int entryLength = _classNameEntry.Entries[_currentClassIndex][FieldKey.ClassNameStr].EntryLength;
                     var formattedText = CalcHelper.TextLengthValidate(
                             _sharedData.Charmap,
                             ctx.Get<string>(),
@@ -215,77 +223,28 @@ namespace PochiPochiEditor2.Forms
                 // データを更新
                 .Then(ctx =>
                 {
-                    var targetField = _className.Entries[_currentClassIndex][FieldKey.ClassNameStr];
-
-                    // 変更前のバイナリデータ
-                    byte[] oldBinary = targetField.BinaryData;
-
-                    // データ更新
-                    targetField.SetData(ctx.Get<string>());
-
-                    // 変更後のバイナリデータ
-                    byte[] newBinary = targetField.BinaryData;
-
-                    // 異なればスタックに追加
-                    if (!oldBinary.SequenceEqual(newBinary))
-                    {
-                        var cmd = new FieldChangeCommand(
-                            targetField,
-                            oldBinary,
-                            newBinary,
-                            $"[{this.Text}]肩書き名(ID:{_currentClassIndex})");
-                        _undoManager.PushCommand(cmd);
-                    }
-                })
-                // テキストボックスを更新
-                .Then(ctx =>
-                {
-                    ctx.Get<TextBox>().Text = ctx.Get<string>();
-                    CtrlHelper.MoveCursorToEnd(ctx.Get<TextBox>()); // カーソル位置
-                })
-                // コンボボックスを更新（副次的）
-                .Then(ctx =>
-                {
-                    cmbClassNameIndex.Items[_currentClassIndex] = ctx.Get<string>();
+                    var desc = $"[{this.Text}]肩書き名(ID:{_currentClassIndex:D4})";
+                    _classNameEntry.Entries[_currentClassIndex][FieldKey.ClassNameStr]
+                        .UpdateData(_undoManager, ctx.Get<string>(), desc);
                 });
 
             // nudPrizeMulti
             _prizeMultiPipeline = new PipelineBuilder()
-                // 入力値を取得、データを更新
+                // 入力値を取得
                 .Then(ctx =>
                 {
-                    // 入力値
-                    var nud = (NumericUpDown)ctx.Sender;
-                    int newValue = (int)nud.Value;
-
+                    ctx.Set((NumericUpDown)ctx.Sender); // ニューメリックアップダウン
+                    ctx.Set((int)ctx.Get<NumericUpDown>().Value); // 入力された値
+                })
+                // データを更新
+                .Then(ctx =>
+                {
                     // 対象のインデックスを計算
                     int calcIndex = CalcPrizeMultiIndex(_currentClassIndex);
 
-                    // 対象データ
-                    var targetField = _prizeMulti.Entries[calcIndex][FieldKey.PrizeMultiValue];
-
-                    // 変更前のバイナリデータ
-                    byte[] oldBinary = targetField.BinaryData;
-
-                    // データ更新
-                    targetField.SetData(newValue);
-
-                    // 変更後のバイナリデータ
-                    byte[] newBinary = targetField.BinaryData;
-
-                    // 異なればスタックに追加
-                    if (!oldBinary.SequenceEqual(newBinary))
-                    {
-                        var cmd = new FieldChangeCommand(
-                            targetField,
-                            oldBinary,
-                            newBinary,
-                            $"[{this.Text}]賞金倍率(ID:{_currentClassIndex})");
-                        _undoManager.PushCommand(cmd);
-                    }
-
-                    // UI更新
-                    nud.Value = newValue;
+                    var desc = $"[{this.Text}]賞金倍率(ID:{_currentClassIndex:D4})";
+                    _prizeMultiEntry.Entries[calcIndex][FieldKey.PrizeMultiValue]
+                        .UpdateData(_undoManager, ctx.Get<int>(), desc);
                 });
 
             // ループで回すためのタプル
@@ -297,24 +256,24 @@ namespace PochiPochiEditor2.Forms
                 Action<PipelineBuilder> AssignPipeline)[]
             {
                 (_isEncounterMusicEnabled, 
-                    _encMusic, 
+                    _encMusicEntry, 
                     FieldKey.EncounterMusicIndex,
-                    () => $"[{this.Text}]戦闘前BGM(ID:{_currentClassIndex})",
+                    () => $"[{this.Text}]戦闘前BGM(ID:{_currentClassIndex:D4})",
                     p => _encMusicPipeline = p),
-                (_isBattleMusicEnabled, 
-                    _battleMusic, 
+                (_isBattleMusicEnabled,
+                    _encMusicEntry, 
                     FieldKey.BattleMusicIndex,
-                    () => $"[{this.Text}]戦闘中BGM(ID:{_currentClassIndex})",
+                    () => $"[{this.Text}]戦闘中BGM(ID:{_currentClassIndex:D4})",
                     p => _battleMusicPipeline = p),
-                (_isPokeBallEnabled, 
-                    _pokeBall,
+                (_isPokeBallEnabled,
+                    _encMusicEntry,
                     FieldKey.PokeBallIndex,
-                    () => $"[{this.Text}]使用ボールID(ID:{_currentClassIndex})",
+                    () => $"[{this.Text}]使用ボールID(ID:{_currentClassIndex:D4})",
                     p => _pokeBallPipeline = p),
-                (_isBaseIvEnabled, 
-                    _baseIv, 
+                (_isBaseIvEnabled,
+                    _encMusicEntry, 
                     FieldKey.BaseIvValue,
-                    () => $"[{this.Text}]基礎個体値(ID:{_currentClassIndex})", 
+                    () => $"[{this.Text}]基礎個体値(ID:{_currentClassIndex:D4})", 
                     p => _baseIvPipeline = p)
             };
 
@@ -338,32 +297,9 @@ namespace PochiPochiEditor2.Forms
                         var nud = (NumericUpDown)ctx.Sender;
                         int newValue = (int)nud.Value;
 
-                        // 対象データ
-                        var targetField = entry.Entries[_currentClassIndex][key];
-
-                        // 変更前のバイナリデータ
-                        byte[] oldBinary = targetField.BinaryData;
-
-                        // データ更新
-                        targetField.SetData(newValue);
-
-                        // 変更後のバイナリデータ
-                        byte[] newBinary = targetField.BinaryData;
-
-                        // 異なればスタックに追加
-                        if (!oldBinary.SequenceEqual(newBinary))
-                        {
-                            var cmd = new FieldChangeCommand(
-                                targetField,
-                                oldBinary,
-                                newBinary,
-                                descGen());
-
-                            _undoManager.PushCommand(cmd);
-                        }
-
-                        // UI更新
-                        nud.Value = newValue;
+                        // データを更新
+                        entry.Entries[_currentClassIndex][key]
+                            .UpdateData(_undoManager, newValue, descGen());
                     });
             }
         }
@@ -382,8 +318,8 @@ namespace PochiPochiEditor2.Forms
 
             // 肩書き名
             _eventBinder.BindCtrl(
-                h => txtClassName.TextChanged += h,
-                h => txtClassName.TextChanged -= h,
+                h => txtClassName.Validated += h,
+                h => txtClassName.Validated -= h,
                 (s, e) =>
                 {
                     _classNamePipeline.Execute(new Context(s, e));
@@ -457,31 +393,37 @@ namespace PochiPochiEditor2.Forms
             nudClassNameIndex.Value = (decimal)index;
 
             // クラス名
-            txtClassName.Text = _className.Entries[index][FieldKey.ClassNameStr].GetData<string>();
+            txtClassName.Text = 
+                _classNameEntry.Entries[index][FieldKey.ClassNameStr].GetData<string>();
 
             // 賞金倍率、インデックス計算あり
             int calcIndex = CalcPrizeMultiIndex(index);
-            nudPrizeMulti.Value = (decimal)_prizeMulti.Entries[calcIndex][FieldKey.PrizeMultiValue].GetData<int>();
+            nudPrizeMulti.Value = 
+                (decimal)_prizeMultiEntry.Entries[calcIndex][FieldKey.PrizeMultiValue].GetData<int>();
 
             // 追加データ
             if (_isEncounterMusicEnabled)
             {
-                nudEncMusic.Value = (decimal)_encMusic.Entries[index][FieldKey.EncounterMusicIndex].GetData<int>();
+                nudEncMusic.Value = 
+                    (decimal)_encMusicEntry.Entries[index][FieldKey.EncounterMusicIndex].GetData<int>();
             }
 
             if (_isBattleMusicEnabled)
             {
-                nudBattleMusic.Value = (decimal)_battleMusic.Entries[index][FieldKey.BattleMusicIndex].GetData<int>();
+                nudBattleMusic.Value = 
+                    (decimal)_battleMusicEntry.Entries[index][FieldKey.BattleMusicIndex].GetData<int>();
             }
 
             if (_isPokeBallEnabled)
             {
-                nudPokeBall.Value = (decimal)_pokeBall.Entries[index][FieldKey.PokeBallIndex].GetData<int>();
+                nudPokeBall.Value = 
+                    (decimal)_pokeBallEntry.Entries[index][FieldKey.PokeBallIndex].GetData<int>();
             }
 
             if (_isBaseIvEnabled)
             {
-                nudBaseIv.Value = (decimal)_baseIv.Entries[index][FieldKey.BaseIvValue].GetData<int>();
+                nudBaseIv.Value = 
+                    (decimal)_baseIvEntry.Entries[index][FieldKey.BaseIvValue].GetData<int>();
             }
         }
 
@@ -491,13 +433,13 @@ namespace PochiPochiEditor2.Forms
         private int CalcPrizeMultiIndex(int index)
         {
             // 総エントリーからindexを含むエントリーを探す
-            int foundIndex = _prizeMulti.Entries
+            int foundIndex = _prizeMultiEntry.Entries
                 .FindIndex(entry => entry[FieldKey.ClassNameIndex]
                 .GetData<int>() == index);
 
             if (foundIndex == Constants.InvalidValue) // 存在せず、クラス名インデックス0xFF適用パターン
             {
-                foundIndex = _prizeMulti.Entries
+                foundIndex = _prizeMultiEntry.Entries
                     .FindIndex(entry => entry[FieldKey.ClassNameIndex]
                     .GetData<int>() == 0xFF);
             }
@@ -510,10 +452,10 @@ namespace PochiPochiEditor2.Forms
         /// </summary>
         public void RefreshFromData()
         {
-            UpdateClassNameComboBox();
-
             // 現在のインデックスを再読み込み
             LoadDataToUI(_currentClassIndex);
+
+            UpdateClassNameComboBox();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace PochiPochiEditor2.Managers.Fields
+﻿using PochiPochiEditor2.Managers.Fields;
+
+namespace PochiPochiEditor2.Managers.Commands
 {
     public class FieldChangeCommand : ICommand
     {

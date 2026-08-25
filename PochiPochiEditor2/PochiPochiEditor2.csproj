@@ -63,7 +63,7 @@
     </Compile>
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Managers\EntryManager.cs" />
-    <Compile Include="Managers\Fields\FieldChangeCommand.cs" />
+    <Compile Include="Managers\Commands\FieldChangeCommand.cs" />
     <Compile Include="Managers\FormGroupManager.cs" />
     <Compile Include="Managers\TblManager.cs" />
     <Compile Include="Utilities\QuickInput.cs">
