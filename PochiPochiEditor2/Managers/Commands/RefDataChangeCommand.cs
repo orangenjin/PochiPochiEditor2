@@ -25,7 +25,7 @@ namespace PochiPochiEditor2.Managers.Commands
             _refData = refData;
 
             _oldOffset = oldOffset;
-            _oldData = (byte[])oldData.Clone();
+            _oldData = (byte[])oldData.Clone(); // 参照を切るためにCloneする
 
             _newOffset = newOffset;
             _newData = (byte[])newData.Clone();

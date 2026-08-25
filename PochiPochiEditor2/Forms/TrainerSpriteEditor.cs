@@ -406,8 +406,7 @@ namespace PochiPochiEditor2.Forms
 
                     using (Bitmap bmp = new Bitmap(filePath))
                     {
-                        TextBox targetTextBox;
-
+                        // バイト配列を抽出
                         if (!ImageHelper.ExtractImageAndPalette(
                             bmp,
                             Constants.SpriteSize,
@@ -415,12 +414,25 @@ namespace PochiPochiEditor2.Forms
                             out byte[] imageData,
                             out byte[] paletteData)) return;
 
-                        targetTextBox = importKind == SpriteData.Image
-                            ? txtImageOffset
-                            : txtPaletteOffset;
+                        if (importKind == SpriteData.Image)
+                        {
+                            // データを保持
+                            _imageData.BinaryData = ImageHelper.CompressLZ77(imageData);
+                            txtImageOffset.Text = offset.ParseIntToString();
+                        }
+                        else
+                        {
+                            _paletteData.BinaryData = ImageHelper.CompressPalette(paletteData, true);
+                            txtPaletteOffset.Text = offset.ParseIntToString();
+                        };
+
+
+ 
+
+
                     }
 
-                    // DisplayTrainerSprite();
+                    DisplayTrainerSprite();
                 }
             }
         }
