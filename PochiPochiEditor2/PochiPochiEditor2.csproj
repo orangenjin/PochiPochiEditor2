@@ -65,6 +65,7 @@
     <Compile Include="Managers\EntryManager.cs" />
     <Compile Include="Managers\Commands\FieldChangeCommand.cs" />
     <Compile Include="Managers\FormGroupManager.cs" />
+    <Compile Include="Managers\RefDataManager.cs" />
     <Compile Include="Managers\TblManager.cs" />
     <Compile Include="Utilities\QuickInput.cs">
       <SubType>Form</SubType>
