@@ -5,7 +5,6 @@ using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Managers;
-using PochiPochiEditor2.Managers.Commands;
 using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Forms

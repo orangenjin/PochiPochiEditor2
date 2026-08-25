@@ -158,6 +158,9 @@ namespace PochiPochiEditor2
             _romPath = string.Empty;
             _sharedData.ClearRom();
 
+            // 変更履歴とlstHistoryをクリア
+            _undoManager.Clear();
+
             // UIの状態を更新
             MainFormUIUpdate();
         }

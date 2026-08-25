@@ -85,6 +85,18 @@ namespace PochiPochiEditor2.Managers
                 Redo();
             }
         }
+
+        /// <summary>
+        /// 初期状態に戻す。
+        /// </summary>
+        public void Clear()
+        {
+            ExecuteAndNotify(() =>
+            {
+                _history.Clear();
+                _currentIndex = 0;
+            });
+        }
     }
 
     /// <summary>
