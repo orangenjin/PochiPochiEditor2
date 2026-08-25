@@ -200,27 +200,27 @@ namespace PochiPochiEditor2.Forms
             _eventBinder.BindCtrl(
                 h => txtImageOffset.Validated += h,
                 h => txtImageOffset.Validated -= h,
-                (s, e) =>
+                (sender, e) =>
                 {
-                    _imageOffsetPipeline.Execute(new Context(s, e));
+                    _imageOffsetPipeline.Execute(new Context(sender, e));
                     
                 });
             // パレットアドレス
             _eventBinder.BindCtrl(
                 h => txtPaletteOffset.Validated += h,
                 h => txtPaletteOffset.Validated -= h,
-                (s, e) =>
+                (sender, e) =>
                 {
-                    _paletteOffsetPipeline.Execute(new Context(s, e));
+                    _paletteOffsetPipeline.Execute(new Context(sender, e));
 
                 });
             // Y座標位置
             _eventBinder.BindCtrl(
                 h => nudYPosValue.ValueChanged += h,
                 h => nudYPosValue.ValueChanged -= h,
-                (s, e) =>
+                (sender, e) =>
                 {
-                    _yPosValuePipeline.Execute(new Context(s, e));
+                    _yPosValuePipeline.Execute(new Context(sender, e));
 
                 });
 
@@ -232,6 +232,26 @@ namespace PochiPochiEditor2.Forms
                 {
                     int newIndex = (int)nudSpriteIndex.Value;
                     LoadDataToUI(newIndex);
+                });
+
+            // エクスポート
+            _eventBinder.BindCtrl(
+                h => btnSpriteExport.Click += h,
+                h => btnSpriteExport.Click -= h,
+                (_, __) =>
+                {
+                    if (picSprite.Image == null) return;
+
+                    using (var sfd = new SaveFileDialog())
+                    {
+                        sfd.Filter = Constants.ImageExportFilter;
+                        sfd.FileName = $"trainer_sprite_{_currentSpriteIndex:D4}";
+
+                        if (sfd.ShowDialog() == DialogResult.OK)
+                        {
+                            ImageHelper.ExportIndexedImage((Bitmap)picSprite.Image, sfd.FileName);
+                        }
+                    }
                 });
 
             // 解除タイミング指定
@@ -336,8 +356,6 @@ namespace PochiPochiEditor2.Forms
                 picSprite.Image = null;
             }
         }
-
-
 
 
 

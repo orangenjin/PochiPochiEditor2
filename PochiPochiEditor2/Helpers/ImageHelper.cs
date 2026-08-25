@@ -410,7 +410,7 @@ namespace PochiPochiEditor2.Helpers
         }
 
         /// <summary>
-        /// 背景色)の透過状態をリセットし、画像を出力する。
+        /// 背景色の透過状態をリセットし、画像を出力する。
         /// </summary>
         public static void ExportIndexedImage(Bitmap bmp, string filePath)
         {
