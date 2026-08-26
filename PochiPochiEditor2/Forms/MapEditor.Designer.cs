@@ -59,10 +59,16 @@ namespace PochiPochiEditor2.Forms
             this.lblMapNameIndex = new System.Windows.Forms.Label();
             this.nudBgmIndex = new System.Windows.Forms.NumericUpDown();
             this.lblBgmIndex = new System.Windows.Forms.Label();
+            this.tbcMain = new System.Windows.Forms.TabControl();
+            this.tbpMap = new System.Windows.Forms.TabPage();
+            this.tbpOther = new System.Windows.Forms.TabPage();
+            this.pnlMapDraw = new System.Windows.Forms.Panel();
             this.grpMapHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapTerrainIndex)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapRelLayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudBgmIndex)).BeginInit();
+            this.tbcMain.SuspendLayout();
+            this.tbpMap.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpMapHeader
@@ -389,11 +395,52 @@ namespace PochiPochiEditor2.Forms
             this.lblBgmIndex.TabIndex = 18;
             this.lblBgmIndex.Text = "BGM No. :";
             // 
+            // tbcMain
+            // 
+            this.tbcMain.Controls.Add(this.tbpMap);
+            this.tbcMain.Controls.Add(this.tbpOther);
+            this.tbcMain.Location = new System.Drawing.Point(356, 16);
+            this.tbcMain.Margin = new System.Windows.Forms.Padding(0);
+            this.tbcMain.Name = "tbcMain";
+            this.tbcMain.SelectedIndex = 0;
+            this.tbcMain.Size = new System.Drawing.Size(737, 557);
+            this.tbcMain.TabIndex = 1;
+            // 
+            // tbpMap
+            // 
+            this.tbpMap.Controls.Add(this.pnlMapDraw);
+            this.tbpMap.Location = new System.Drawing.Point(4, 24);
+            this.tbpMap.Margin = new System.Windows.Forms.Padding(0);
+            this.tbpMap.Name = "tbpMap";
+            this.tbpMap.Size = new System.Drawing.Size(729, 529);
+            this.tbpMap.TabIndex = 0;
+            this.tbpMap.Text = "マップ";
+            this.tbpMap.UseVisualStyleBackColor = true;
+            // 
+            // tbpOther
+            // 
+            this.tbpOther.Location = new System.Drawing.Point(4, 24);
+            this.tbpOther.Margin = new System.Windows.Forms.Padding(0);
+            this.tbpOther.Name = "tbpOther";
+            this.tbpOther.Size = new System.Drawing.Size(729, 489);
+            this.tbpOther.TabIndex = 1;
+            this.tbpOther.Text = "その他";
+            this.tbpOther.UseVisualStyleBackColor = true;
+            // 
+            // pnlMapDraw
+            // 
+            this.pnlMapDraw.Location = new System.Drawing.Point(40, 36);
+            this.pnlMapDraw.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlMapDraw.Name = "pnlMapDraw";
+            this.pnlMapDraw.Size = new System.Drawing.Size(608, 448);
+            this.pnlMapDraw.TabIndex = 0;
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1158, 581);
+            this.ClientSize = new System.Drawing.Size(1158, 605);
+            this.Controls.Add(this.tbcMain);
             this.Controls.Add(this.grpMapHeader);
             this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -406,6 +453,8 @@ namespace PochiPochiEditor2.Forms
             ((System.ComponentModel.ISupportInitialize)(this.nudMapTerrainIndex)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapRelLayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudBgmIndex)).EndInit();
+            this.tbcMain.ResumeLayout(false);
+            this.tbpMap.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -441,5 +490,9 @@ namespace PochiPochiEditor2.Forms
         private System.Windows.Forms.Label lblMapNameType;
         private System.Windows.Forms.ComboBox cmbMapNameIndex;
         private System.Windows.Forms.Label lblMapNameIndex;
+        private System.Windows.Forms.TabControl tbcMain;
+        private System.Windows.Forms.TabPage tbpMap;
+        private System.Windows.Forms.TabPage tbpOther;
+        private System.Windows.Forms.Panel pnlMapDraw;
     }
 }
