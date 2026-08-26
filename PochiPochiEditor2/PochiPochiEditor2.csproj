@@ -68,6 +68,7 @@
       <DependentUpon>TrainerSpriteEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Utilities\PatternMatcher.cs" />
     <Compile Include="Utilities\Tokens\TokenDefinition.cs" />
     <Compile Include="Utilities\Tokens\TokenData.cs" />
     <Compile Include="Managers\Commands\CombineCommand.cs" />

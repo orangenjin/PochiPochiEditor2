@@ -33,9 +33,9 @@
             return new TokenData(TokenType.Range, tokenDef);
         }
 
-        public static TokenData Wildcard()
+        public static TokenData Wildcard(int length)
         {
-            var tokenDef = new WildcardToken();
+            var tokenDef = new WildcardToken(length);
             return new TokenData(TokenType.Wildcard, tokenDef);
         }
 

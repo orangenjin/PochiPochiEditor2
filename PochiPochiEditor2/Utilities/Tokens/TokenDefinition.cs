@@ -84,7 +84,6 @@ namespace PochiPochiEditor2.Utilities.Tokens
             // 範囲内かチェック
             return (uint)Min <= hexValue && hexValue <= (uint)Max;
         }
-
     }
 
     /// <summary>
@@ -94,9 +93,9 @@ namespace PochiPochiEditor2.Utilities.Tokens
     {
         public int Length { get; }
 
-        public WildcardToken()
+        public WildcardToken(int length)
         {
-            Length = Constants.UIntSize;
+            Length = length;
         }
 
         public bool IsValid(byte[] bytes) => true;
