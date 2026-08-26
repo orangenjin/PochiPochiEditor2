@@ -68,6 +68,8 @@
       <DependentUpon>TrainerSpriteEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Helpers\Patterns\TokenDefinition.cs" />
+    <Compile Include="Helpers\Patterns\TokenData.cs" />
     <Compile Include="Managers\Commands\CombineCommand.cs" />
     <Compile Include="Managers\Commands\RefDataChangeCommand.cs" />
     <Compile Include="Managers\EntryManager.cs" />
