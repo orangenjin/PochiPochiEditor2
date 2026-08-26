@@ -49,6 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\MapEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MapEditor.Designer.cs">
+      <DependentUpon>MapEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TrainerClassEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,6 +102,9 @@
     <Compile Include="Utilities\EventBinder.cs" />
     <Compile Include="Managers\Fields\FieldExtensions.cs" />
     <Compile Include="Utilities\SharedData.cs" />
+    <EmbeddedResource Include="Forms\MapEditor.resx">
+      <DependentUpon>MapEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\TrainerClassEditor.resx">
       <DependentUpon>TrainerClassEditor.cs</DependentUpon>
     </EmbeddedResource>
