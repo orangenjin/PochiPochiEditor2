@@ -1,6 +1,6 @@
 ﻿using PochiPochiEditor2.Helpers;
 
-namespace PochiPochiEditor2.Utilities.Patterns
+namespace PochiPochiEditor2.Utilities.Tokens
 {
     public enum TokenType
     {

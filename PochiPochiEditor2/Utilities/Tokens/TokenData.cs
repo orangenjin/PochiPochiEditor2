@@ -1,4 +1,4 @@
-﻿namespace PochiPochiEditor2.Utilities.Patterns
+﻿namespace PochiPochiEditor2.Utilities.Tokens
 {
     public class TokenData
     {
