@@ -24,7 +24,7 @@ namespace PochiPochiEditor2.Helpers
         /// <summary>
         /// LZ77圧縮されたデータを解凍する。
         /// </summary>
-        public static byte[] DecompressLZ77(byte[] data, int Offset)
+        public static byte[] DecompressLZ77(byte[] data, int Offset = Constants.DefaultIndex)
         {
             // ヘッダの読み込み
             // 先頭1バイトは識別子(LZ77HeaderIdentifier)
@@ -198,7 +198,10 @@ namespace PochiPochiEditor2.Helpers
         /// <summary>
         /// データからパレットデータ（圧縮と非圧縮）を読み込む。
         /// </summary>
-        public static byte[] DecompressPalette(byte[] data, int offset, bool isCompressed)
+        public static byte[] DecompressPalette(
+            byte[] data, 
+            int offset = Constants.DefaultIndex, 
+            bool isCompressed = true)
         {
             if (isCompressed)
             {
@@ -213,7 +216,9 @@ namespace PochiPochiEditor2.Helpers
         /// <summary>
         /// パレットデータを書き込み用に変換する。（圧縮指定可能）
         /// </summary>
-        public static byte[] CompressPalette(byte[] rawPaletteData, bool isCompressed)
+        public static byte[] CompressPalette(
+            byte[] rawPaletteData, 
+            bool isCompressed = true)
         {
             return isCompressed 
                 ? CompressLZ77(rawPaletteData) 

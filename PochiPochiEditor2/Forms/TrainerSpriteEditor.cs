@@ -257,12 +257,9 @@ namespace PochiPochiEditor2.Forms
                         {
                             // RefDataから生成
                             var imageData = ImageHelper.DecompressLZ77(
-                                _imageData.BinaryData, 
-                                Constants.DefaultIndex);
+                                _imageData.BinaryData);
                             var paletteData = ImageHelper.DecompressPalette(
-                                _paletteData.BinaryData,
-                                Constants.DefaultIndex,
-                                isCompressed: true);
+                                _paletteData.BinaryData);
                             var sprite = ImageHelper.CreateBitmap(
                                 imageData,
                                 paletteData,
@@ -381,10 +378,9 @@ namespace PochiPochiEditor2.Forms
                 var paletteOffsetValue = paletteOffsetStr.ParseStringToInt();
                 var paletteData = ImageHelper.DecompressPalette(
                     _sharedData.RomData,
-                    paletteOffsetValue, 
-                    isCompressed: true);
+                    paletteOffsetValue);
                 // RefDataとして保持する
-                var paletteDataLz77 = ImageHelper.CompressPalette(paletteData, true);
+                var paletteDataLz77 = ImageHelper.CompressPalette(paletteData);
                 _paletteData = new RefData(
                     SpriteData.Palette,
                     paletteOffsetValue,
@@ -461,7 +457,7 @@ namespace PochiPochiEditor2.Forms
                         else
                         {
                             // LZ77圧縮を適用
-                            var compressedData = ImageHelper.CompressPalette(paletteData, true);
+                            var compressedData = ImageHelper.CompressPalette(paletteData);
                             // コマンド表示名
                             var desc = $"[{this.Text}]パレットインポート(ID:{_currentSpriteIndex:D4})";
 
