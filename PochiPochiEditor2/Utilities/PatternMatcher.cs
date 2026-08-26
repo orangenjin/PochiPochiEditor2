@@ -8,15 +8,16 @@ using PochiPochiEditor2.Utilities.Tokens;
 
 namespace PochiPochiEditor2.Utilities
 {
-    public class PatternMatcher
+    public static class PatternMatcher
     {
         /// <summary>
-        /// シンプルにパターンマッチングを試みる。
+        /// シンプルに1回のパターンマッチングを試みる。
         /// </summary>
-        public bool TryMatch(
-            List<TokenData> tokens, 
-            byte[] data, 
-            int offset)
+        public static bool TryMatch(
+            List<TokenData> tokens,
+            byte[] data,
+            int offset = Constants.DefaultIndex,
+            bool allowNullPointer = false)
         {
             // カーソル用
             int currentPos = offset;
@@ -41,6 +42,12 @@ namespace PochiPochiEditor2.Utilities
                 // トークン判定、メソッドを抜ける
                 if (!token.IsMatch()) return false;
 
+                // nullポインタを許容せず、ポインタトークンの時
+                if (!allowNullPointer && token.Def is PointerToken pToken)
+                {
+                    if (pToken.IsSus) return false;
+                }
+
                 // 次のトークンへ
                 currentPos += length;
             }
@@ -51,16 +58,16 @@ namespace PochiPochiEditor2.Utilities
         /// <summary>
         /// パターンマッチングが連続する個数を取得する。
         /// </summary>
-        public int TryCount(
+        public static int TryCount(
             List<TokenData> tokens,
             byte[] data,
-            int offset)
+            int baseOffset = Constants.DefaultIndex)
         {
             // 単一パターンの長さを取得
             int patternLength = GetPatternLength(tokens);
 
             int count = 0;
-            int currentPos = offset;
+            int currentPos = baseOffset;
 
             while (currentPos + patternLength <= data.Length)
             {
@@ -77,7 +84,7 @@ namespace PochiPochiEditor2.Utilities
         /// <summary>
         /// TokenDataの長さを計算する。
         /// </summary>
-        private int GetPatternLength(List<TokenData> tokens)
+        private static int GetPatternLength(List<TokenData> tokens)
         {
             int length = 0;
 
