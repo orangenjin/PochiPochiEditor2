@@ -50,13 +50,13 @@ namespace PochiPochiEditor2.Forms
             this.cmbMapType = new System.Windows.Forms.ComboBox();
             this.nudMapTerrainIndex = new System.Windows.Forms.NumericUpDown();
             this.txtConnHeaderOffset = new System.Windows.Forms.TextBox();
-            this.txtEventScriptOffset = new System.Windows.Forms.TextBox();
+            this.txtEventScriptHeaderOffset = new System.Windows.Forms.TextBox();
             this.txtLevelScriptOffset = new System.Windows.Forms.TextBox();
             this.txtMapFooterOffset = new System.Windows.Forms.TextBox();
             this.lblMapType = new System.Windows.Forms.Label();
             this.lblMapTerrainIndex = new System.Windows.Forms.Label();
             this.lblConnHeaderOffset = new System.Windows.Forms.Label();
-            this.lblEventScriptOffset = new System.Windows.Forms.Label();
+            this.lblEventScriptHeaderOffset = new System.Windows.Forms.Label();
             this.lblLevelScriptOffset = new System.Windows.Forms.Label();
             this.lblMapFooterOffset = new System.Windows.Forms.Label();
             this.tbcMain = new System.Windows.Forms.TabControl();
@@ -92,13 +92,13 @@ namespace PochiPochiEditor2.Forms
             this.grpMapHeader.Controls.Add(this.cmbMapType);
             this.grpMapHeader.Controls.Add(this.nudMapTerrainIndex);
             this.grpMapHeader.Controls.Add(this.txtConnHeaderOffset);
-            this.grpMapHeader.Controls.Add(this.txtEventScriptOffset);
+            this.grpMapHeader.Controls.Add(this.txtEventScriptHeaderOffset);
             this.grpMapHeader.Controls.Add(this.txtLevelScriptOffset);
             this.grpMapHeader.Controls.Add(this.txtMapFooterOffset);
             this.grpMapHeader.Controls.Add(this.lblMapType);
             this.grpMapHeader.Controls.Add(this.lblMapTerrainIndex);
             this.grpMapHeader.Controls.Add(this.lblConnHeaderOffset);
-            this.grpMapHeader.Controls.Add(this.lblEventScriptOffset);
+            this.grpMapHeader.Controls.Add(this.lblEventScriptHeaderOffset);
             this.grpMapHeader.Controls.Add(this.lblLevelScriptOffset);
             this.grpMapHeader.Controls.Add(this.lblMapFooterOffset);
             this.grpMapHeader.Location = new System.Drawing.Point(20, 16);
@@ -311,13 +311,13 @@ namespace PochiPochiEditor2.Forms
             this.txtConnHeaderOffset.Size = new System.Drawing.Size(80, 23);
             this.txtConnHeaderOffset.TabIndex = 1;
             // 
-            // txtEventScriptOffset
+            // txtEventScriptHeaderOffset
             // 
-            this.txtEventScriptOffset.Location = new System.Drawing.Point(156, 58);
-            this.txtEventScriptOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.txtEventScriptOffset.Name = "txtEventScriptOffset";
-            this.txtEventScriptOffset.Size = new System.Drawing.Size(80, 23);
-            this.txtEventScriptOffset.TabIndex = 1;
+            this.txtEventScriptHeaderOffset.Location = new System.Drawing.Point(156, 58);
+            this.txtEventScriptHeaderOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.txtEventScriptHeaderOffset.Name = "txtEventScriptHeaderOffset";
+            this.txtEventScriptHeaderOffset.Size = new System.Drawing.Size(80, 23);
+            this.txtEventScriptHeaderOffset.TabIndex = 1;
             // 
             // txtLevelScriptOffset
             // 
@@ -365,15 +365,15 @@ namespace PochiPochiEditor2.Forms
             this.lblConnHeaderOffset.TabIndex = 0;
             this.lblConnHeaderOffset.Text = "接続ヘッダーアドレス :";
             // 
-            // lblEventScriptOffset
+            // lblEventScriptHeaderOffset
             // 
-            this.lblEventScriptOffset.AutoSize = true;
-            this.lblEventScriptOffset.Location = new System.Drawing.Point(20, 62);
-            this.lblEventScriptOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.lblEventScriptOffset.Name = "lblEventScriptOffset";
-            this.lblEventScriptOffset.Size = new System.Drawing.Size(119, 15);
-            this.lblEventScriptOffset.TabIndex = 0;
-            this.lblEventScriptOffset.Text = "イベントヘッダーアドレス :";
+            this.lblEventScriptHeaderOffset.AutoSize = true;
+            this.lblEventScriptHeaderOffset.Location = new System.Drawing.Point(20, 62);
+            this.lblEventScriptHeaderOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.lblEventScriptHeaderOffset.Name = "lblEventScriptHeaderOffset";
+            this.lblEventScriptHeaderOffset.Size = new System.Drawing.Size(119, 15);
+            this.lblEventScriptHeaderOffset.TabIndex = 0;
+            this.lblEventScriptHeaderOffset.Text = "イベントヘッダーアドレス :";
             // 
             // lblLevelScriptOffset
             // 
@@ -463,11 +463,11 @@ namespace PochiPochiEditor2.Forms
 
         private System.Windows.Forms.GroupBox grpMapHeader;
         private System.Windows.Forms.TextBox txtConnHeaderOffset;
-        private System.Windows.Forms.TextBox txtEventScriptOffset;
+        private System.Windows.Forms.TextBox txtEventScriptHeaderOffset;
         private System.Windows.Forms.TextBox txtLevelScriptOffset;
         private System.Windows.Forms.TextBox txtMapFooterOffset;
         private System.Windows.Forms.Label lblConnHeaderOffset;
-        private System.Windows.Forms.Label lblEventScriptOffset;
+        private System.Windows.Forms.Label lblEventScriptHeaderOffset;
         private System.Windows.Forms.Label lblLevelScriptOffset;
         private System.Windows.Forms.Label lblMapFooterOffset;
         private System.Windows.Forms.NumericUpDown nudMapRelLayer;

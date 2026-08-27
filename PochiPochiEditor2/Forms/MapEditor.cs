@@ -28,14 +28,29 @@ namespace PochiPochiEditor2.Forms
         private UndoManager _undoManager = null;
         // 各テーブル用
         private EntryManager _mapNameEntry = null;
-        private List<EntryManager[]> _mapHeaderEntry = null;
+        private List<Entry[]> _mapHeaderEntry = null;
 
         private enum FieldKey
         {
             MapNamePointerOffset,
 
             MapHeaderPointerOffset,
-            MapHeaderOffset
+            MapHeaderOffset,
+
+            MapFooterOffset,
+            EventScriptHeaderOffset,
+            LevelScriptOffset,
+            ConnHeaderOffset,
+            BgmIndex,
+            MapTerrainIndex,
+            MapNameIndex,
+            MapSight,
+            MapWthr,
+            MapType,
+            MapBike,
+            MapNameType,
+            MapRelLayer,
+            MapSpBg
         }
 
         private static class DefName
@@ -44,6 +59,7 @@ namespace PochiPochiEditor2.Forms
 
             public static string MapBankPointerEntry = nameof(MapBankPointerEntry);
             public static string MapNumberPointerEntry = nameof(MapNumberPointerEntry);
+            public static string MapHeaderEntry = nameof(MapHeaderEntry);
         }
 
         private static class IniKey
@@ -75,11 +91,15 @@ namespace PochiPochiEditor2.Forms
             string defFileName = DefName.MapNamePointerEntry;
             int tableOffset = _sharedData.Config.ReadInt(IniKey.MapNameTableOffset);
             int entrycount = _sharedData.Config.ReadInt(IniKey.MapNameCount);
-            _mapNameEntry = 
-                new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
+            _mapNameEntry = new EntryManager(
+                defFileName, 
+                typeof(FieldKey), 
+                _sharedData,
+                tableOffset, 
+                entrycount);
 
             // マップヘッダーエントリー格納先を先に作成
-            _mapHeaderEntry = new List<EntryManager[]>();
+            _mapHeaderEntry = new List<Entry[]>();
 
             // マップバンクテーブルを仮作成
             defFileName = DefName.MapBankPointerEntry;
@@ -94,8 +114,12 @@ namespace PochiPochiEditor2.Forms
                 _sharedData.RomData,
                 tableOffset,
                 allowNullPointer: false); // nullポインタを許容しない
-            var mapBankEntry = 
-                new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, bankEntrycount);
+            var mapBankEntry = new EntryManager(
+                defFileName,
+                typeof(FieldKey),
+                _sharedData, 
+                tableOffset, 
+                bankEntrycount);
 
             // マップナンバーテーブルの先頭オフセットをすべて取得
             var mapNumberTableOffsets = new List<int>();
@@ -117,9 +141,10 @@ namespace PochiPochiEditor2.Forms
                 mapNumberTableOffsets.Add(targetOffset);
             }
 
-            // マップヘッダーテーブルを検証
-            defFileName = DefName.MapNumberPointerEntry;
+            // 定数を事前に計算
             var entryLength = TokenData.Pointer().GetLength();
+
+            // マップエントリーテーブルを検証
             for (int i = 0; i < mapBankEntry.Entries.Count; i++)
             {
                 // そのテーブルのエントリー数を仮カウント（パターンは使い回し）
@@ -131,7 +156,6 @@ namespace PochiPochiEditor2.Forms
 
                 // そのテーブルの正しいエントリー数を求める
                 int trueEntryCount = numberEntrycount; // 仮カウント数
-
                 for (int j = 0; j < numberEntrycount; j++)
                 {
                     // 各テーブルの先頭オフセットと比較して検証
@@ -146,27 +170,47 @@ namespace PochiPochiEditor2.Forms
                     }
                 }
 
-                // 正しい要素数で配列を追加
-                var entryManagerArray = new EntryManager[trueEntryCount];
-                _mapHeaderEntry.Add(entryManagerArray);
+                // マップナンバーエントリーテーブルを作成
+                defFileName = DefName.MapNumberPointerEntry;
+                var mapNumberEntry =new EntryManager(
+                    defFileName,
+                    typeof(FieldKey), 
+                    _sharedData, 
+                    mapNumberTableOffsets[i],
+                    trueEntryCount);
 
-                // 正しい要素数でループを回して格納する
+                // マップヘッダーの定義情報を読み込む
+                defFileName = DefName.MapHeaderEntry;
+                var mapHeaderDef = new DefReader(defFileName);
+
+                // エントリーを作成
+                var entryArray = new Entry[trueEntryCount];
                 for (int j = 0; j < trueEntryCount; j++)
                 {
-                    // もう一度オフセットを計算
-                    var targetOffset = mapNumberTableOffsets[i] + j * entryLength;
+                    var entryFields = new List<FieldValue>();
+                    for (int k = 0; k < mapHeaderDef.FieldDefs.Count; k++)
+                    {
+                        // FieldValueを生成
+                        var fieldValue = new FieldValue(
+                            _sharedData,
+                            mapHeaderDef.FieldDefs[k],
+                            typeof(FieldKey));
 
-                    // EntryManagerを生成、配列のk番目に格納する
-                    entryManagerArray[j] = new EntryManager(
-                        defFileName,
-                        typeof(FieldKey),
-                        _sharedData,
-                        targetOffset,
-                        1);
+                        entryFields.Add(fieldValue);
+                    }
+                    var entry = new Entry(
+                        mapNumberEntry.Entries[j][FieldKey.MapHeaderOffset].GetData<int>(),
+                        Constants.DefaultIndex,
+                        entryFields);
+
+                    entryArray[j] = entry;
                 }
+
+                // このインデックスのEntry[]を格納
+                _mapHeaderEntry.Add(entryArray);
             }
 
-            txtMapFooterOffset.Text = _mapHeaderEntry[0][0].Entries[0][FieldKey.MapHeaderOffset].GetData<int>().ToString("X8");
+            txtMapFooterOffset.Text = _mapHeaderEntry[42][1][FieldKey.EventScriptHeaderOffset].GetData<int>().ToString("X8");
         }
 
         private void InitializeControls()
