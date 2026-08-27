@@ -242,6 +242,9 @@ namespace PochiPochiEditor2.Forms
                     // ポインタ先が正規のマップヘッダーかどうかを検証
                     if (IoHelper.TryReadPtr(_sharedData.RomData, pointerOffset, out int entryOffset))
                     {
+                        // nullポインタならスキップ
+                        if (entryOffset == Constants.InvalidValue) continue;
+
                         var IsValid = PatternMatcher.TryMatch(
                             headerPattern,
                             _sharedData.RomData,
@@ -296,10 +299,6 @@ namespace PochiPochiEditor2.Forms
                 // マップバンクに対してEntry[]を格納
                 _mapHeaderEntry.Add(entryArray);
             }
-
-            // [0][FieldKey.EventScriptHeaderOffset].GetData<int>()
-            //txtMapFooterOffset.Text = mapNumberTableOffsets[42].ToString("X8");
-            txtMapFooterOffset.Text = _mapHeaderEntry[42].Length.ToString();
         }
 
 
