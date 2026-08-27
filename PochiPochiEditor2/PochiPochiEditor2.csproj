@@ -152,6 +152,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="def\Map\MapNamePointerEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="def\Trainer\TrainerClassBaseIvEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
