@@ -152,6 +152,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="def\Map\MapBankPointerEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Map\MapNumberPointerEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="def\Map\MapNamePointerEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

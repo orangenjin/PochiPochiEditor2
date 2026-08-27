@@ -61,7 +61,8 @@ namespace PochiPochiEditor2.Utilities
         public static int TryCount(
             List<TokenData> tokens,
             byte[] data,
-            int baseOffset = Constants.DefaultIndex)
+            int baseOffset = Constants.DefaultIndex,
+            bool allowNullPointer = false)
         {
             // 単一パターンの長さを取得
             int patternLength = GetPatternLength(tokens);
@@ -72,7 +73,7 @@ namespace PochiPochiEditor2.Utilities
             while (currentPos + patternLength <= data.Length)
             {
                 // falseが戻るまで続ける
-                if (!TryMatch(tokens, data, currentPos)) break;
+                if (!TryMatch(tokens, data, currentPos, allowNullPointer)) break;
 
                 count++;
                 currentPos += patternLength;
