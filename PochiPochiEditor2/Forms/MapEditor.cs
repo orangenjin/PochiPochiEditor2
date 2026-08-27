@@ -30,6 +30,8 @@ namespace PochiPochiEditor2.Forms
         private EntryManager _mapNameEntry = null;
         private List<Entry[]> _mapHeaderEntry = null;
 
+        private int _mapNameFirstIndex = default;
+
         private enum FieldKey
         {
             MapNamePointerOffset,
@@ -77,33 +79,82 @@ namespace PochiPochiEditor2.Forms
             _sharedData = sharedData;
             _undoManager = undoManager;
 
-            InitializeEntries();
+            InitializeMapNameEntry();
             InitializeControls();
+            InitializeOtherEntries();
+
             // InitializePipelines();
             // InitializeEventHandlers();
 
 
         }
 
-        private void InitializeEntries()
+        private void InitializeControls()
+        {
+            // 各コンボボックスにアイテムを追加
+            CtrlHelper.LoadComboBoxFromFile(
+                (cmbMapType, "txt/Map/MapType.txt"),
+                (cmbMapWthr, "txt/Map/MapWthr.txt"),
+                (cmbMapSight, "txt/Map/MapSight.txt"),
+                (cmbMapBike, "txt/Map/MapBike.txt"),
+                (cmbMapSpBg, "txt/Map/MapSpBg.txt"),
+                (cmbMapNameType, "txt/Map/MapNameType.txt"));
+            UpdateMapNameComboBox();
+        }
+
+        private void UpdateMapNameComboBox()
+        {
+            cmbMapNameIndex.BeginUpdate();
+            cmbMapNameIndex.Items.Clear();
+
+            // 基準となる最初のインデックスを設定
+            _mapNameFirstIndex = _sharedData.Config.ReadInt(IniKey.MapNameFirstIndex);
+
+            // 順次格納していく
+            for (int i = 0; i < _mapNameEntry.Entries.Count; i++)
+            {
+                var offset =
+                    _mapNameEntry.Entries[i][FieldKey.MapNamePointerOffset].GetData<int>();
+                var mapName =
+                    _sharedData.Charmap.BytesToString(_sharedData.RomData, offset);
+
+                cmbMapNameIndex.Items.Add($"[{_mapNameFirstIndex + i:X2}]{mapName}");
+            }
+
+            cmbMapNameIndex.EndUpdate();
+
+            // 初期選択
+            if (cmbMapNameIndex.Items.Count > 0)
+            {
+                cmbMapNameIndex.SelectedIndex = 0;
+            }
+        }
+
+        /// <summary>
+        /// コンボボックス用に必要なため。
+        /// </summary>
+        private void InitializeMapNameEntry()
         {
             // マップ名テーブルを作成
             string defFileName = DefName.MapNamePointerEntry;
             int tableOffset = _sharedData.Config.ReadInt(IniKey.MapNameTableOffset);
             int entrycount = _sharedData.Config.ReadInt(IniKey.MapNameCount);
             _mapNameEntry = new EntryManager(
-                defFileName, 
-                typeof(FieldKey), 
+                defFileName,
+                typeof(FieldKey),
                 _sharedData,
-                tableOffset, 
+                tableOffset,
                 entrycount);
+        }
 
+        private void InitializeOtherEntries()
+        {
             // マップヘッダーエントリー格納先を先に作成
             _mapHeaderEntry = new List<Entry[]>();
 
             // マップバンクテーブルを仮作成
-            defFileName = DefName.MapBankPointerEntry;
-            tableOffset = _sharedData.Config.ReadInt(IniKey.MapBankTableOffset);
+            string defFileName = DefName.MapBankPointerEntry;
+            int tableOffset = _sharedData.Config.ReadInt(IniKey.MapBankTableOffset);
             // エントリー数を仮カウント（誤って含まれている可能性）
             var pointerPattern = new List<TokenData>()
             {
@@ -149,7 +200,15 @@ namespace PochiPochiEditor2.Forms
                 TokenData.Pointer(),
                 TokenData.Pointer(),
                 TokenData.Pointer(),
-                TokenData.Wildcard(12)
+                TokenData.Wildcard(4),
+                TokenData.Range((byte)_mapNameFirstIndex, byte.MaxValue, Constants.ByteSize),
+                TokenData.Range(byte.MinValue, (byte)cmbMapSight.Items.Count, Constants.ByteSize),
+                TokenData.Range(byte.MinValue, (byte)cmbMapWthr.Items.Count, Constants.ByteSize),
+                TokenData.Range(byte.MinValue, (byte)cmbMapType.Items.Count, Constants.ByteSize),
+                TokenData.Range(byte.MinValue, (byte)cmbMapBike.Items.Count, Constants.ByteSize),
+                TokenData.Range(byte.MinValue, (byte)cmbMapNameType.Items.Count, Constants.ByteSize),
+                TokenData.Wildcard(1),
+                TokenData.Range(byte.MinValue, (byte)cmbMapSpBg.Items.Count, Constants.ByteSize),
             };
 
             // マップエントリーテーブルを検証
@@ -241,45 +300,6 @@ namespace PochiPochiEditor2.Forms
             txtMapFooterOffset.Text = _mapHeaderEntry[42].Length.ToString();
         }
 
-        private void InitializeControls()
-        {
-            // 各コンボボックスにアイテムを追加
-            CtrlHelper.LoadComboBoxFromFile(
-                (cmbMapType, "txt/Map/MapType.txt"),
-                (cmbMapWthr, "txt/Map/MapWthr.txt"),
-                (cmbMapSight, "txt/Map/MapSight.txt"),
-                (cmbMapBike, "txt/Map/MapBike.txt"),
-                (cmbMapSpBg, "txt/Map/MapSpBg.txt"),
-                (cmbMapNameType, "txt/Map/MapNameType.txt"));
-            UpdateMapNameComboBox();
-        }
 
-        private void UpdateMapNameComboBox()
-        {
-            cmbMapNameIndex.BeginUpdate();
-            cmbMapNameIndex.Items.Clear();
-
-            // 基準となる最初のインデックスを設定
-            int firstIndex = _sharedData.Config.ReadInt(IniKey.MapNameFirstIndex);
-
-            // 順次格納していく
-            for (int i = 0; i < _mapNameEntry.Entries.Count; i++)
-            {
-                var offset =
-                    _mapNameEntry.Entries[i][FieldKey.MapNamePointerOffset].GetData<int>();
-                var mapName =
-                    _sharedData.Charmap.BytesToString(_sharedData.RomData, offset);
-
-                cmbMapNameIndex.Items.Add($"[{firstIndex + i:X2}]{mapName}");
-            }
-
-            cmbMapNameIndex.EndUpdate();
-
-            // 初期選択
-            if (cmbMapNameIndex.Items.Count > 0)
-            {
-                cmbMapNameIndex.SelectedIndex = 0;
-            }
-        }
     }
 }

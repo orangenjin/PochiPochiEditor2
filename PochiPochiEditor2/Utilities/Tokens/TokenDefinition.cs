@@ -64,11 +64,11 @@ namespace PochiPochiEditor2.Utilities.Tokens
     /// </summary>
     public class RangeToken : IToken
     {
-        public int Min { get; }
-        public int Max { get; }
+        public byte Min { get; }
+        public byte Max { get; }
         public int Length { get; }
 
-        public RangeToken(int min, int max, int length)
+        public RangeToken(byte min, byte max, int length)
         {
             Min = min;
             Max = max;
@@ -78,7 +78,7 @@ namespace PochiPochiEditor2.Utilities.Tokens
         public bool IsValid(byte[] bytes)
         {
             // リトルエンディアンで読み取る
-            var hexValue = IoHelper.ReadByteValue(
+            var hexValue = (byte)IoHelper.ReadByteValue(
                 bytes, Constants.DefaultIndex, Length);
 
             // 範囲内かチェック

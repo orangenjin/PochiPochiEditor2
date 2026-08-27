@@ -27,7 +27,7 @@
         }
 
         // 1, 2, 4バイトしか想定していない
-        public static TokenData Range(int min, int max, int length)
+        public static TokenData Range(byte min, byte max, int length)
         {
             var tokenDef = new RangeToken(min, max, length);
             return new TokenData(TokenType.Range, tokenDef);
