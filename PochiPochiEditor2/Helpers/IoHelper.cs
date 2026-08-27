@@ -61,7 +61,7 @@ namespace PochiPochiEditor2.Helpers
             int ptrOffset,
             out int resultOffset)
         {
-            uint rawAddr = ReadByteValue(data, ptrOffset, Constants.UIntSize, true); // uint
+            uint rawAddr = ReadByteValue(data, ptrOffset, Constants.UIntSize); // uint
 
             // nullポインタ?
             if (rawAddr == 0)

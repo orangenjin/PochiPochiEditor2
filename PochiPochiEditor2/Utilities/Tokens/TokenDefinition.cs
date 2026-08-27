@@ -82,7 +82,7 @@ namespace PochiPochiEditor2.Utilities.Tokens
                 bytes, Constants.DefaultIndex, Length);
 
             // 範囲内かチェック
-            return (uint)Min <= hexValue && hexValue <= (uint)Max;
+            return Min <= hexValue && hexValue <= Max;
         }
     }
 
