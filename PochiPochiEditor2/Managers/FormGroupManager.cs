@@ -116,6 +116,9 @@ namespace PochiPochiEditor2.Managers
     /// </summary>
     public enum FormGroup
     {
+
+        Map,
+
         TrainerClass,
         TrainerSprite
     }

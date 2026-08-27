@@ -364,27 +364,35 @@ namespace PochiPochiEditor2.Helpers
         /// <summary>
         /// 外部ファイルからcmbに格納する。各行の書式：[XX]ItemName（1バイト対応のみ）
         /// </summary>
-        public static void LoadComboBoxFromFile(ComboBox cmb, string path)
+        public static void LoadComboBoxFromFile(params (ComboBox cmb, string path)[] targets)
         {
-            var entries = new List<KeyValuePair<byte, string>>();
-            foreach (string line in File.ReadLines(path))
+            foreach (var target in targets)
             {
-                // 空行とコメント行をスキップ
-                if (string.IsNullOrWhiteSpace(line) || line.StartsWith(Constants.CommentChar.ToString())) continue;
+                var entries = new List<KeyValuePair<byte, string>>();
 
-                // 行解析、 "["を除外
-                int closeBracketIndex = line.IndexOf(Constants.CloseBracketChar);
-                var hex = line.Substring(
-                    Constants.OpenBracketChar.ToString().Length,
-                    closeBracketIndex - 1)
-                    .ParseStringToInt();
-                var entry = new KeyValuePair<byte, string>((byte)hex, line);
-                entries.Add(entry);
+                // ファイルを読み込む
+                foreach (string line in File.ReadLines(target.path))
+                {
+                    // 空行とコメント行をスキップ
+                    if (string.IsNullOrWhiteSpace(line) ||
+                        line.StartsWith(Constants.CommentChar.ToString())) continue;
+
+                    // 行解析、 "["を除外
+                    int closeBracketIndex = line.IndexOf(Constants.CloseBracketChar);
+                    var hex = line.Substring(
+                        Constants.OpenBracketChar.ToString().Length,
+                        closeBracketIndex - 1)
+                        .ParseStringToInt();
+
+                    var entry = new KeyValuePair<byte, string>((byte)hex, line);
+                    entries.Add(entry);
+                }
+
+                // データをバインド
+                target.cmb.DisplayMember = nameof(KeyValuePair<byte, string>.Value);
+                target.cmb.ValueMember = nameof(KeyValuePair<byte, string>.Key);
+                target.cmb.DataSource = entries;
             }
-
-            cmb.DisplayMember = nameof(KeyValuePair<byte, string>.Value);
-            cmb.ValueMember = nameof(KeyValuePair<byte, string>.Key);
-            cmb.DataSource = entries;
         }
 
         /// <summary>
