@@ -79,9 +79,10 @@ namespace PochiPochiEditor2.Forms
             _sharedData = sharedData;
             _undoManager = undoManager;
 
-            InitializeMapNameEntry();
+            InitializeMapNameEntry(); // 先に処理する
             InitializeControls();
-            InitializeOtherEntries();
+            InitializeMapHeaderEntry();
+            // InitializeOtherEntries();
 
             // InitializePipelines();
             // InitializeEventHandlers();
@@ -147,12 +148,11 @@ namespace PochiPochiEditor2.Forms
                 entrycount);
         }
 
-        private void InitializeOtherEntries()
+        private void InitializeMapHeaderEntry()
         {
             // マップヘッダーエントリー格納先を先に作成
             _mapHeaderEntry = new List<Entry[]>();
 
-            // マップバンクテーブルを仮作成
             string defFileName = DefName.MapBankPointerEntry;
             int tableOffset = _sharedData.Config.ReadInt(IniKey.MapBankTableOffset);
             // エントリー数を仮カウント（誤って含まれている可能性）
@@ -165,6 +165,8 @@ namespace PochiPochiEditor2.Forms
                 _sharedData.RomData,
                 tableOffset,
                 allowNullPointer: false); // nullポインタを許容しない
+
+            // マップバンクテーブルを仮作成
             var mapBankEntry = new EntryManager(
                 defFileName,
                 typeof(FieldKey),
@@ -176,20 +178,20 @@ namespace PochiPochiEditor2.Forms
             var mapNumberTableOffsets = new List<int>();
             for (int i = 0; i < mapBankEntry.Entries.Count; i++)
             {
-                var targetOffset = 
+                var mapNumberTableOffset = 
                     mapBankEntry.Entries[i][FieldKey.MapHeaderPointerOffset].GetData<int>();
 
-                // 正しいテーブルオフセットかどうかの検証はポインタかどうかが限界
+                // 正しいテーブルオフセットの検証は、ポインタ判定が限界
                 var IsValid = PatternMatcher.TryMatch(
                     pointerPattern,
                     _sharedData.RomData,
-                    targetOffset,
+                    mapNumberTableOffset,
                     allowNullPointer: true); // nullポインタを許容する
 
                 // 無効なオフセットだったら、そこで中断
                 if (!IsValid) break;
 
-                mapNumberTableOffsets.Add(targetOffset);
+                mapNumberTableOffsets.Add(mapNumberTableOffset);
             }
 
             // 定数を事前に計算
@@ -214,31 +216,31 @@ namespace PochiPochiEditor2.Forms
             // マップエントリーテーブルを検証
             for (int i = 0; i < mapBankEntry.Entries.Count; i++)
             {
-                // そのテーブルのエントリー数を仮カウント（パターンは使い回し）
+                // そのテーブルのエントリー数を仮カウント
                 var numberEntrycount = PatternMatcher.TryCount(
-                    pointerPattern,
+                    pointerPattern, // ポインタパターン
                     _sharedData.RomData,
                     mapNumberTableOffsets[i],
                     allowNullPointer: true); // nullポインタを許容する
 
                 // そのテーブルの正しいエントリー数を求める
-                int trueEntryCount = numberEntrycount; // 仮カウント数
+                int validEntryCount = numberEntrycount; // 仮カウント数を仮代入
                 for (int j = 0; j < numberEntrycount; j++)
                 {
-                    var targetOffset = mapNumberTableOffsets[i] + j * entryLength;
+                    var pointerOffset = mapNumberTableOffsets[i] + j * entryLength;
 
-                    // 各テーブルの先頭オフセットと比較して検証
-                    bool hasOffset = mapNumberTableOffsets.Contains(targetOffset);
+                    // 各マップナンバーテーブルのオフセットと比較して検証
+                    bool hasOffset = mapNumberTableOffsets.Contains(pointerOffset);
 
                     // 別のマップナンバーテーブルオフセットだった場合
                     if (j > 0 && hasOffset)
                     {
-                        trueEntryCount = j;
+                        validEntryCount = j;
                         break;
                     }
 
                     // ポインタ先が正規のマップヘッダーかどうかを検証
-                    if (IoHelper.TryReadPtr(_sharedData.RomData, targetOffset, out int entryOffset))
+                    if (IoHelper.TryReadPtr(_sharedData.RomData, pointerOffset, out int entryOffset))
                     {
                         var IsValid = PatternMatcher.TryMatch(
                             headerPattern,
@@ -249,7 +251,7 @@ namespace PochiPochiEditor2.Forms
                         // 正規のマップヘッダーでない場合
                         if (!IsValid)
                         {
-                            trueEntryCount = j;
+                            validEntryCount = j;
                             break;
                         }
                     }
@@ -257,20 +259,20 @@ namespace PochiPochiEditor2.Forms
 
                 // マップナンバーエントリーテーブルを作成
                 defFileName = DefName.MapNumberPointerEntry;
-                var mapNumberEntry =new EntryManager(
+                var mapNumberEntry = new EntryManager(
                     defFileName,
                     typeof(FieldKey), 
                     _sharedData, 
                     mapNumberTableOffsets[i],
-                    trueEntryCount);
+                    validEntryCount);
 
                 // マップヘッダーの定義情報を読み込む
                 defFileName = DefName.MapHeaderEntry;
                 var mapHeaderDef = new DefReader(defFileName);
 
                 // エントリーを作成
-                var entryArray = new Entry[trueEntryCount];
-                for (int j = 0; j < trueEntryCount; j++)
+                var entryArray = new Entry[validEntryCount];
+                for (int j = 0; j < validEntryCount; j++)
                 {
                     var entryFields = new List<FieldValue>();
                     for (int k = 0; k < mapHeaderDef.FieldDefs.Count; k++)
@@ -291,7 +293,7 @@ namespace PochiPochiEditor2.Forms
                     entryArray[j] = entry;
                 }
 
-                // このインデックスのEntry[]を格納
+                // マップバンクに対してEntry[]を格納
                 _mapHeaderEntry.Add(entryArray);
             }
 
