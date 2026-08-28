@@ -32,7 +32,7 @@ namespace PochiPochiEditor2.Forms
         private RefData _imageData = null;
         private RefData _paletteData = null;
         // UI制御用
-        private int _currentSpriteIndex = 0;
+        private int _currentSpriteIndex = default;
 
         private enum FieldKey
         {
@@ -55,20 +55,20 @@ namespace PochiPochiEditor2.Forms
             AnimPointerOffset
         }
 
-        private static class IniKey
+        private static class DefName
         {
             public static string TrainerSpriteImageEntry = nameof(TrainerSpriteImageEntry);
-            public static string TrainerSpriteImageTableOffset = nameof(TrainerSpriteImageTableOffset);
-
             public static string TrainerSpritePaletteEntry = nameof(TrainerSpritePaletteEntry);
-            public static string TrainerSpritePaletteTableOffset = nameof(TrainerSpritePaletteTableOffset);
-
             public static string TrainerSpriteYPosEntry = nameof(TrainerSpriteYPosEntry);
-            public static string TrainerSpriteYPosTableOffset = nameof(TrainerSpriteYPosTableOffset);
-
             public static string TrainerSpriteAnimationPointerEntry = nameof(TrainerSpriteAnimationPointerEntry);
-            public static string TrainerSpriteAnimPointerTableOffset = nameof(TrainerSpriteAnimPointerTableOffset);
+        }
 
+        private static class IniKey
+        {
+            public static string TrainerSpriteImageTableOffset = nameof(TrainerSpriteImageTableOffset);
+            public static string TrainerSpritePaletteTableOffset = nameof(TrainerSpritePaletteTableOffset);
+            public static string TrainerSpriteYPosTableOffset = nameof(TrainerSpriteYPosTableOffset);
+            public static string TrainerSpriteAnimPointerTableOffset = nameof(TrainerSpriteAnimPointerTableOffset);
             public static string TrainerSpriteCount = nameof(TrainerSpriteCount);
         }
 
@@ -95,23 +95,23 @@ namespace PochiPochiEditor2.Forms
         private void InitializeEntries()
         {
             // 画像テーブルを作成
-            string defFileName = IniKey.TrainerSpriteImageEntry;
+            string defFileName = DefName.TrainerSpriteImageEntry;
             int tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpriteImageTableOffset);
             int entrycount = _sharedData.Config.ReadInt(IniKey.TrainerSpriteCount);
             _imageEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // パレットテーブルを作成
-            defFileName = IniKey.TrainerSpritePaletteEntry;
+            defFileName = DefName.TrainerSpritePaletteEntry;
             tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpritePaletteTableOffset);
             _paletteEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // Y座標位置テーブルを作成
-            defFileName = IniKey.TrainerSpriteYPosEntry;
+            defFileName = DefName.TrainerSpriteYPosEntry;
             tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpriteYPosTableOffset);
             _yPosEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // アニメポインタテーブルを作成
-            defFileName = IniKey.TrainerSpriteAnimationPointerEntry;
+            defFileName = DefName.TrainerSpriteAnimationPointerEntry;
             tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerSpriteAnimPointerTableOffset);
             _animPointerEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
         }

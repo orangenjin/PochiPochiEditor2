@@ -25,11 +25,18 @@ namespace PochiPochiEditor2.Managers
             _ownerForm = ownerForm;
             _forms = new List<Form>();
 
-            // グループ判定
+            // グループと順番判定
             var formTypes = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(t => typeof(Form).IsAssignableFrom(t))
-                .Where(t => t.GetCustomAttribute<FormGroupAttribute>()?.Group == group);
+                .Select(t => new
+                {
+                    Type = t,
+                    Attribute = t.GetCustomAttribute<FormGroupAttribute>()
+                })
+                .Where(x => x.Attribute?.Group == group)
+                .OrderBy(x => x.Attribute.Order)
+                .Select(x => x.Type);
 
             // フォーム作成
             foreach (var type in formTypes)
@@ -98,16 +105,19 @@ namespace PochiPochiEditor2.Managers
     }
 
     /// <summary>
-    /// 属するフォームグループを指定する。
+    /// 属するフォームグループと、表示の順番を指定する。
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class FormGroupAttribute : Attribute
     {
         public FormGroup Group { get; }
+        public int Order { get; }
 
-        public FormGroupAttribute(FormGroup group)
+        // 順番がどうでもいい時はデフォルト値
+        public FormGroupAttribute(FormGroup group, int order = 0)
         {
             Group = group;
+            Order = order;
         }
     }
 

@@ -17,7 +17,7 @@ using PochiPochiEditor2.Utilities.Tokens;
 
 namespace PochiPochiEditor2.Forms
 {
-    [FormGroup(FormGroup.Map)]
+    [FormGroup(FormGroup.Map, 1)]
     public partial class MapEditor : Form
     {
         // イベント登録・解除用

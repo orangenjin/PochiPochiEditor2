@@ -38,7 +38,7 @@ namespace PochiPochiEditor2.Forms
         private bool _isPokeBallEnabled = false;
         private bool _isBaseIvEnabled = false;
         // UI制御用
-        private int _currentClassIndex = 0;
+        private int _currentClassIndex = default;
 
         private enum FieldKey
         {
@@ -55,29 +55,34 @@ namespace PochiPochiEditor2.Forms
             BaseIvValue
         }
 
-        private static class IniKey 
+        private static class DefName
         {
             public static string TrainerClassNameEntry = nameof(TrainerClassNameEntry);
+            public static string TrainerClassPrizeMultiEntry = nameof(TrainerClassPrizeMultiEntry);
+
+            public static string EnableTrainerClassEncMusic = nameof(EnableTrainerClassEncMusic);
+            public static string EnableTrainerClassBattleMusic = nameof(EnableTrainerClassBattleMusic);
+            public static string EnableTrainerClassPokeBall = nameof(EnableTrainerClassPokeBall);
+            public static string EnableTrainerClassBaseIV = nameof(EnableTrainerClassBaseIV);
+        }
+
+        private static class IniKey 
+        {
             public static string TrainerClassNameTableOffset = nameof(TrainerClassNameTableOffset);
             public static string TrainerClassNameCount = nameof(TrainerClassNameCount);
 
-            public static string TrainerClassPrizeMultiEntry = nameof(TrainerClassPrizeMultiEntry);
             public static string TrainerClassPrizeMultiTableOffset = nameof(TrainerClassPrizeMultiTableOffset);
             public static string TrainerClassPrizeMultiCount = nameof(TrainerClassPrizeMultiCount);
 
-            public static string EnableTrainerClassEncMusic = nameof(EnableTrainerClassEncMusic);
             public static string TrainerClassEncMusicEntry = nameof(TrainerClassEncMusicEntry);
             public static string TrainerClassEncMusicTableOffset = nameof(TrainerClassEncMusicTableOffset);
 
-            public static string EnableTrainerClassBattleMusic = nameof(EnableTrainerClassBattleMusic);
             public static string TrainerClassBattleMusicEntry = nameof(TrainerClassBattleMusicEntry);
             public static string TrainerClassBattleMusicTableOffset = nameof(TrainerClassBattleMusicTableOffset);
 
-            public static string EnableTrainerClassPokeBall = nameof(EnableTrainerClassPokeBall);
             public static string TrainerClassPokeBallEntry = nameof(TrainerClassPokeBallEntry);
             public static string TrainerClassPokeBallTableOffset = nameof(TrainerClassPokeBallTableOffset);
 
-            public static string EnableTrainerClassBaseIV = nameof(EnableTrainerClassBaseIV);
             public static string TrainerClassBaseIvEntry = nameof(TrainerClassBaseIvEntry);
             public static string TrainerClassBaseIVTableOffset = nameof(TrainerClassBaseIVTableOffset);
         }
@@ -99,16 +104,16 @@ namespace PochiPochiEditor2.Forms
         private void InitializeEntries()
         {
             // 肩書名テーブルを作成
-            string defFileName = IniKey.TrainerClassNameEntry;
+            string defFileName = DefName.TrainerClassNameEntry;
             int tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassNameTableOffset);
             int entrycount = _sharedData.Config.ReadInt(IniKey.TrainerClassNameCount);
             _classNameEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
 
             // 追加データのbool判定
-            _isEncounterMusicEnabled = _sharedData.Config.ReadBool(IniKey.EnableTrainerClassEncMusic);
-            _isBattleMusicEnabled = _sharedData.Config.ReadBool(IniKey.EnableTrainerClassBattleMusic);
-            _isPokeBallEnabled = _sharedData.Config.ReadBool(IniKey.EnableTrainerClassPokeBall);
-            _isBaseIvEnabled = _sharedData.Config.ReadBool(IniKey.EnableTrainerClassBaseIV);
+            _isEncounterMusicEnabled = _sharedData.Config.ReadBool(DefName.EnableTrainerClassEncMusic);
+            _isBattleMusicEnabled = _sharedData.Config.ReadBool(DefName.EnableTrainerClassBattleMusic);
+            _isPokeBallEnabled = _sharedData.Config.ReadBool(DefName.EnableTrainerClassPokeBall);
+            _isBaseIvEnabled = _sharedData.Config.ReadBool(DefName.EnableTrainerClassBaseIV);
 
             if (_isEncounterMusicEnabled)
             {
@@ -143,7 +148,7 @@ namespace PochiPochiEditor2.Forms
             }
 
             // 賞金倍率テーブルを作成
-            defFileName = IniKey.TrainerClassPrizeMultiEntry;
+            defFileName = DefName.TrainerClassPrizeMultiEntry;
             tableOffset = _sharedData.Config.ReadInt(IniKey.TrainerClassPrizeMultiTableOffset);
             entrycount = _sharedData.Config.ReadInt(IniKey.TrainerClassPrizeMultiCount);
             _prizeMultiEntry = new EntryManager(defFileName, typeof(FieldKey), _sharedData, tableOffset, entrycount);
