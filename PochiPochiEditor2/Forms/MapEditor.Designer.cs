@@ -68,6 +68,10 @@ namespace PochiPochiEditor2.Forms
             this.rbOrderByName = new System.Windows.Forms.RadioButton();
             this.chkOrderByTerrain = new System.Windows.Forms.CheckBox();
             this.tvwMapSelector = new System.Windows.Forms.TreeView();
+            this.btnEditMapFooter = new System.Windows.Forms.Button();
+            this.btnEditEventScriptHeader = new System.Windows.Forms.Button();
+            this.btnEditLevelScript = new System.Windows.Forms.Button();
+            this.btnEditConnHeader = new System.Windows.Forms.Button();
             this.grpMapHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudBgmIndex)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapRelLayer)).BeginInit();
@@ -79,6 +83,10 @@ namespace PochiPochiEditor2.Forms
             // 
             // grpMapHeader
             // 
+            this.grpMapHeader.Controls.Add(this.btnEditConnHeader);
+            this.grpMapHeader.Controls.Add(this.btnEditLevelScript);
+            this.grpMapHeader.Controls.Add(this.btnEditEventScriptHeader);
+            this.grpMapHeader.Controls.Add(this.btnEditMapFooter);
             this.grpMapHeader.Controls.Add(this.nudBgmIndex);
             this.grpMapHeader.Controls.Add(this.lblBgmIndex);
             this.grpMapHeader.Controls.Add(this.cmbMapNameType);
@@ -497,6 +505,46 @@ namespace PochiPochiEditor2.Forms
             this.tvwMapSelector.Size = new System.Drawing.Size(284, 186);
             this.tvwMapSelector.TabIndex = 4;
             // 
+            // btnEditMapFooter
+            // 
+            this.btnEditMapFooter.Location = new System.Drawing.Point(244, 28);
+            this.btnEditMapFooter.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditMapFooter.Name = "btnEditMapFooter";
+            this.btnEditMapFooter.Size = new System.Drawing.Size(60, 23);
+            this.btnEditMapFooter.TabIndex = 20;
+            this.btnEditMapFooter.Text = "編集";
+            this.btnEditMapFooter.UseVisualStyleBackColor = true;
+            // 
+            // btnEditEventScriptHeader
+            // 
+            this.btnEditEventScriptHeader.Location = new System.Drawing.Point(244, 58);
+            this.btnEditEventScriptHeader.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditEventScriptHeader.Name = "btnEditEventScriptHeader";
+            this.btnEditEventScriptHeader.Size = new System.Drawing.Size(60, 23);
+            this.btnEditEventScriptHeader.TabIndex = 20;
+            this.btnEditEventScriptHeader.Text = "編集";
+            this.btnEditEventScriptHeader.UseVisualStyleBackColor = true;
+            // 
+            // btnEditLevelScript
+            // 
+            this.btnEditLevelScript.Location = new System.Drawing.Point(244, 88);
+            this.btnEditLevelScript.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditLevelScript.Name = "btnEditLevelScript";
+            this.btnEditLevelScript.Size = new System.Drawing.Size(60, 23);
+            this.btnEditLevelScript.TabIndex = 20;
+            this.btnEditLevelScript.Text = "編集";
+            this.btnEditLevelScript.UseVisualStyleBackColor = true;
+            // 
+            // btnEditConnHeader
+            // 
+            this.btnEditConnHeader.Location = new System.Drawing.Point(244, 118);
+            this.btnEditConnHeader.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditConnHeader.Name = "btnEditConnHeader";
+            this.btnEditConnHeader.Size = new System.Drawing.Size(60, 23);
+            this.btnEditConnHeader.TabIndex = 20;
+            this.btnEditConnHeader.Text = "編集";
+            this.btnEditConnHeader.UseVisualStyleBackColor = true;
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -564,5 +612,9 @@ namespace PochiPochiEditor2.Forms
         private System.Windows.Forms.RadioButton rbOrderByName;
         private System.Windows.Forms.RadioButton rbOrderByAsc;
         private System.Windows.Forms.TreeView tvwMapSelector;
+        private System.Windows.Forms.Button btnEditConnHeader;
+        private System.Windows.Forms.Button btnEditLevelScript;
+        private System.Windows.Forms.Button btnEditEventScriptHeader;
+        private System.Windows.Forms.Button btnEditMapFooter;
     }
 }

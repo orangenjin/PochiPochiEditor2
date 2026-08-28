@@ -299,21 +299,19 @@ namespace PochiPochiEditor2.Forms
             LoadMapNames();
 
             cmbMapNameIndex.BeginUpdate();
-            cmbMapNameIndex.Items.Clear();
+            var entries = new List<KeyValuePair<int, string>>();
 
-            // キャッシュからコンボボックスへ
+            // キャッシュから
             foreach (var kvp in _mapNameCache)
             {
-                cmbMapNameIndex.Items.Add($"[{kvp.Key:X2}]{kvp.Value}");
+                entries.Add(new KeyValuePair<int, string>(kvp.Key, $"[{kvp.Key:X2}]{kvp.Value}"));
             }
+
+            cmbMapNameIndex.DisplayMember = nameof(KeyValuePair<int, string>.Value);
+            cmbMapNameIndex.ValueMember = nameof(KeyValuePair<int, string>.Key);
+            cmbMapNameIndex.DataSource = entries;
 
             cmbMapNameIndex.EndUpdate();
-
-            // 初期選択
-            if (cmbMapNameIndex.Items.Count > 0)
-            {
-                cmbMapNameIndex.SelectedIndex = 0;
-            }
         }
 
         private void LoadMapNames()
@@ -436,7 +434,7 @@ namespace PochiPochiEditor2.Forms
                 cmbMapSpBg.SelectedIndex =
                     entry[FieldKey.MapSpBg]
                     .GetData<int>();
-                cmbMapNameIndex.SelectedIndex =
+                cmbMapNameIndex.SelectedValue =
                     entry[FieldKey.MapNameIndex]
                     .GetData<int>();
                 cmbMapNameType.SelectedIndex =
