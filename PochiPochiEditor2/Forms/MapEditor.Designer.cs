@@ -60,20 +60,20 @@ namespace PochiPochiEditor2.Forms
             this.lblLevelScriptOffset = new System.Windows.Forms.Label();
             this.lblMapFooterOffset = new System.Windows.Forms.Label();
             this.tbcMain = new System.Windows.Forms.TabControl();
-            this.tbpMap = new System.Windows.Forms.TabPage();
+            this.tbpMapView = new System.Windows.Forms.TabPage();
             this.pnlMapDraw = new System.Windows.Forms.Panel();
             this.tbpOther = new System.Windows.Forms.TabPage();
             this.grpMapSelector = new System.Windows.Forms.GroupBox();
-            this.lstMapSelector = new System.Windows.Forms.ListBox();
             this.rbOrderByAsc = new System.Windows.Forms.RadioButton();
             this.rbOrderByName = new System.Windows.Forms.RadioButton();
             this.chkOrderByTerrain = new System.Windows.Forms.CheckBox();
+            this.tvwMapSelector = new System.Windows.Forms.TreeView();
             this.grpMapHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudBgmIndex)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapRelLayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapTerrainIndex)).BeginInit();
             this.tbcMain.SuspendLayout();
-            this.tbpMap.SuspendLayout();
+            this.tbpMapView.SuspendLayout();
             this.grpMapSelector.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -403,7 +403,7 @@ namespace PochiPochiEditor2.Forms
             // 
             // tbcMain
             // 
-            this.tbcMain.Controls.Add(this.tbpMap);
+            this.tbcMain.Controls.Add(this.tbpMapView);
             this.tbcMain.Controls.Add(this.tbpOther);
             this.tbcMain.Location = new System.Drawing.Point(374, 16);
             this.tbcMain.Margin = new System.Windows.Forms.Padding(0);
@@ -412,16 +412,16 @@ namespace PochiPochiEditor2.Forms
             this.tbcMain.Size = new System.Drawing.Size(737, 736);
             this.tbcMain.TabIndex = 1;
             // 
-            // tbpMap
+            // tbpMapView
             // 
-            this.tbpMap.Controls.Add(this.pnlMapDraw);
-            this.tbpMap.Location = new System.Drawing.Point(4, 24);
-            this.tbpMap.Margin = new System.Windows.Forms.Padding(0);
-            this.tbpMap.Name = "tbpMap";
-            this.tbpMap.Size = new System.Drawing.Size(729, 708);
-            this.tbpMap.TabIndex = 0;
-            this.tbpMap.Text = "マップ";
-            this.tbpMap.UseVisualStyleBackColor = true;
+            this.tbpMapView.Controls.Add(this.pnlMapDraw);
+            this.tbpMapView.Location = new System.Drawing.Point(4, 24);
+            this.tbpMapView.Margin = new System.Windows.Forms.Padding(0);
+            this.tbpMapView.Name = "tbpMapView";
+            this.tbpMapView.Size = new System.Drawing.Size(729, 708);
+            this.tbpMapView.TabIndex = 0;
+            this.tbpMapView.Text = "マップ";
+            this.tbpMapView.UseVisualStyleBackColor = true;
             // 
             // pnlMapDraw
             // 
@@ -436,17 +436,17 @@ namespace PochiPochiEditor2.Forms
             this.tbpOther.Location = new System.Drawing.Point(4, 24);
             this.tbpOther.Margin = new System.Windows.Forms.Padding(0);
             this.tbpOther.Name = "tbpOther";
-            this.tbpOther.Size = new System.Drawing.Size(729, 529);
+            this.tbpOther.Size = new System.Drawing.Size(729, 708);
             this.tbpOther.TabIndex = 1;
             this.tbpOther.Text = "その他";
             this.tbpOther.UseVisualStyleBackColor = true;
             // 
             // grpMapSelector
             // 
+            this.grpMapSelector.Controls.Add(this.tvwMapSelector);
             this.grpMapSelector.Controls.Add(this.chkOrderByTerrain);
             this.grpMapSelector.Controls.Add(this.rbOrderByName);
             this.grpMapSelector.Controls.Add(this.rbOrderByAsc);
-            this.grpMapSelector.Controls.Add(this.lstMapSelector);
             this.grpMapSelector.Location = new System.Drawing.Point(20, 16);
             this.grpMapSelector.Margin = new System.Windows.Forms.Padding(0);
             this.grpMapSelector.Name = "grpMapSelector";
@@ -456,20 +456,10 @@ namespace PochiPochiEditor2.Forms
             this.grpMapSelector.TabStop = false;
             this.grpMapSelector.Text = "マップを選択";
             // 
-            // lstMapSelector
-            // 
-            this.lstMapSelector.FormattingEnabled = true;
-            this.lstMapSelector.ItemHeight = 15;
-            this.lstMapSelector.Location = new System.Drawing.Point(20, 56);
-            this.lstMapSelector.Margin = new System.Windows.Forms.Padding(0);
-            this.lstMapSelector.Name = "lstMapSelector";
-            this.lstMapSelector.ScrollAlwaysVisible = true;
-            this.lstMapSelector.Size = new System.Drawing.Size(218, 184);
-            this.lstMapSelector.TabIndex = 0;
-            // 
             // rbOrderByAsc
             // 
             this.rbOrderByAsc.AutoSize = true;
+            this.rbOrderByAsc.Checked = true;
             this.rbOrderByAsc.Location = new System.Drawing.Point(20, 28);
             this.rbOrderByAsc.Margin = new System.Windows.Forms.Padding(0);
             this.rbOrderByAsc.Name = "rbOrderByAsc";
@@ -487,7 +477,6 @@ namespace PochiPochiEditor2.Forms
             this.rbOrderByName.Name = "rbOrderByName";
             this.rbOrderByName.Size = new System.Drawing.Size(63, 19);
             this.rbOrderByName.TabIndex = 2;
-            this.rbOrderByName.TabStop = true;
             this.rbOrderByName.Text = "マップ順";
             this.rbOrderByName.UseVisualStyleBackColor = true;
             // 
@@ -502,6 +491,14 @@ namespace PochiPochiEditor2.Forms
             this.chkOrderByTerrain.Text = "マップ地形ID";
             this.chkOrderByTerrain.UseVisualStyleBackColor = true;
             // 
+            // tvwMapSelector
+            // 
+            this.tvwMapSelector.Location = new System.Drawing.Point(20, 56);
+            this.tvwMapSelector.Margin = new System.Windows.Forms.Padding(0);
+            this.tvwMapSelector.Name = "tvwMapSelector";
+            this.tvwMapSelector.Size = new System.Drawing.Size(218, 186);
+            this.tvwMapSelector.TabIndex = 4;
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -515,14 +512,14 @@ namespace PochiPochiEditor2.Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MapEditor";
-            this.Text = "マップ編集";
+            this.Text = "マップ";
             this.grpMapHeader.ResumeLayout(false);
             this.grpMapHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudBgmIndex)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapRelLayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapTerrainIndex)).EndInit();
             this.tbcMain.ResumeLayout(false);
-            this.tbpMap.ResumeLayout(false);
+            this.tbpMapView.ResumeLayout(false);
             this.grpMapSelector.ResumeLayout(false);
             this.grpMapSelector.PerformLayout();
             this.ResumeLayout(false);
@@ -561,13 +558,13 @@ namespace PochiPochiEditor2.Forms
         private System.Windows.Forms.ComboBox cmbMapNameIndex;
         private System.Windows.Forms.Label lblMapNameIndex;
         private System.Windows.Forms.TabControl tbcMain;
-        private System.Windows.Forms.TabPage tbpMap;
+        private System.Windows.Forms.TabPage tbpMapView;
         private System.Windows.Forms.TabPage tbpOther;
         private System.Windows.Forms.Panel pnlMapDraw;
         private System.Windows.Forms.GroupBox grpMapSelector;
         private System.Windows.Forms.CheckBox chkOrderByTerrain;
         private System.Windows.Forms.RadioButton rbOrderByName;
         private System.Windows.Forms.RadioButton rbOrderByAsc;
-        private System.Windows.Forms.ListBox lstMapSelector;
+        private System.Windows.Forms.TreeView tvwMapSelector;
     }
 }

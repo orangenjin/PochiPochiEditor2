@@ -18,7 +18,7 @@ using PochiPochiEditor2.Utilities.Tokens;
 namespace PochiPochiEditor2.Forms
 {
     [FormGroup(FormGroup.Map, 2)]
-    public partial class MapSideForm : Form
+    public partial class MapExtraForm : Form
     {
         // イベント登録・解除用
         private EventBinder _eventBinder = new EventBinder();
@@ -27,7 +27,7 @@ namespace PochiPochiEditor2.Forms
         // 変更履歴用
         private UndoManager _undoManager = null;
 
-        public MapSideForm(SharedData sharedData, UndoManager undoManager)
+        public MapExtraForm(SharedData sharedData, UndoManager undoManager)
         {
             InitializeComponent();
             _sharedData = sharedData;

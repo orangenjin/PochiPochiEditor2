@@ -31,6 +31,7 @@ namespace PochiPochiEditor2.Forms
         private List<Entry[]> _mapHeaderEntry = null;
         // 再利用する変数を保持
         private int _mapNameFirstIndex = default;
+        private Dictionary<int, string> _mapNameCache = new Dictionary<int, string>();
 
         private enum FieldKey
         {
@@ -79,9 +80,14 @@ namespace PochiPochiEditor2.Forms
             _sharedData = sharedData;
             _undoManager = undoManager;
 
-            InitializeMapNameEntry(); // 先に処理する
+            InitializeMapNameEntry(); // 先に処理
             InitializeControls();
             InitializeMapHeaderEntry();
+
+            UpdateMapNameComboBox();
+            UpdateMapSelector();
+
+
             // InitializeOtherEntries();
 
             // InitializePipelines();
@@ -90,50 +96,6 @@ namespace PochiPochiEditor2.Forms
 
         }
 
-        private void InitializeControls()
-        {
-            // 各コンボボックスにアイテムを追加
-            CtrlHelper.LoadComboBoxFromFile(
-                (cmbMapType, "txt/Map/MapType.txt"),
-                (cmbMapWthr, "txt/Map/MapWthr.txt"),
-                (cmbMapSight, "txt/Map/MapSight.txt"),
-                (cmbMapBike, "txt/Map/MapBike.txt"),
-                (cmbMapSpBg, "txt/Map/MapSpBg.txt"),
-                (cmbMapNameType, "txt/Map/MapNameType.txt"));
-            UpdateMapNameComboBox();
-        }
-
-        private void UpdateMapNameComboBox()
-        {
-            cmbMapNameIndex.BeginUpdate();
-            cmbMapNameIndex.Items.Clear();
-
-            // 基準となる最初のインデックスを設定
-            _mapNameFirstIndex = _sharedData.Config.ReadInt(IniKey.MapNameFirstIndex);
-
-            // 順次格納していく
-            for (int i = 0; i < _mapNameEntry.Entries.Count; i++)
-            {
-                var offset =
-                    _mapNameEntry.Entries[i][FieldKey.MapNamePointerOffset].GetData<int>();
-                var mapName =
-                    _sharedData.Charmap.BytesToString(_sharedData.RomData, offset);
-
-                cmbMapNameIndex.Items.Add($"[{_mapNameFirstIndex + i:X2}]{mapName}");
-            }
-
-            cmbMapNameIndex.EndUpdate();
-
-            // 初期選択
-            if (cmbMapNameIndex.Items.Count > 0)
-            {
-                cmbMapNameIndex.SelectedIndex = 0;
-            }
-        }
-
-        /// <summary>
-        /// コンボボックス用に必要なため。
-        /// </summary>
         private void InitializeMapNameEntry()
         {
             // マップ名テーブルを作成
@@ -146,6 +108,18 @@ namespace PochiPochiEditor2.Forms
                 _sharedData,
                 tableOffset,
                 entrycount);
+        }
+
+        private void InitializeControls()
+        {
+            // 各コンボボックスにアイテムを追加
+            CtrlHelper.LoadComboBoxFromFile(
+                (cmbMapType, "txt/Map/MapType.txt"),
+                (cmbMapWthr, "txt/Map/MapWthr.txt"),
+                (cmbMapSight, "txt/Map/MapSight.txt"),
+                (cmbMapBike, "txt/Map/MapBike.txt"),
+                (cmbMapSpBg, "txt/Map/MapSpBg.txt"),
+                (cmbMapNameType, "txt/Map/MapNameType.txt"));
         }
 
         private void InitializeMapHeaderEntry()
@@ -301,6 +275,102 @@ namespace PochiPochiEditor2.Forms
             }
         }
 
+        private void UpdateMapNameComboBox()
+        {
+            // キャッシュを最新化
+            LoadMapNames();
 
+            cmbMapNameIndex.BeginUpdate();
+            cmbMapNameIndex.Items.Clear();
+
+            // キャッシュからコンボボックスへ
+            foreach (var kvp in _mapNameCache)
+            {
+                cmbMapNameIndex.Items.Add($"[{kvp.Key:X2}]{kvp.Value}");
+            }
+
+            cmbMapNameIndex.EndUpdate();
+
+            // 初期選択
+            if (cmbMapNameIndex.Items.Count > 0)
+            {
+                cmbMapNameIndex.SelectedIndex = 0;
+            }
+        }
+
+        private void LoadMapNames()
+        {
+            _mapNameCache.Clear();
+
+            // 基準となるンデックス
+            _mapNameFirstIndex = _sharedData.Config.ReadInt(IniKey.MapNameFirstIndex);
+
+            // 順次格納していく
+            for (int i = 0; i < _mapNameEntry.Entries.Count; i++)
+            {
+                var offset = _mapNameEntry.Entries[i][FieldKey.MapNamePointerOffset].GetData<int>();
+                var mapName = _sharedData.Charmap.BytesToString(_sharedData.RomData, offset);
+
+                int nameIndex = _mapNameFirstIndex + i;
+                _mapNameCache[nameIndex] = mapName;
+            }
+        }
+
+        private void UpdateMapSelector()
+        {
+            tvwMapSelector.BeginUpdate();
+            tvwMapSelector.Nodes.Clear();
+
+            // 番号順
+            if (rbOrderByAsc.Checked)
+            {
+                for (int i = 0; i < _mapHeaderEntry.Count; i++)
+                {
+                    var bankNode = new TreeNode($"バンク{i}");
+
+                    for (int j = 0; j < _mapHeaderEntry[i].Length; j++)
+                    {
+                        int nameIndex = _mapHeaderEntry[i][j][FieldKey.MapNameIndex].GetData<int>();
+                        string mapName = _mapNameCache[nameIndex];
+
+                        var mapNode = new TreeNode($"({i}, {j}) {mapName}");
+                        bankNode.Nodes.Add(mapNode);
+                    }
+                    tvwMapSelector.Nodes.Add(bankNode);
+                }
+            }
+            // マップ順
+            else if (rbOrderByName.Checked)
+            {
+                var nameGroupNodes = new Dictionary<int, TreeNode>();
+
+                for (int i = 0; i < _mapHeaderEntry.Count; i++)
+                {
+                    for (int j = 0; j < _mapHeaderEntry[i].Length; j++)
+                    {
+                        int nameIndex = _mapHeaderEntry[i][j][FieldKey.MapNameIndex].GetData<int>();
+
+                        // ルートノードが存在しない場合は新規作成
+                        if (!nameGroupNodes.ContainsKey(nameIndex))
+                        {
+                            string rootName = $"[{nameIndex:X2}]{_mapNameCache[nameIndex]}";
+                            nameGroupNodes[nameIndex] = new TreeNode(rootName);
+                        }
+
+                        string mapName = _mapNameCache[nameIndex];
+                        var mapNode = new TreeNode($"({i}, {j}) {mapName}");
+                        nameGroupNodes[nameIndex].Nodes.Add(mapNode);
+                    }
+                }
+
+                // マップ名IDの昇順
+                foreach (var key in nameGroupNodes.Keys.OrderBy(k => k))
+                {
+                    tvwMapSelector.Nodes.Add(nameGroupNodes[key]);
+                }
+            }
+
+            tvwMapSelector.EndUpdate();
+        }
     }
 }

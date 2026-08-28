@@ -1,7 +1,7 @@
 ﻿
 namespace PochiPochiEditor2.Forms
 {
-    partial class MapSideForm
+    partial class MapExtraForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,20 +29,20 @@ namespace PochiPochiEditor2.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapSideForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapExtraForm));
             this.SuspendLayout();
             // 
-            // MapSelector
+            // MapSideForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(933, 562);
+            this.ClientSize = new System.Drawing.Size(311, 338);
             this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Name = "MapSelector";
-            this.Text = "マップ選択";
+            this.Name = "MapSideForm";
+            this.Text = "サイドパネル";
             this.ResumeLayout(false);
 
         }

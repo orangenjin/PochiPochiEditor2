@@ -55,11 +55,11 @@
     <Compile Include="Forms\MapEditor.Designer.cs">
       <DependentUpon>MapEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MapSideForm.cs">
+    <Compile Include="Forms\MapExtraForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MapSideForm.Designer.cs">
-      <DependentUpon>MapSideForm.cs</DependentUpon>
+    <Compile Include="Forms\MapExtraForm.Designer.cs">
+      <DependentUpon>MapExtraForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TrainerClassEditor.cs">
       <SubType>Form</SubType>
@@ -114,8 +114,8 @@
     <EmbeddedResource Include="Forms\MapEditor.resx">
       <DependentUpon>MapEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MapSideForm.resx">
-      <DependentUpon>MapSideForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\MapExtraForm.resx">
+      <DependentUpon>MapExtraForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TrainerClassEditor.resx">
       <DependentUpon>TrainerClassEditor.cs</DependentUpon>
