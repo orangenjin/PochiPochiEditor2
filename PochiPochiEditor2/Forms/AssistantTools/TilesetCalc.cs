@@ -88,7 +88,8 @@ namespace PochiPochiEditor2.Forms.AssistantTools
         private void BtnToOffset_Click(object sender, EventArgs e)
         {
             int tilesetNo = (int)nudTilesetNo.Value;
-            int offset = _baseOffset + (tilesetNo * _entryLength);
+            int offset = CalcOffsetFromTilesetNo(tilesetNo);
+
             txtHeaderOffset.Text = offset.ParseIntToString();
 
             SetSuccess();
@@ -98,29 +99,20 @@ namespace PochiPochiEditor2.Forms.AssistantTools
         {
             try
             {
-                // 16進数文字列を数値に変換
                 int offset = txtHeaderOffset.Text.ParseStringToInt();
 
-                // ベースオフセット未満の場合は失敗として
-                if (offset < _baseOffset)
+                if (TryCalcTilesetNoFromOffset(offset, out int tilesetNo))
                 {
-                    SetFailure(Constants.DefaultIndex);
-                    return;
-                }
-
-                int diff = offset - _baseOffset;
-                int remainder = diff % _entryLength;
-                int exactNo = diff / _entryLength;
-
-                if (remainder == 0)
-                {
-                    // 完全一致
-                    nudTilesetNo.Value = exactNo;
+                    nudTilesetNo.Value = tilesetNo;
                     SetSuccess();
                 }
                 else
                 {
-                    int recNo = exactNo + 1;
+                    int diff = offset - _baseOffset;
+                    int recNo = diff < 0
+                        ? Constants.DefaultIndex
+                        : (diff / _entryLength) + 1;
+
                     SetFailure(recNo);
                 }
             }
@@ -150,6 +142,34 @@ namespace PochiPochiEditor2.Forms.AssistantTools
             nudRecNo.Value = recNo;
             int recOffset = _baseOffset + (recNo * _entryLength);
             txtRecOffset.Text = recOffset.ParseIntToString();
+        }
+
+        /// <summary>
+        /// タイルセット番号からヘッダーオフセットを計算する。
+        /// </summary>
+        private int CalcOffsetFromTilesetNo(int tilesetNo)
+        {
+            return _baseOffset + (tilesetNo * _entryLength);
+        }
+
+        /// <summary>
+        /// ヘッダーオフセットからタイルセット番号を計算する。
+        /// 完全一致しない場合は失敗する。
+        /// </summary>
+        private bool TryCalcTilesetNoFromOffset(int offset, out int tilesetNo)
+        {
+            tilesetNo = Constants.InvalidValue;
+
+            // ベースオフセットより小さい場合
+            if (offset < _baseOffset) return false;
+
+            int diff = offset - _baseOffset;
+
+            // 完全一致でない場合
+            if (diff % _entryLength != 0) return false;
+
+            tilesetNo = diff / _entryLength;
+            return true;
         }
     }
 }
