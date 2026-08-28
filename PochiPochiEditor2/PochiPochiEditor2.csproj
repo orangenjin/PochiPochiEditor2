@@ -55,12 +55,6 @@
     <Compile Include="Forms\MapEditor.Designer.cs">
       <DependentUpon>MapEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MapExtraForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MapExtraForm.Designer.cs">
-      <DependentUpon>MapExtraForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\TrainerClassEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,9 +107,6 @@
     <Compile Include="Utilities\SharedData.cs" />
     <EmbeddedResource Include="Forms\MapEditor.resx">
       <DependentUpon>MapEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MapExtraForm.resx">
-      <DependentUpon>MapExtraForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TrainerClassEditor.resx">
       <DependentUpon>TrainerClassEditor.cs</DependentUpon>
@@ -228,6 +219,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Forms\MapEditorExtra\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

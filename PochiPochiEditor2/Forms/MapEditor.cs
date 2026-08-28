@@ -33,6 +33,7 @@ namespace PochiPochiEditor2.Forms
         // 基準インデックスの計算を省略するため
         private int _mapNameFirstIndex = default;
         private Dictionary<int, string> _mapNameCache = new Dictionary<int, string>();
+
         // ノードからエントリーインデックスを取得するため
         public class MapTreeNode : TreeNode, IMapNode
         {
@@ -45,7 +46,6 @@ namespace PochiPochiEditor2.Forms
                 MapNumberIndex = number;
             }
         }
-
         public interface IMapNode
         {
             int MapBankIndex { get; }
@@ -110,7 +110,8 @@ namespace PochiPochiEditor2.Forms
             // InitializePipelines();
             InitializeEventHandlers();
 
-
+            // 初期選択
+            rbOrderByAsc.Checked = true;
         }
 
         private void InitializeMapNameEntry()
@@ -390,6 +391,81 @@ namespace PochiPochiEditor2.Forms
             tvwMapSelector.EndUpdate();
         }
 
+        private void LoadDataToUI(Entry entry)
+        {
+            if (entry.Fields[Constants.DefaultIndex].Offset != Constants.InvalidValue)
+            {
+                // まずコントロールを有効化
+                ChangeControlsState(true);
+
+                // マップヘッダー
+                txtMapFooterOffset.Text =
+                    entry[FieldKey.MapFooterOffset]
+                    .GetData<int>()
+                    .ParseIntToString();
+                txtEventScriptHeaderOffset.Text =
+                    entry[FieldKey.EventScriptHeaderOffset]
+                    .GetData<int>()
+                    .ParseIntToString();
+                txtLevelScriptOffset.Text =
+                    entry[FieldKey.LevelScriptOffset]
+                    .GetData<int>()
+                    .ParseIntToString();
+                txtConnHeaderOffset.Text =
+                    entry[FieldKey.ConnHeaderOffset]
+                    .GetData<int>()
+                    .ParseIntToString();
+                nudMapTerrainIndex.Value =
+                    entry[FieldKey.MapTerrainIndex]
+                    .GetData<int>();
+                cmbMapType.SelectedIndex =
+                    entry[FieldKey.MapType]
+                    .GetData<int>();
+                nudMapRelLayer.Value =
+                    entry[FieldKey.MapRelLayer]
+                    .GetData<int>();
+                cmbMapWthr.SelectedIndex =
+                    entry[FieldKey.MapWthr]
+                    .GetData<int>();
+                cmbMapSight.SelectedIndex =
+                    entry[FieldKey.MapSight]
+                    .GetData<int>();
+                cmbMapBike.SelectedIndex =
+                    entry[FieldKey.MapBike]
+                    .GetData<int>();
+                cmbMapSpBg.SelectedIndex =
+                    entry[FieldKey.MapSpBg]
+                    .GetData<int>();
+                cmbMapNameIndex.SelectedIndex =
+                    entry[FieldKey.MapNameIndex]
+                    .GetData<int>();
+                cmbMapNameType.SelectedIndex =
+                    entry[FieldKey.MapNameType]
+                    .GetData<int>();
+                nudBgmIndex.Value =
+                    entry[FieldKey.BgmIndex]
+                    .GetData<int>();
+
+            }
+
+
+        }
+
+        private void ChangeControlsState(bool value)
+        {
+            // 値はリセットされる
+            CtrlHelper.ResetControls(
+                grpMapHeader,
+                includeSelf: true);
+
+            CtrlHelper.SetControlsEnabled(
+                grpMapHeader,
+                enabled: value,
+                includeSelf: false);
+
+            // 他のクリアコントロールも追加
+        }
+
         private void InitializeEventHandlers()
         {
             // 枠描画
@@ -406,6 +482,11 @@ namespace PochiPochiEditor2.Forms
                 h => rbOrderByName.CheckedChanged += h,
                 h => rbOrderByName.CheckedChanged -= h,
                 OrderRadioButton_CheckedChanged);
+
+            // マップ選択
+            _eventBinder.BindCustom(
+                () => tvwMapSelector.AfterSelect += tvwMapSelector_AfterSelect,
+                () => tvwMapSelector.AfterSelect -= tvwMapSelector_AfterSelect);
         }
 
         private void OrderRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -415,6 +496,20 @@ namespace PochiPochiEditor2.Forms
             if (rb.Checked)
             {
                 UpdateMapSelector();
+                ChangeControlsState(false);
+            }
+        }
+
+        private void tvwMapSelector_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node is IMapNode mapNode)
+            {
+                var entry = _mapHeaderEntry[mapNode.MapBankIndex][mapNode.MapNumberIndex];
+                LoadDataToUI(entry);
+            }
+            else
+            {
+                ChangeControlsState(false);
             }
         }
     }

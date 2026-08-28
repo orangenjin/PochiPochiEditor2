@@ -459,13 +459,11 @@ namespace PochiPochiEditor2.Forms
             // rbOrderByAsc
             // 
             this.rbOrderByAsc.AutoSize = true;
-            this.rbOrderByAsc.Checked = true;
             this.rbOrderByAsc.Location = new System.Drawing.Point(22, 28);
             this.rbOrderByAsc.Margin = new System.Windows.Forms.Padding(0);
             this.rbOrderByAsc.Name = "rbOrderByAsc";
             this.rbOrderByAsc.Size = new System.Drawing.Size(61, 19);
             this.rbOrderByAsc.TabIndex = 1;
-            this.rbOrderByAsc.TabStop = true;
             this.rbOrderByAsc.Text = "番号順";
             this.rbOrderByAsc.UseVisualStyleBackColor = true;
             // 
