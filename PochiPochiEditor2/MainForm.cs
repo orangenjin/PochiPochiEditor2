@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
@@ -18,7 +20,7 @@ namespace PochiPochiEditor2
             SaveAs
         }
 
-        // ファイルパス
+        // パス
         private string _romPath = string.Empty;
         private string _iniFolder = Path.Combine(Application.StartupPath, "ini");
         private string _tblPath = Path.Combine(Application.StartupPath, "charmap.tbl");
@@ -122,6 +124,14 @@ namespace PochiPochiEditor2
                 h => lstHistory.Click += h,
                 h => lstHistory.Click -= h,
                 lstHistory_Click);
+
+            foreach (Button btn in grpAssistantTool.Controls)
+            {
+                _eventBinder.BindCtrl(
+                    h => btn.Click += h,
+                    h => btn.Click -= h,
+                    AssistantToolButton_Click);
+            }
 
             // 解除タイミング指定
             _eventBinder.BindCtrl(
@@ -320,6 +330,25 @@ namespace PochiPochiEditor2
 
             if (index < 0) return;
             _undoManager.MoveTo(index + 1);
+        }
+
+        private void AssistantToolButton_Click(object sender, EventArgs e)
+        {
+            if (!(sender is Button btn)) return;
+
+            // "btn" を外す
+            string toolName = btn.Name.Substring(Constants.ButtonPrefix.Length);
+
+            Type formType = Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .FirstOrDefault(t => t.Name == toolName);
+
+            if (formType != null)
+            {
+                var form = (Form)Activator.CreateInstance(formType, _sharedData);
+                form.Show(this);
+            }
         }
     }
 }

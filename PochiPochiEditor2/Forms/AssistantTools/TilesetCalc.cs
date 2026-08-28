@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
-using PochiPochiEditor2.Managers;
-using PochiPochiEditor2.Managers.Commands;
 using PochiPochiEditor2.Managers.Fields;
 using PochiPochiEditor2.Utilities;
-using PochiPochiEditor2.Utilities.Tokens;
 
 namespace PochiPochiEditor2.Forms.AssistantTools
 {
@@ -32,7 +25,7 @@ namespace PochiPochiEditor2.Forms.AssistantTools
             ImageCompType,
             PaletteType,
             TilesetHeaderUnk1,
-            ilesetHeaderUnk2,
+            TilesetHeaderUnk2,
             ImageOffset,
             PaletteOffset,
             BlockArg1Offset,
@@ -94,18 +87,11 @@ namespace PochiPochiEditor2.Forms.AssistantTools
 
         private void BtnToOffset_Click(object sender, EventArgs e)
         {
-            try
-            {
-                int tilesetNo = (int)nudTilesetNo.Value;
-                int offset = _baseOffset + (tilesetNo * _entryLength);
-                txtHeaderOffset.Text = offset.ParseIntToString();
+            int tilesetNo = (int)nudTilesetNo.Value;
+            int offset = _baseOffset + (tilesetNo * _entryLength);
+            txtHeaderOffset.Text = offset.ParseIntToString();
 
-                SetSuccess();
-            }
-            catch
-            {
-                SetFailure(Constants.DefaultIndex);
-            }
+            SetSuccess();
         }
 
         private void BtnToNo_Click(object sender, EventArgs e)
