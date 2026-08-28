@@ -176,6 +176,9 @@
     <Content Include="def\Map\MapNamePointerEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="def\Tileset\TilesetHeaderEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="def\Trainer\TrainerClassBaseIvEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

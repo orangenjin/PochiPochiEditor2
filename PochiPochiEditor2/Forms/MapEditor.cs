@@ -508,6 +508,11 @@ namespace PochiPochiEditor2.Forms
             _eventBinder.BindCustom(
                 () => tvwMapSelector.AfterSelect += tvwMapSelector_AfterSelect,
                 () => tvwMapSelector.AfterSelect -= tvwMapSelector_AfterSelect);
+
+            // 解除タイミング指定
+            _eventBinder.BindCtrl(
+                h => this.Disposed += h,
+                h => this.Disposed -= h);
         }
 
         private void OrderRadioButton_CheckedChanged(object sender, EventArgs e)
