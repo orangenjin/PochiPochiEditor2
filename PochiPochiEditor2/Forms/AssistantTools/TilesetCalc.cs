@@ -147,7 +147,7 @@ namespace PochiPochiEditor2.Forms.AssistantTools
         /// <summary>
         /// タイルセット番号からヘッダーオフセットを計算する。
         /// </summary>
-        private int CalcOffsetFromTilesetNo(int tilesetNo)
+        public int CalcOffsetFromTilesetNo(int tilesetNo)
         {
             return _baseOffset + (tilesetNo * _entryLength);
         }
@@ -156,7 +156,7 @@ namespace PochiPochiEditor2.Forms.AssistantTools
         /// ヘッダーオフセットからタイルセット番号を計算する。
         /// 完全一致しない場合は失敗する。
         /// </summary>
-        private bool TryCalcTilesetNoFromOffset(int offset, out int tilesetNo)
+        public bool TryCalcTilesetNoFromOffset(int offset, out int tilesetNo)
         {
             tilesetNo = Constants.InvalidValue;
 
