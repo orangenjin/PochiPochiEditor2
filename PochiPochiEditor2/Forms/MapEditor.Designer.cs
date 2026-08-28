@@ -63,12 +63,18 @@ namespace PochiPochiEditor2.Forms
             this.tbpMap = new System.Windows.Forms.TabPage();
             this.pnlMapDraw = new System.Windows.Forms.Panel();
             this.tbpOther = new System.Windows.Forms.TabPage();
+            this.grpMapSelector = new System.Windows.Forms.GroupBox();
+            this.lstMapSelector = new System.Windows.Forms.ListBox();
+            this.rbOrderByAsc = new System.Windows.Forms.RadioButton();
+            this.rbOrderByName = new System.Windows.Forms.RadioButton();
+            this.chkOrderByTerrain = new System.Windows.Forms.CheckBox();
             this.grpMapHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudBgmIndex)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapRelLayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapTerrainIndex)).BeginInit();
             this.tbcMain.SuspendLayout();
             this.tbpMap.SuspendLayout();
+            this.grpMapSelector.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpMapHeader
@@ -101,7 +107,7 @@ namespace PochiPochiEditor2.Forms
             this.grpMapHeader.Controls.Add(this.lblEventScriptHeaderOffset);
             this.grpMapHeader.Controls.Add(this.lblLevelScriptOffset);
             this.grpMapHeader.Controls.Add(this.lblMapFooterOffset);
-            this.grpMapHeader.Location = new System.Drawing.Point(20, 16);
+            this.grpMapHeader.Location = new System.Drawing.Point(20, 290);
             this.grpMapHeader.Margin = new System.Windows.Forms.Padding(0);
             this.grpMapHeader.Name = "grpMapHeader";
             this.grpMapHeader.Padding = new System.Windows.Forms.Padding(0);
@@ -403,7 +409,7 @@ namespace PochiPochiEditor2.Forms
             this.tbcMain.Margin = new System.Windows.Forms.Padding(0);
             this.tbcMain.Name = "tbcMain";
             this.tbcMain.SelectedIndex = 0;
-            this.tbcMain.Size = new System.Drawing.Size(737, 557);
+            this.tbcMain.Size = new System.Drawing.Size(737, 736);
             this.tbcMain.TabIndex = 1;
             // 
             // tbpMap
@@ -412,7 +418,7 @@ namespace PochiPochiEditor2.Forms
             this.tbpMap.Location = new System.Drawing.Point(4, 24);
             this.tbpMap.Margin = new System.Windows.Forms.Padding(0);
             this.tbpMap.Name = "tbpMap";
-            this.tbpMap.Size = new System.Drawing.Size(729, 529);
+            this.tbpMap.Size = new System.Drawing.Size(729, 708);
             this.tbpMap.TabIndex = 0;
             this.tbpMap.Text = "マップ";
             this.tbpMap.UseVisualStyleBackColor = true;
@@ -435,11 +441,73 @@ namespace PochiPochiEditor2.Forms
             this.tbpOther.Text = "その他";
             this.tbpOther.UseVisualStyleBackColor = true;
             // 
+            // grpMapSelector
+            // 
+            this.grpMapSelector.Controls.Add(this.chkOrderByTerrain);
+            this.grpMapSelector.Controls.Add(this.rbOrderByName);
+            this.grpMapSelector.Controls.Add(this.rbOrderByAsc);
+            this.grpMapSelector.Controls.Add(this.lstMapSelector);
+            this.grpMapSelector.Location = new System.Drawing.Point(20, 16);
+            this.grpMapSelector.Margin = new System.Windows.Forms.Padding(0);
+            this.grpMapSelector.Name = "grpMapSelector";
+            this.grpMapSelector.Padding = new System.Windows.Forms.Padding(0);
+            this.grpMapSelector.Size = new System.Drawing.Size(260, 262);
+            this.grpMapSelector.TabIndex = 2;
+            this.grpMapSelector.TabStop = false;
+            this.grpMapSelector.Text = "マップを選択";
+            // 
+            // lstMapSelector
+            // 
+            this.lstMapSelector.FormattingEnabled = true;
+            this.lstMapSelector.ItemHeight = 15;
+            this.lstMapSelector.Location = new System.Drawing.Point(20, 56);
+            this.lstMapSelector.Margin = new System.Windows.Forms.Padding(0);
+            this.lstMapSelector.Name = "lstMapSelector";
+            this.lstMapSelector.ScrollAlwaysVisible = true;
+            this.lstMapSelector.Size = new System.Drawing.Size(218, 184);
+            this.lstMapSelector.TabIndex = 0;
+            // 
+            // rbOrderByAsc
+            // 
+            this.rbOrderByAsc.AutoSize = true;
+            this.rbOrderByAsc.Location = new System.Drawing.Point(20, 28);
+            this.rbOrderByAsc.Margin = new System.Windows.Forms.Padding(0);
+            this.rbOrderByAsc.Name = "rbOrderByAsc";
+            this.rbOrderByAsc.Size = new System.Drawing.Size(61, 19);
+            this.rbOrderByAsc.TabIndex = 1;
+            this.rbOrderByAsc.TabStop = true;
+            this.rbOrderByAsc.Text = "番号順";
+            this.rbOrderByAsc.UseVisualStyleBackColor = true;
+            // 
+            // rbOrderByName
+            // 
+            this.rbOrderByName.AutoSize = true;
+            this.rbOrderByName.Location = new System.Drawing.Point(88, 28);
+            this.rbOrderByName.Margin = new System.Windows.Forms.Padding(0);
+            this.rbOrderByName.Name = "rbOrderByName";
+            this.rbOrderByName.Size = new System.Drawing.Size(63, 19);
+            this.rbOrderByName.TabIndex = 2;
+            this.rbOrderByName.TabStop = true;
+            this.rbOrderByName.Text = "マップ順";
+            this.rbOrderByName.UseVisualStyleBackColor = true;
+            // 
+            // chkOrderByTerrain
+            // 
+            this.chkOrderByTerrain.AutoSize = true;
+            this.chkOrderByTerrain.Location = new System.Drawing.Point(156, 28);
+            this.chkOrderByTerrain.Margin = new System.Windows.Forms.Padding(0);
+            this.chkOrderByTerrain.Name = "chkOrderByTerrain";
+            this.chkOrderByTerrain.Size = new System.Drawing.Size(87, 19);
+            this.chkOrderByTerrain.TabIndex = 3;
+            this.chkOrderByTerrain.Text = "マップ地形ID";
+            this.chkOrderByTerrain.UseVisualStyleBackColor = true;
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1158, 605);
+            this.ClientSize = new System.Drawing.Size(1158, 771);
+            this.Controls.Add(this.grpMapSelector);
             this.Controls.Add(this.tbcMain);
             this.Controls.Add(this.grpMapHeader);
             this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -447,7 +515,7 @@ namespace PochiPochiEditor2.Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MapEditor";
-            this.Text = "マップ";
+            this.Text = "マップ編集";
             this.grpMapHeader.ResumeLayout(false);
             this.grpMapHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudBgmIndex)).EndInit();
@@ -455,6 +523,8 @@ namespace PochiPochiEditor2.Forms
             ((System.ComponentModel.ISupportInitialize)(this.nudMapTerrainIndex)).EndInit();
             this.tbcMain.ResumeLayout(false);
             this.tbpMap.ResumeLayout(false);
+            this.grpMapSelector.ResumeLayout(false);
+            this.grpMapSelector.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -494,5 +564,10 @@ namespace PochiPochiEditor2.Forms
         private System.Windows.Forms.TabPage tbpMap;
         private System.Windows.Forms.TabPage tbpOther;
         private System.Windows.Forms.Panel pnlMapDraw;
+        private System.Windows.Forms.GroupBox grpMapSelector;
+        private System.Windows.Forms.CheckBox chkOrderByTerrain;
+        private System.Windows.Forms.RadioButton rbOrderByName;
+        private System.Windows.Forms.RadioButton rbOrderByAsc;
+        private System.Windows.Forms.ListBox lstMapSelector;
     }
 }

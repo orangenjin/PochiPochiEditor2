@@ -29,7 +29,7 @@ namespace PochiPochiEditor2.Forms
         // 各テーブル用
         private EntryManager _mapNameEntry = null;
         private List<Entry[]> _mapHeaderEntry = null;
-
+        // 再利用する変数を保持
         private int _mapNameFirstIndex = default;
 
         private enum FieldKey
