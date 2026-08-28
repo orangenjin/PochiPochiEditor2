@@ -29,6 +29,7 @@ namespace PochiPochiEditor2.Forms
         // 各テーブル用
         private EntryManager _mapNameEntry = null;
         private List<Entry[]> _mapHeaderEntry = null;
+        private Entry _mapFooterEntry = null;
 
         // 基準インデックスの計算を省略するため
         private int _mapNameFirstIndex = default;
@@ -72,7 +73,22 @@ namespace PochiPochiEditor2.Forms
             MapBike,
             MapNameType,
             MapRelLayer,
-            MapSpBg
+            MapSpBg,
+
+            MapWidth,
+            MapFooterUnk1,
+            MapFooterUnk2,
+            MapFooterUnk3,
+            MapHeight,
+            MapFooterUnk4,
+            MapFooterUnk5,
+            MapFooterUnk6,
+            MapDataOffset,
+            BorderDataOffset,
+            Tileset1HeaderOffset,
+            Tileset2HeaderOffset,
+            BorderWidth,
+            BorderHeight
         }
 
         private static class DefName
@@ -82,6 +98,8 @@ namespace PochiPochiEditor2.Forms
             public static string MapBankPointerEntry = nameof(MapBankPointerEntry);
             public static string MapNumberPointerEntry = nameof(MapNumberPointerEntry);
             public static string MapHeaderEntry = nameof(MapHeaderEntry);
+
+            public static string MapFooterEntry = nameof(MapFooterEntry);
         }
 
         private static class IniKey
@@ -397,9 +415,11 @@ namespace PochiPochiEditor2.Forms
                 ChangeControlsState(true);
 
                 // マップヘッダー
-                txtMapFooterOffset.Text =
+                var MapFooterOffset =
                     entry[FieldKey.MapFooterOffset]
-                    .GetData<int>()
+                    .GetData<int>();
+                txtMapFooterOffset.Text =
+                    MapFooterOffset
                     .ParseIntToString();
                 txtEventScriptHeaderOffset.Text =
                     entry[FieldKey.EventScriptHeaderOffset]
@@ -444,9 +464,12 @@ namespace PochiPochiEditor2.Forms
                     entry[FieldKey.BgmIndex]
                     .GetData<int>();
 
+                ReadMapFooter(MapFooterOffset);
             }
-
-
+            else
+            {
+                ChangeControlsState(false);
+            }
         }
 
         private void ChangeControlsState(bool value)
@@ -508,6 +531,31 @@ namespace PochiPochiEditor2.Forms
             else
             {
                 ChangeControlsState(false);
+            }
+        }
+
+        private void ReadMapFooter(int offset)
+        {
+            if (offset != Constants.InvalidValue)
+            {
+                // マップフッターの定義情報を読み込む
+                var mapFooterDef = new DefReader(DefName.MapFooterEntry);
+
+                var entryFields = new List<FieldValue>();
+                for (int i = 0; i < mapFooterDef.FieldDefs.Count; i++)
+                {
+                    // FieldValueを生成
+                    var fieldValue = new FieldValue(
+                        _sharedData,
+                        mapFooterDef.FieldDefs[i],
+                        typeof(FieldKey));
+
+                    entryFields.Add(fieldValue);
+                }
+                _mapFooterEntry = new Entry(
+                    offset,
+                    Constants.DefaultIndex,
+                    entryFields);
             }
         }
     }

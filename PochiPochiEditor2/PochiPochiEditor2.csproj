@@ -155,6 +155,9 @@
     <Content Include="def\Map\MapBankPointerEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="def\Map\MapFooterEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="def\Map\MapHeaderEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -70,7 +70,7 @@ namespace PochiPochiEditor2
             this.picPoke = new System.Windows.Forms.PictureBox();
             this.btnFreeSpaceFinder = new System.Windows.Forms.Button();
             this.grpAssistantTool = new System.Windows.Forms.GroupBox();
-            this.btnTool5 = new System.Windows.Forms.Button();
+            this.btnTilesetCalc = new System.Windows.Forms.Button();
             this.btnTool4 = new System.Windows.Forms.Button();
             this.btnTool3 = new System.Windows.Forms.Button();
             this.btnTool2 = new System.Windows.Forms.Button();
@@ -504,6 +504,7 @@ namespace PochiPochiEditor2
             // btnFreeSpaceFinder
             // 
             this.btnFreeSpaceFinder.Location = new System.Drawing.Point(20, 28);
+            this.btnFreeSpaceFinder.Margin = new System.Windows.Forms.Padding(0);
             this.btnFreeSpaceFinder.Name = "btnFreeSpaceFinder";
             this.btnFreeSpaceFinder.Size = new System.Drawing.Size(128, 23);
             this.btnFreeSpaceFinder.TabIndex = 5;
@@ -512,7 +513,7 @@ namespace PochiPochiEditor2
             // 
             // grpAssistantTool
             // 
-            this.grpAssistantTool.Controls.Add(this.btnTool5);
+            this.grpAssistantTool.Controls.Add(this.btnTilesetCalc);
             this.grpAssistantTool.Controls.Add(this.btnTool4);
             this.grpAssistantTool.Controls.Add(this.btnTool3);
             this.grpAssistantTool.Controls.Add(this.btnTool2);
@@ -527,18 +528,20 @@ namespace PochiPochiEditor2
             this.grpAssistantTool.TabStop = false;
             this.grpAssistantTool.Text = "補助ツール";
             // 
-            // btnTool5
+            // btnTilesetCalc
             // 
-            this.btnTool5.Location = new System.Drawing.Point(164, 88);
-            this.btnTool5.Name = "btnTool5";
-            this.btnTool5.Size = new System.Drawing.Size(128, 23);
-            this.btnTool5.TabIndex = 10;
-            this.btnTool5.Text = "ツール5";
-            this.btnTool5.UseVisualStyleBackColor = true;
+            this.btnTilesetCalc.Location = new System.Drawing.Point(164, 28);
+            this.btnTilesetCalc.Margin = new System.Windows.Forms.Padding(0);
+            this.btnTilesetCalc.Name = "btnTilesetCalc";
+            this.btnTilesetCalc.Size = new System.Drawing.Size(128, 23);
+            this.btnTilesetCalc.TabIndex = 10;
+            this.btnTilesetCalc.Text = "タイルセット番号計算";
+            this.btnTilesetCalc.UseVisualStyleBackColor = true;
             // 
             // btnTool4
             // 
-            this.btnTool4.Location = new System.Drawing.Point(20, 88);
+            this.btnTool4.Location = new System.Drawing.Point(164, 88);
+            this.btnTool4.Margin = new System.Windows.Forms.Padding(0);
             this.btnTool4.Name = "btnTool4";
             this.btnTool4.Size = new System.Drawing.Size(128, 23);
             this.btnTool4.TabIndex = 9;
@@ -547,7 +550,8 @@ namespace PochiPochiEditor2
             // 
             // btnTool3
             // 
-            this.btnTool3.Location = new System.Drawing.Point(164, 58);
+            this.btnTool3.Location = new System.Drawing.Point(20, 88);
+            this.btnTool3.Margin = new System.Windows.Forms.Padding(0);
             this.btnTool3.Name = "btnTool3";
             this.btnTool3.Size = new System.Drawing.Size(128, 23);
             this.btnTool3.TabIndex = 8;
@@ -556,7 +560,8 @@ namespace PochiPochiEditor2
             // 
             // btnTool2
             // 
-            this.btnTool2.Location = new System.Drawing.Point(20, 58);
+            this.btnTool2.Location = new System.Drawing.Point(164, 58);
+            this.btnTool2.Margin = new System.Windows.Forms.Padding(0);
             this.btnTool2.Name = "btnTool2";
             this.btnTool2.Size = new System.Drawing.Size(128, 23);
             this.btnTool2.TabIndex = 7;
@@ -565,7 +570,8 @@ namespace PochiPochiEditor2
             // 
             // btnTool1
             // 
-            this.btnTool1.Location = new System.Drawing.Point(164, 28);
+            this.btnTool1.Location = new System.Drawing.Point(20, 58);
+            this.btnTool1.Margin = new System.Windows.Forms.Padding(0);
             this.btnTool1.Name = "btnTool1";
             this.btnTool1.Size = new System.Drawing.Size(128, 23);
             this.btnTool1.TabIndex = 6;
@@ -642,7 +648,7 @@ namespace PochiPochiEditor2
         private System.Windows.Forms.Button btnEditor1;
         private System.Windows.Forms.Button btnFreeSpaceFinder;
         private System.Windows.Forms.GroupBox grpAssistantTool;
-        private System.Windows.Forms.Button btnTool5;
+        private System.Windows.Forms.Button btnTilesetCalc;
         private System.Windows.Forms.Button btnTool4;
         private System.Windows.Forms.Button btnTool3;
         private System.Windows.Forms.Button btnTool2;
