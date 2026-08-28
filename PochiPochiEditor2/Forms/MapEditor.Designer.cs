@@ -107,11 +107,11 @@ namespace PochiPochiEditor2.Forms
             this.grpMapHeader.Controls.Add(this.lblEventScriptHeaderOffset);
             this.grpMapHeader.Controls.Add(this.lblLevelScriptOffset);
             this.grpMapHeader.Controls.Add(this.lblMapFooterOffset);
-            this.grpMapHeader.Location = new System.Drawing.Point(20, 290);
+            this.grpMapHeader.Location = new System.Drawing.Point(24, 290);
             this.grpMapHeader.Margin = new System.Windows.Forms.Padding(0);
             this.grpMapHeader.Name = "grpMapHeader";
             this.grpMapHeader.Padding = new System.Windows.Forms.Padding(0);
-            this.grpMapHeader.Size = new System.Drawing.Size(332, 462);
+            this.grpMapHeader.Size = new System.Drawing.Size(330, 462);
             this.grpMapHeader.TabIndex = 0;
             this.grpMapHeader.TabStop = false;
             this.grpMapHeader.Text = "マップヘッダー";
@@ -447,11 +447,11 @@ namespace PochiPochiEditor2.Forms
             this.grpMapSelector.Controls.Add(this.chkOrderByTerrain);
             this.grpMapSelector.Controls.Add(this.rbOrderByName);
             this.grpMapSelector.Controls.Add(this.rbOrderByAsc);
-            this.grpMapSelector.Location = new System.Drawing.Point(20, 16);
+            this.grpMapSelector.Location = new System.Drawing.Point(24, 16);
             this.grpMapSelector.Margin = new System.Windows.Forms.Padding(0);
             this.grpMapSelector.Name = "grpMapSelector";
             this.grpMapSelector.Padding = new System.Windows.Forms.Padding(0);
-            this.grpMapSelector.Size = new System.Drawing.Size(260, 262);
+            this.grpMapSelector.Size = new System.Drawing.Size(330, 262);
             this.grpMapSelector.TabIndex = 2;
             this.grpMapSelector.TabStop = false;
             this.grpMapSelector.Text = "マップを選択";
@@ -460,7 +460,7 @@ namespace PochiPochiEditor2.Forms
             // 
             this.rbOrderByAsc.AutoSize = true;
             this.rbOrderByAsc.Checked = true;
-            this.rbOrderByAsc.Location = new System.Drawing.Point(20, 28);
+            this.rbOrderByAsc.Location = new System.Drawing.Point(22, 28);
             this.rbOrderByAsc.Margin = new System.Windows.Forms.Padding(0);
             this.rbOrderByAsc.Name = "rbOrderByAsc";
             this.rbOrderByAsc.Size = new System.Drawing.Size(61, 19);
@@ -472,7 +472,7 @@ namespace PochiPochiEditor2.Forms
             // rbOrderByName
             // 
             this.rbOrderByName.AutoSize = true;
-            this.rbOrderByName.Location = new System.Drawing.Point(88, 28);
+            this.rbOrderByName.Location = new System.Drawing.Point(90, 28);
             this.rbOrderByName.Margin = new System.Windows.Forms.Padding(0);
             this.rbOrderByName.Name = "rbOrderByName";
             this.rbOrderByName.Size = new System.Drawing.Size(63, 19);
@@ -483,7 +483,7 @@ namespace PochiPochiEditor2.Forms
             // chkOrderByTerrain
             // 
             this.chkOrderByTerrain.AutoSize = true;
-            this.chkOrderByTerrain.Location = new System.Drawing.Point(156, 28);
+            this.chkOrderByTerrain.Location = new System.Drawing.Point(158, 28);
             this.chkOrderByTerrain.Margin = new System.Windows.Forms.Padding(0);
             this.chkOrderByTerrain.Name = "chkOrderByTerrain";
             this.chkOrderByTerrain.Size = new System.Drawing.Size(87, 19);
@@ -493,17 +493,17 @@ namespace PochiPochiEditor2.Forms
             // 
             // tvwMapSelector
             // 
-            this.tvwMapSelector.Location = new System.Drawing.Point(20, 56);
+            this.tvwMapSelector.Location = new System.Drawing.Point(22, 56);
             this.tvwMapSelector.Margin = new System.Windows.Forms.Padding(0);
             this.tvwMapSelector.Name = "tvwMapSelector";
-            this.tvwMapSelector.Size = new System.Drawing.Size(218, 186);
+            this.tvwMapSelector.Size = new System.Drawing.Size(284, 186);
             this.tvwMapSelector.TabIndex = 4;
             // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1158, 771);
+            this.ClientSize = new System.Drawing.Size(1158, 773);
             this.Controls.Add(this.grpMapSelector);
             this.Controls.Add(this.tbcMain);
             this.Controls.Add(this.grpMapHeader);

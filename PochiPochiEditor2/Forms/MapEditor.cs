@@ -29,9 +29,28 @@ namespace PochiPochiEditor2.Forms
         // 各テーブル用
         private EntryManager _mapNameEntry = null;
         private List<Entry[]> _mapHeaderEntry = null;
-        // 再利用する変数を保持
+
+        // 基準インデックスの計算を省略するため
         private int _mapNameFirstIndex = default;
         private Dictionary<int, string> _mapNameCache = new Dictionary<int, string>();
+        // ノードからエントリーインデックスを取得するため
+        public class MapTreeNode : TreeNode, IMapNode
+        {
+            public int MapBankIndex { get; }
+            public int MapNumberIndex { get; }
+
+            public MapTreeNode(string text, int bank, int number) : base(text)
+            {
+                MapBankIndex = bank;
+                MapNumberIndex = number;
+            }
+        }
+
+        public interface IMapNode
+        {
+            int MapBankIndex { get; }
+            int MapNumberIndex { get; }
+        }
 
         private enum FieldKey
         {
@@ -83,15 +102,13 @@ namespace PochiPochiEditor2.Forms
             InitializeMapNameEntry(); // 先に処理
             InitializeControls();
             InitializeMapHeaderEntry();
+            // InitializeOtherEntries();
 
             UpdateMapNameComboBox();
             UpdateMapSelector();
 
-
-            // InitializeOtherEntries();
-
             // InitializePipelines();
-            // InitializeEventHandlers();
+            InitializeEventHandlers();
 
 
         }
@@ -333,7 +350,7 @@ namespace PochiPochiEditor2.Forms
                         int nameIndex = _mapHeaderEntry[i][j][FieldKey.MapNameIndex].GetData<int>();
                         string mapName = _mapNameCache[nameIndex];
 
-                        var mapNode = new TreeNode($"({i}, {j}) {mapName}");
+                        var mapNode = new MapTreeNode($"({i}, {j}) {mapName}", i, j);
                         bankNode.Nodes.Add(mapNode);
                     }
                     tvwMapSelector.Nodes.Add(bankNode);
@@ -358,7 +375,7 @@ namespace PochiPochiEditor2.Forms
                         }
 
                         string mapName = _mapNameCache[nameIndex];
-                        var mapNode = new TreeNode($"({i}, {j}) {mapName}");
+                        var mapNode = new MapTreeNode($"({i}, {j}) {mapName}", i, j);
                         nameGroupNodes[nameIndex].Nodes.Add(mapNode);
                     }
                 }
@@ -371,6 +388,34 @@ namespace PochiPochiEditor2.Forms
             }
 
             tvwMapSelector.EndUpdate();
+        }
+
+        private void InitializeEventHandlers()
+        {
+            // 枠描画
+            _eventBinder.BindCustom(
+                () => CtrlHelper.AttachBorder(tbpMapView, pnlMapDraw),
+                () => CtrlHelper.DetachBorder(tbpMapView));
+
+            // マップ選択のラジオボタン
+            _eventBinder.BindCtrl(
+                h => rbOrderByAsc.CheckedChanged += h,
+                h => rbOrderByAsc.CheckedChanged -= h,
+                OrderRadioButton_CheckedChanged);
+            _eventBinder.BindCtrl(
+                h => rbOrderByName.CheckedChanged += h,
+                h => rbOrderByName.CheckedChanged -= h,
+                OrderRadioButton_CheckedChanged);
+        }
+
+        private void OrderRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!(sender is RadioButton rb)) return;
+
+            if (rb.Checked)
+            {
+                UpdateMapSelector();
+            }
         }
     }
 }
