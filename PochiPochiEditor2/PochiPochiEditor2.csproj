@@ -49,6 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\AssistantTools\TilesetCalc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AssistantTools\TilesetCalc.Designer.cs">
+      <DependentUpon>TilesetCalc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MapEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -105,6 +111,9 @@
     <Compile Include="Utilities\EventBinder.cs" />
     <Compile Include="Managers\Fields\FieldExtensions.cs" />
     <Compile Include="Utilities\SharedData.cs" />
+    <EmbeddedResource Include="Forms\AssistantTools\TilesetCalc.resx">
+      <DependentUpon>TilesetCalc.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MapEditor.resx">
       <DependentUpon>MapEditor.cs</DependentUpon>
     </EmbeddedResource>
