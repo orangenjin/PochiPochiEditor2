@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
@@ -45,7 +43,7 @@ namespace PochiPochiEditor2.Forms.AssistantTools
         private void BtnToOffset_Click(object sender, EventArgs e)
         {
             int tilesetNo = (int)nudTilesetNo.Value;
-            int offset = CalcOffsetFromTilesetNo(tilesetNo);
+            int offset = _tilesetManager.CalcOffset(tilesetNo);
 
             txtHeaderOffset.Text = offset.ParseIntToString();
 
@@ -54,28 +52,25 @@ namespace PochiPochiEditor2.Forms.AssistantTools
 
         private void BtnToNo_Click(object sender, EventArgs e)
         {
-            try
-            {
-                int offset = txtHeaderOffset.Text.ParseStringToInt();
+            int offset = txtHeaderOffset.Text.ParseStringToInt();
 
-                if (TryCalcTilesetNoFromOffset(offset, out int tilesetNo))
-                {
-                    nudTilesetNo.Value = tilesetNo;
-                    SetSuccess();
-                }
-                else
-                {
-                    int diff = offset - _tilesetManager.BaseOffset;
-                    int recNo = diff < 0
-                        ? Constants.DefaultIndex
-                        : (diff / _tilesetManager.EntryLength) + 1;
-
-                    SetFailure(recNo);
-                }
-            }
-            catch
+            // 空白、16進数出ない場合
+            if (offset == Constants.InvalidValue)
             {
                 SetFailure(Constants.DefaultIndex);
+                return;
+            }
+
+            if (_tilesetManager.TryCalcTilesetNo(offset, out int tilesetNo))
+            {
+                nudTilesetNo.Value = tilesetNo;
+                SetSuccess();
+            }
+            else
+            {
+                // 近い番号を計算
+                int recNo = _tilesetManager.CalcNearestTilesetNo(offset);
+                SetFailure(recNo);
             }
         }
 
@@ -97,36 +92,7 @@ namespace PochiPochiEditor2.Forms.AssistantTools
 
             // 推奨番号とオフセットの表示
             nudRecNo.Value = recNo;
-            int recOffset = _tilesetManager.BaseOffset + (recNo * _tilesetManager.EntryLength);
-            txtRecOffset.Text = recOffset.ParseIntToString();
-        }
-
-        /// <summary>
-        /// タイルセット番号からヘッダーオフセットを計算する。
-        /// </summary>
-        public int CalcOffsetFromTilesetNo(int tilesetNo)
-        {
-            return _tilesetManager.BaseOffset + (tilesetNo * _tilesetManager.EntryLength);
-        }
-
-        /// <summary>
-        /// ヘッダーオフセットからタイルセット番号を計算する。
-        /// 完全一致しない場合は失敗する。
-        /// </summary>
-        public bool TryCalcTilesetNoFromOffset(int offset, out int tilesetNo)
-        {
-            tilesetNo = Constants.InvalidValue;
-
-            // ベースオフセットより小さい場合
-            if (offset < _tilesetManager.BaseOffset) return false;
-
-            int diff = offset - _tilesetManager.BaseOffset;
-
-            // 完全一致でない場合
-            if (diff % _tilesetManager.EntryLength != 0) return false;
-
-            tilesetNo = diff / _tilesetManager.EntryLength;
-            return true;
+            txtRecOffset.Text = _tilesetManager.CalcOffset(recNo).ParseIntToString();
         }
     }
 }

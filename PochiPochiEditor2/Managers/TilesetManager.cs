@@ -61,5 +61,41 @@ namespace PochiPochiEditor2.Managers
             }
             EntryLength = entryFields.Sum(f => f.EntryLength);
         }
+
+        /// <summary>
+        /// タイルセット番号からヘッダーオフセットを計算する。
+        /// </summary>
+        public int CalcOffset(int tilesetNo)
+        {
+            return BaseOffset + (tilesetNo * EntryLength);
+        }
+
+        /// <summary>
+        /// ヘッダーオフセットからタイルセット番号を計算する。
+        /// 完全一致しない場合は失敗する。
+        /// </summary>
+        public bool TryCalcTilesetNo(int offset, out int tilesetNo)
+        {
+            tilesetNo = Constants.InvalidValue;
+
+            if (offset < BaseOffset) return false;
+
+            int diff = offset - BaseOffset;
+            if (diff % EntryLength != 0) return false;
+
+            tilesetNo = diff / EntryLength;
+            return true;
+        }
+
+        /// <summary>
+        /// 指定されたオフセットに近いタイルセット番号を取得する。
+        /// </summary>
+        public int CalcNearestTilesetNo(int offset)
+        {
+            int diff = offset - BaseOffset;
+            if (diff < 0) return Constants.DefaultIndex;
+
+            return (diff / EntryLength) + 1;
+        }
     }
 }
