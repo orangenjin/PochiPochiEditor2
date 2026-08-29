@@ -130,13 +130,16 @@ namespace PochiPochiEditor2.Managers.Tilesets
             }
 
             // 画像読み込み
-            LoadImage(entry);
+            Image = LoadImage(entry);
 
-            return default;
+            return this;
         }
 
-        private void LoadImage(Entry entry)
+        private byte[] LoadImage(Entry entry)
         {
+            // 戻り値用
+            byte[] imageData = null;
+
             var imagePointerOffset = entry[FieldKey.ImageOffset].GetData<int>();
             if (IoHelper.TryReadPtr(_sharedData.RomData, imagePointerOffset, out int imageOffset))
             {
@@ -146,23 +149,21 @@ namespace PochiPochiEditor2.Managers.Tilesets
                 // 圧縮形式に応じて格納
                 if (IsCompress)
                 {
-                    Image = ImageHelper.DecompressLZ77(_sharedData.RomData, imageOffset);
+                    imageData = ImageHelper.DecompressLZ77(_sharedData.RomData, imageOffset);
                 }
                 else
                 {
-                    int maxheight;
-                    if (PaletteType == PaletteKind.Pal0to6)
-                    {
-                        maxheight = Tileset1ImageHeight;
-                    }
-                    else
-                    {
-                        maxheight = Tileset2ImageMaxHeight;
-                    }
+                    int maxheight = (PaletteType == PaletteKind.Pal0to6)
+                        ? Tileset1ImageHeight
+                        : Tileset2ImageMaxHeight;
+
                     var maxSize = (TilesetImageWidth * maxheight) / Constants.PixelsPerByte4Bpp;
-                    Array.Copy(_sharedData.RomData, imageOffset, Image, Constants.DefaultIndex, maxSize);
-                };
+                    imageData = new byte[maxSize];
+                    Array.Copy(_sharedData.RomData, imageOffset, imageData, Constants.DefaultIndex, maxSize);
+                }
             }
+
+            return imageData;
         }
 
 
