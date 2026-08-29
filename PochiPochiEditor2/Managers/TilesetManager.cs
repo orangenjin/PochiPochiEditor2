@@ -16,8 +16,8 @@ namespace PochiPochiEditor2.Managers
         private SharedData _sharedData = null;
 
         // タイルセット番号管理するため
-        public int BaseOffset { get; set; }
-        public int EntryLength { get; set; }
+        public int _baseOffset;
+        public int _entryLength;
 
         private enum FieldKey
         {
@@ -45,7 +45,7 @@ namespace PochiPochiEditor2.Managers
         public TilesetManager(SharedData sharedData)
         {
             _sharedData = sharedData;
-            BaseOffset = _sharedData.Config.ReadInt(IniKey.TilesetHeaderBaseOffset);
+            _baseOffset = _sharedData.Config.ReadInt(IniKey.TilesetHeaderBaseOffset);
 
             // エントリーサイズを求める
             var tilesetHeaderDef = new DefReader(DefName.TilesetHeaderEntry);
@@ -60,7 +60,7 @@ namespace PochiPochiEditor2.Managers
 
                 entryFields.Add(fieldValue);
             }
-            EntryLength = entryFields.Sum(f => f.EntryLength);
+            _entryLength = entryFields.Sum(f => f.EntryLength);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace PochiPochiEditor2.Managers
         /// </summary>
         public int CalcOffset(int tilesetNo)
         {
-            return BaseOffset + (tilesetNo * EntryLength);
+            return _baseOffset + (tilesetNo * _entryLength);
         }
 
         /// <summary>
@@ -79,12 +79,12 @@ namespace PochiPochiEditor2.Managers
         {
             tilesetNo = Constants.InvalidValue;
 
-            if (offset < BaseOffset) return false;
+            if (offset < _baseOffset) return false;
 
-            int diff = offset - BaseOffset;
-            if (diff % EntryLength != 0) return false;
+            int diff = offset - _baseOffset;
+            if (diff % _entryLength != 0) return false;
 
-            tilesetNo = diff / EntryLength;
+            tilesetNo = diff / _entryLength;
             return true;
         }
 
@@ -93,10 +93,10 @@ namespace PochiPochiEditor2.Managers
         /// </summary>
         public int CalcNearestTilesetNo(int offset)
         {
-            int diff = offset - BaseOffset;
+            int diff = offset - _baseOffset;
             if (diff < 0) return Constants.DefaultIndex;
 
-            return (diff / EntryLength) + 1;
+            return (diff / _entryLength) + 1;
         }
     }
 }
