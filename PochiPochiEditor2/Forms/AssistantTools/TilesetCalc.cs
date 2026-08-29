@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
-using PochiPochiEditor2.Managers.Fields;
+using PochiPochiEditor2.Managers;
 using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Forms.AssistantTools
@@ -14,57 +14,14 @@ namespace PochiPochiEditor2.Forms.AssistantTools
     {
         // イベント登録・解除用
         private EventBinder _eventBinder = new EventBinder();
-        // 共有データ用
-        private SharedData _sharedData = null;
-
-        private int _baseOffset = default;
-        private int _entryLength = default;
-
-        private enum FieldKey
-        {
-            ImageCompType,
-            PaletteType,
-            TilesetHeaderUnk1,
-            TilesetHeaderUnk2,
-            ImageOffset,
-            PaletteOffset,
-            BlockArg1Offset,
-            AnimDataOffset,
-            BlockArg2Offset
-        }
-
-        private static class DefName
-        {
-            public static string TilesetHeaderEntry = nameof(TilesetHeaderEntry);
-        }
-
-        private static class IniKey
-        {
-            public static string TilesetHeaderBaseOffset = nameof(TilesetHeaderBaseOffset);
-        }
+        // イベント登録・解除用
+        private TilesetManager _tilesetManager = null;
 
         public TilesetCalc(SharedData sharedData)
         {
             InitializeComponent();
-            _sharedData = sharedData;
 
-            _baseOffset = _sharedData.Config.ReadInt(IniKey.TilesetHeaderBaseOffset);
-
-            // エントリーサイズを求める
-            var tilesetHeaderDef = new DefReader(DefName.TilesetHeaderEntry);
-            var entryFields = new List<FieldValue>();
-            for (int i = 0; i < tilesetHeaderDef.FieldDefs.Count; i++)
-            {
-                // FieldValueを生成
-                var fieldValue = new FieldValue(
-                    _sharedData,
-                    tilesetHeaderDef.FieldDefs[i],
-                    typeof(FieldKey));
-
-                entryFields.Add(fieldValue);
-            }
-            _entryLength = entryFields.Sum(f => f.EntryLength);
-
+            _tilesetManager = new TilesetManager(sharedData);
             InitializeEventHandlers();
         }
 
@@ -108,10 +65,10 @@ namespace PochiPochiEditor2.Forms.AssistantTools
                 }
                 else
                 {
-                    int diff = offset - _baseOffset;
+                    int diff = offset - _tilesetManager.BaseOffset;
                     int recNo = diff < 0
                         ? Constants.DefaultIndex
-                        : (diff / _entryLength) + 1;
+                        : (diff / _tilesetManager.EntryLength) + 1;
 
                     SetFailure(recNo);
                 }
@@ -140,7 +97,7 @@ namespace PochiPochiEditor2.Forms.AssistantTools
 
             // 推奨番号とオフセットの表示
             nudRecNo.Value = recNo;
-            int recOffset = _baseOffset + (recNo * _entryLength);
+            int recOffset = _tilesetManager.BaseOffset + (recNo * _tilesetManager.EntryLength);
             txtRecOffset.Text = recOffset.ParseIntToString();
         }
 
@@ -149,7 +106,7 @@ namespace PochiPochiEditor2.Forms.AssistantTools
         /// </summary>
         public int CalcOffsetFromTilesetNo(int tilesetNo)
         {
-            return _baseOffset + (tilesetNo * _entryLength);
+            return _tilesetManager.BaseOffset + (tilesetNo * _tilesetManager.EntryLength);
         }
 
         /// <summary>
@@ -161,14 +118,14 @@ namespace PochiPochiEditor2.Forms.AssistantTools
             tilesetNo = Constants.InvalidValue;
 
             // ベースオフセットより小さい場合
-            if (offset < _baseOffset) return false;
+            if (offset < _tilesetManager.BaseOffset) return false;
 
-            int diff = offset - _baseOffset;
+            int diff = offset - _tilesetManager.BaseOffset;
 
             // 完全一致でない場合
-            if (diff % _entryLength != 0) return false;
+            if (diff % _tilesetManager.EntryLength != 0) return false;
 
-            tilesetNo = diff / _entryLength;
+            tilesetNo = diff / _tilesetManager.EntryLength;
             return true;
         }
     }
