@@ -125,7 +125,8 @@ namespace PochiPochiEditor2.Managers.Tilesets
             {
                 var blockDataTableOffset = entry[FieldKey.BlockDataTableOffset].GetData<int>();
                 var blockAttrTableOffset = entry[FieldKey.BlockAttrTableOffset].GetData<int>();
-                BlockCount = (blockAttrTableOffset - blockDataTableOffset) / _blockFields.Sum(f => f.EntryLength);
+                var expectedCount = (blockAttrTableOffset - blockDataTableOffset) / _blockFields.Sum(f => f.EntryLength);
+                BlockCount = Math.Min(expectedCount, Tileset2BlockMaxAmount);
             }
 
             // 画像読み込み
