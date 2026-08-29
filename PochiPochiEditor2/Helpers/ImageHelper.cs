@@ -92,7 +92,7 @@ namespace PochiPochiEditor2.Helpers
         {
             // マージ用の入れ物
             int length = data.Length;
-            var result = new List<byte>(length / Constants.PixelsPerByte4Bpp);
+            var result = new List<byte>(length);
 
             // ヘッダの書き込み
             // 先頭に識別子(LZ77HeaderIdentifier)
@@ -300,7 +300,7 @@ namespace PochiPochiEditor2.Helpers
 
                             // Bitmapの書き込み位置を計算
                             int byteIndex = (yTile + yPixel) * bmpData.Stride + ((xTile + xPixel) / Constants.PixelsPerByte4Bpp);
-                            pixels[byteIndex] = (byte)((leftIndex << Constants.Bpp4) | rightIndex);
+                            pixels[byteIndex] = (byte)((leftIndex << Constants.NibbleShift) | rightIndex);
                         }
                     }
                 }
