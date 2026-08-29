@@ -14,7 +14,6 @@ namespace PochiPochiEditor2.Managers
     {
         // 共有データ用
         private SharedData _sharedData = null;
-
         // タイルセット番号管理するため
         public int _baseOffset;
         public int _entryLength;

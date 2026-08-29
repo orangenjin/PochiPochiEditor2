@@ -217,12 +217,12 @@ namespace PochiPochiEditor2.Helpers
         /// パレットデータを書き込み用に変換する。（圧縮指定可能）
         /// </summary>
         public static byte[] CompressPalette(
-            byte[] rawPaletteData, 
+            byte[] data, 
             bool isCompressed = true)
         {
             return isCompressed 
-                ? CompressLZ77(rawPaletteData) 
-                : rawPaletteData;
+                ? CompressLZ77(data) 
+                : data;
         }
 
         /// <summary>
