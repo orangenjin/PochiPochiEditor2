@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 using PochiPochiEditor2.Helpers;
 using PochiPochiEditor2.Managers.Fields;
+using PochiPochiEditor2.Managers.Tilesets;
 using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Managers
@@ -14,27 +15,11 @@ namespace PochiPochiEditor2.Managers
     {
         // 共有データ用
         private SharedData _sharedData = null;
+        // タイルセットデータのコンテナ
+        private TilesetData _tilesetData = null;
         // タイルセット番号管理するため
-        public int _baseOffset;
-        public int _entryLength;
-
-        private enum FieldKey
-        {
-            ImageCompType,
-            PaletteType,
-            TilesetHeaderUnk1,
-            TilesetHeaderUnk2,
-            ImageOffset,
-            PaletteOffset,
-            BlockArg1Offset,
-            AnimDataOffset,
-            BlockArg2Offset
-        }
-
-        private static class DefName
-        {
-            public static string TilesetHeaderEntry = nameof(TilesetHeaderEntry);
-        }
+        private int _baseOffset = default;
+        private int _entryLength = default;
 
         private static class IniKey
         {
@@ -44,23 +29,39 @@ namespace PochiPochiEditor2.Managers
         public TilesetManager(SharedData sharedData)
         {
             _sharedData = sharedData;
+            _tilesetData = new TilesetData(_sharedData);
             _baseOffset = _sharedData.Config.ReadInt(IniKey.TilesetHeaderBaseOffset);
+            _entryLength = _tilesetData.GetEntryLength();
 
-            // エントリーサイズを求める
-            var tilesetHeaderDef = new DefReader(DefName.TilesetHeaderEntry);
-            var entryFields = new List<FieldValue>();
-            for (int i = 0; i < tilesetHeaderDef.FieldDefs.Count; i++)
-            {
-                // FieldValueを生成
-                var fieldValue = new FieldValue(
-                    _sharedData,
-                    tilesetHeaderDef.FieldDefs[i],
-                    typeof(FieldKey));
 
-                entryFields.Add(fieldValue);
-            }
-            _entryLength = entryFields.Sum(f => f.EntryLength);
+
         }
+
+        public void ReadHeader(int tilesetNo)
+        {
+            // 初期化
+            _tilesetData.Clear();
+            // 読み込み
+            _tilesetData.Create(CalcOffset(tilesetNo));
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// タイルセット番号からヘッダーオフセットを計算する。

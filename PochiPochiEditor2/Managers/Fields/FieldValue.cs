@@ -150,7 +150,7 @@ namespace PochiPochiEditor2.Managers.Fields
         }
 
         /// <summary>
-        /// コマンドを生成する。複数コマンド統合用。
+        /// コマンドを生成する。
         /// </summary>
         public ICommand CreateUpdateCommand<T>(
             T data,
