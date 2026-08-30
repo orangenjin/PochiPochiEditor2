@@ -45,8 +45,9 @@ namespace PochiPochiEditor2.Managers.Tilesets
         private const int TilesetImageWidth = 128;
         private const int Tileset1ImageHeight = 320;
         private const int Tileset2ImageMaxHeight = 192;
-        private const int Tileset1BlockAmount = Tileset1ImageHeight / Constants.PixelsPerByte4Bpp;
-        private const int Tileset2BlockMaxAmount = Tileset2ImageMaxHeight / Constants.PixelsPerByte4Bpp;
+        private const int Tileset1BlockAmount = Tileset1ImageHeight * Constants.PixelsPerByte4Bpp;
+        private const int Tileset2BlockMaxAmount = Tileset2ImageMaxHeight * Constants.PixelsPerByte4Bpp;
+        private const int PaletteCount = 16;
 
 
 
@@ -63,7 +64,21 @@ namespace PochiPochiEditor2.Managers.Tilesets
             PaletteOffset,
             BlockDataTableOffset,
             AnimHeaderOffset,
-            BlockAttrTableOffset
+            BlockAttrTableOffset,
+
+            LowerTopLeft,
+            LowerTopRight,
+            LowerBottomLeft,
+            LowerBottomRight,
+            UpperTopLeft,
+            UpperTopRight,
+            UpperBottomLeft,
+            UpperBottomRight,
+
+            ActionAttr,
+            TypeAttr,
+            UnkAttr,
+            LayerAttr
         }
 
         private static class DefName
@@ -84,19 +99,18 @@ namespace PochiPochiEditor2.Managers.Tilesets
             _sharedData = shareData;
 
             // ヘッダー定義を読み込み
-            GenerateContainer(_headerFields, new DefReader(DefName.TilesetHeaderEntry));
-            // ブロック定義を読み込み;
-            GenerateContainer(_blockFields, new DefReader(DefName.BlockDataEntry));
+            _headerFields = GenerateContainer(new DefReader(DefName.TilesetHeaderEntry));
+            // ブロック定義を読み込み
+            _blockFields = GenerateContainer(new DefReader(DefName.BlockDataEntry));
             // 属性定義を読み込み
-            GenerateContainer(_attrFields, new DefReader(DefName.AttrDataEntry));
+            _attrFields = GenerateContainer(new DefReader(DefName.AttrDataEntry));
 
             // ヘルパーメソッド
-            void GenerateContainer(List<FieldValue> fields, DefReader def)
+            List<FieldValue> GenerateContainer(DefReader def)
             {
-                fields = new List<FieldValue>();
+                var fields = new List<FieldValue>();
                 for (int i = 0; i < def.FieldDefs.Count; i++)
                 {
-                    // FieldValueを生成
                     var fieldValue = new FieldValue(
                         _sharedData,
                         def.FieldDefs[i],
@@ -104,9 +118,13 @@ namespace PochiPochiEditor2.Managers.Tilesets
 
                     fields.Add(fieldValue);
                 }
+                return fields;
             }
         }
 
+        /// <summary>
+        /// タイルセットデータを直で返す。
+        /// </summary>
         public TilesetData Create(int headerOffset)
         {
             // 単一エントリーとして作成
@@ -131,6 +149,13 @@ namespace PochiPochiEditor2.Managers.Tilesets
 
             // 画像読み込み
             Image = LoadImage(entry);
+            // パレット読み込み
+            Palettes = LoadPalettes(entry);
+            // ブロックデータ読み込み
+
+            // ブロック属性読み込み
+
+            // アニメデータ読み込み（別途）
 
             return this;
         }
@@ -153,7 +178,7 @@ namespace PochiPochiEditor2.Managers.Tilesets
                 }
                 else
                 {
-                    int maxheight = (PaletteType == PaletteKind.Pal0to6)
+                    var maxheight = (PaletteType == PaletteKind.Pal0to6)
                         ? Tileset1ImageHeight
                         : Tileset2ImageMaxHeight;
 
@@ -166,6 +191,28 @@ namespace PochiPochiEditor2.Managers.Tilesets
             return imageData;
         }
 
+        private List<byte[]> LoadPalettes(Entry entry)
+        {
+            // 戻り値用
+            var paletteDataList = new List<byte[]>();
+
+            // 計算用
+            var palettePointerOffset = entry[FieldKey.PaletteOffset].GetData<int>();
+            var paletteDataLength = Constants.PalColorCount * Constants.BytesPerColor;
+
+            for (int i = 0; i < PaletteCount - 1; i++)
+            {
+                var currentPos = palettePointerOffset + i * paletteDataLength;
+
+                var paletteData = ImageHelper.DecompressPalette(
+                    _sharedData.RomData, 
+                    currentPos,
+                    isCompressed: false);
+                paletteDataList.Add(paletteData);
+            }
+
+            return paletteDataList;
+        }
 
 
 
@@ -179,8 +226,9 @@ namespace PochiPochiEditor2.Managers.Tilesets
 
 
 
-
-
+        /// <summary>
+        /// Create実行前に実行する。
+        /// </summary>
         public void Clear()
         {
             Image = null;
@@ -193,16 +241,6 @@ namespace PochiPochiEditor2.Managers.Tilesets
         }
 
         public int GetEntryLength() => _headerFields.Sum(f => f.EntryLength);
-
-    }
-
-    public class BlockData
-    {
-
-    }
-
-    public class BlockAttrData
-    {
 
     }
 }

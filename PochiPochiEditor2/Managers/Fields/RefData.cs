@@ -7,6 +7,9 @@ using PochiPochiEditor2.Utilities;
 
 namespace PochiPochiEditor2.Managers.Fields
 {
+    /// <summary>
+    /// フィールドでない可変長データを扱う。
+    /// </summary>
     public class RefData
     {
         public Enum Name { get; }
@@ -60,7 +63,7 @@ namespace PochiPochiEditor2.Managers.Fields
         }
 
         /// <summary>
-        /// コマンドを生成する。複数コマンド統合用。
+        /// コマンドを生成する。
         /// </summary>
         public ICommand CreateUpdateCommand(
             int newOffset,

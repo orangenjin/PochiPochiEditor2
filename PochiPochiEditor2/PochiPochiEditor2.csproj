@@ -75,6 +75,10 @@
     </Compile>
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Managers\TilesetManager.cs" />
+    <Compile Include="Managers\Tilesets\AnimData.cs" />
+    <Compile Include="Managers\Tilesets\BlockAttrData.cs" />
+    <Compile Include="Managers\Tilesets\BlockData.cs" />
+    <Compile Include="Managers\Tilesets\DoorData.cs" />
     <Compile Include="Managers\Tilesets\TilesetData.cs" />
     <Compile Include="Utilities\PatternMatcher.cs" />
     <Compile Include="Utilities\Tokens\TokenDefinition.cs" />
@@ -176,6 +180,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="def\Map\MapNamePointerEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Tileset\AttrDataEntry.def">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="def\Tileset\BlockDataEntry.def">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="def\Tileset\TilesetHeaderEntry.def">
