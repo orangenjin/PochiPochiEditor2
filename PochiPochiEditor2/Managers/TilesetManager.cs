@@ -13,10 +13,8 @@ namespace PochiPochiEditor2.Managers
 {
     public class TilesetManager
     {
-        public TilesetHeader TilesetData {get; set;}
+        public TilesetHeader TilesetData { get; set; }
 
-        // 共有データ用
-        private SharedData _sharedData = null;
         // タイルセット番号管理するため
         private int _baseOffset = default;
         private int _entryLength = default;
@@ -28,13 +26,9 @@ namespace PochiPochiEditor2.Managers
 
         public TilesetManager(SharedData sharedData)
         {
-            _sharedData = sharedData;
-            TilesetData = new TilesetHeader(_sharedData);
-            _baseOffset = _sharedData.Config.ReadInt(IniKey.TilesetHeaderBaseOffset);
+            TilesetData = new TilesetHeader(sharedData);
+            _baseOffset = sharedData.Config.ReadInt(IniKey.TilesetHeaderBaseOffset);
             _entryLength = TilesetData.GetEntryLength();
-
-
-
         }
 
         public void ReadHeader(int tilesetNo)

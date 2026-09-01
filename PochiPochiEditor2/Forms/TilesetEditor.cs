@@ -21,6 +21,12 @@ namespace PochiPochiEditor2.Forms
         private UndoManager _undoManager = null;
         // 各テーブル用
         private TilesetManager _tilesetManager = null;
+        // パイプライン用
+        private PipelineBuilder _imageOffsetPipeline = null;
+        private PipelineBuilder _paletteOffsetPipeline = null;
+        private PipelineBuilder _blockDataOffsetPipeline = null;
+        private PipelineBuilder _animOffsetPipeline = null;
+        private PipelineBuilder _blockAttrOffsetPipeline = null;
         // UI制御用
         private int _currentTilesetNo = default;
 
@@ -31,7 +37,7 @@ namespace PochiPochiEditor2.Forms
             _undoManager = undoManager;
 
             InitializeControls();
-            // InitializePipelines();
+            InitializePipelines();
             InitializeEventHandlers();
         }
 
@@ -59,6 +65,26 @@ namespace PochiPochiEditor2.Forms
             // tbpAnim
             CtrlHelper.SetControlsEnabled(tbpAnim, state);
             CtrlHelper.ResetControls(tbpAnim);
+        }
+
+        private void InitializePipelines()
+        {
+            // txtImageOffset
+            _imageOffsetPipeline = new PipelineBuilder()
+                // 入力値を取得
+                .Then(ctx =>
+                {
+                    ctx.Set((TextBox)ctx.Sender); // テキストボックス
+                    ctx.Set(ctx.Get<TextBox>().Text); // 入力されたテキスト
+                })
+                // データを更新
+                .Then(ctx =>
+                {
+                    var parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
+                    var desc = $"[{this.Text}]画像アドレス(ID:{_currentTilesetNo:D8})";
+
+                    _tilesetManager.TilesetData.UpdateData(_undoManager, parsedValue, desc);
+                });
         }
 
         private void InitializeEventHandlers()
@@ -126,7 +152,7 @@ namespace PochiPochiEditor2.Forms
         /// </summary>
         public void RefreshFromData()
         {
-
+            LoadDataToUI(_currentTilesetNo);
         }
     }
 }

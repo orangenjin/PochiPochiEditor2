@@ -22,63 +22,42 @@ namespace PochiPochiEditor2.Managers.Tilesets
         public int ImageCompType
         {
             get => _headerEntry[FieldKey.ImageCompType].GetData<int>();
-            set
-            {
-                // 記述必要
-            }
+            set { }
         }
         public int ImageOffset
         {
             get => _headerEntry[FieldKey.ImageOffset].GetData<int>();
-            set
-            {
-                // 記述必要
-            }
+            set { }
         }
         public byte[] ImageData { get; set; }
         public PaletteKind PaletteType
         {
             get => (PaletteKind)_headerEntry[FieldKey.PaletteType].GetData<int>();
-            set
-            {
-                // 記述必要
-            }
+            set { }
         }
         public int PaletteOffset
         {
             get => _headerEntry[FieldKey.PaletteOffset].GetData<int>();
-            set
-            {
-                // 記述必要
-            }
+            set { }
         }
         public List<byte[]> PaletteData { get; set; }
         public int BlockDataTableOffset
         {
             get => _headerEntry[FieldKey.BlockDataTableOffset].GetData<int>();
-            set
-            {
-                // 記述必要
-            }
+            set { }
         }
         public List<BlockData> Blocks { get; set; }
         public int BlockCount { get; set; }
         public int AnimHeaderOffset
         {
             get => _headerEntry[FieldKey.AnimHeaderOffset].GetData<int>();
-            set
-            {
-                // 記述必要
-            }
+            set { }
         }
         public List<AnimData> Anims { get; set; }
         public int BlockAttrTableOffset
         {
             get => _headerEntry[FieldKey.BlockAttrTableOffset].GetData<int>();
-            set
-            {
-                // 記述必要
-            }
+            set { }
         }
         public List<BlockAttrData> Attrs { get; set; }
 

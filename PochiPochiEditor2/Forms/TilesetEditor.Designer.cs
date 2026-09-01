@@ -35,38 +35,40 @@ namespace PochiPochiEditor2.Forms
             this.btnLoadTileset = new System.Windows.Forms.Button();
             this.tncMain = new System.Windows.Forms.TabControl();
             this.tbpHeader = new System.Windows.Forms.TabPage();
-            this.tbpAnim = new System.Windows.Forms.TabPage();
-            this.lblImageCompType = new System.Windows.Forms.Label();
-            this.cmbImageCompType = new System.Windows.Forms.ComboBox();
-            this.lblPaletteType = new System.Windows.Forms.Label();
-            this.cmbPaletteType = new System.Windows.Forms.ComboBox();
-            this.lblImageOffset = new System.Windows.Forms.Label();
-            this.lblPaletteOffset = new System.Windows.Forms.Label();
-            this.txtImageOffset = new System.Windows.Forms.TextBox();
-            this.txtPaletteOffset = new System.Windows.Forms.TextBox();
-            this.lblBlockDataTableOffset = new System.Windows.Forms.Label();
-            this.lblAnimHeaderOffset = new System.Windows.Forms.Label();
-            this.txtBlockDataTableOffset = new System.Windows.Forms.TextBox();
-            this.txtAnimHeaderOffset = new System.Windows.Forms.TextBox();
-            this.lblBlockAttrTableOffset = new System.Windows.Forms.Label();
-            this.txtBlockAttrTableOffset = new System.Windows.Forms.TextBox();
             this.grpTilesetView = new System.Windows.Forms.GroupBox();
-            this.lblTileIndex = new System.Windows.Forms.Label();
-            this.nudTileIndex = new System.Windows.Forms.NumericUpDown();
-            this.txtTileIndex = new System.Windows.Forms.TextBox();
-            this.lblSelectedTileCount = new System.Windows.Forms.Label();
-            this.nudSelectedTileCount = new System.Windows.Forms.NumericUpDown();
-            this.btnSelectTileMinus = new System.Windows.Forms.Button();
-            this.btnSelectTilePlus = new System.Windows.Forms.Button();
-            this.pnlTilesetImage = new System.Windows.Forms.Panel();
             this.cmbSelectedPalette = new System.Windows.Forms.ComboBox();
             this.lblSelectedPalette = new System.Windows.Forms.Label();
+            this.pnlTilesetImage = new System.Windows.Forms.Panel();
+            this.btnSelectTilePlus = new System.Windows.Forms.Button();
+            this.btnSelectTileMinus = new System.Windows.Forms.Button();
+            this.txtTileIndex = new System.Windows.Forms.TextBox();
+            this.nudSelectedTileCount = new System.Windows.Forms.NumericUpDown();
+            this.nudTileIndex = new System.Windows.Forms.NumericUpDown();
+            this.lblSelectedTileCount = new System.Windows.Forms.Label();
+            this.lblTileIndex = new System.Windows.Forms.Label();
+            this.txtBlockAttrTableOffset = new System.Windows.Forms.TextBox();
+            this.txtAnimHeaderOffset = new System.Windows.Forms.TextBox();
+            this.txtPaletteOffset = new System.Windows.Forms.TextBox();
+            this.txtBlockDataTableOffset = new System.Windows.Forms.TextBox();
+            this.txtImageOffset = new System.Windows.Forms.TextBox();
+            this.cmbPaletteType = new System.Windows.Forms.ComboBox();
+            this.cmbImageCompType = new System.Windows.Forms.ComboBox();
+            this.lblBlockAttrTableOffset = new System.Windows.Forms.Label();
+            this.lblAnimHeaderOffset = new System.Windows.Forms.Label();
+            this.lblPaletteOffset = new System.Windows.Forms.Label();
+            this.lblPaletteType = new System.Windows.Forms.Label();
+            this.lblBlockDataTableOffset = new System.Windows.Forms.Label();
+            this.lblImageOffset = new System.Windows.Forms.Label();
+            this.lblImageCompType = new System.Windows.Forms.Label();
+            this.tbpAnim = new System.Windows.Forms.TabPage();
+            this.btnCreateNewTileset = new System.Windows.Forms.Button();
+            this.grpPaletteData = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudTilesetNo)).BeginInit();
             this.tncMain.SuspendLayout();
             this.tbpHeader.SuspendLayout();
             this.grpTilesetView.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTileIndex)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSelectedTileCount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTileIndex)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTilesetNo
@@ -115,6 +117,7 @@ namespace PochiPochiEditor2.Forms
             // 
             // tbpHeader
             // 
+            this.tbpHeader.Controls.Add(this.grpPaletteData);
             this.tbpHeader.Controls.Add(this.grpTilesetView);
             this.tbpHeader.Controls.Add(this.txtBlockAttrTableOffset);
             this.tbpHeader.Controls.Add(this.txtAnimHeaderOffset);
@@ -138,146 +141,6 @@ namespace PochiPochiEditor2.Forms
             this.tbpHeader.Text = "ヘッダー";
             this.tbpHeader.UseVisualStyleBackColor = true;
             // 
-            // tbpAnim
-            // 
-            this.tbpAnim.Location = new System.Drawing.Point(4, 24);
-            this.tbpAnim.Margin = new System.Windows.Forms.Padding(0);
-            this.tbpAnim.Name = "tbpAnim";
-            this.tbpAnim.Size = new System.Drawing.Size(610, 462);
-            this.tbpAnim.TabIndex = 1;
-            this.tbpAnim.Text = "タイルアニメ";
-            this.tbpAnim.UseVisualStyleBackColor = true;
-            // 
-            // lblImageCompType
-            // 
-            this.lblImageCompType.AutoSize = true;
-            this.lblImageCompType.Location = new System.Drawing.Point(20, 24);
-            this.lblImageCompType.Margin = new System.Windows.Forms.Padding(0);
-            this.lblImageCompType.Name = "lblImageCompType";
-            this.lblImageCompType.Size = new System.Drawing.Size(85, 15);
-            this.lblImageCompType.TabIndex = 0;
-            this.lblImageCompType.Text = "画像圧縮設定 :";
-            // 
-            // cmbImageCompType
-            // 
-            this.cmbImageCompType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbImageCompType.FormattingEnabled = true;
-            this.cmbImageCompType.Location = new System.Drawing.Point(148, 20);
-            this.cmbImageCompType.Margin = new System.Windows.Forms.Padding(0);
-            this.cmbImageCompType.Name = "cmbImageCompType";
-            this.cmbImageCompType.Size = new System.Drawing.Size(120, 23);
-            this.cmbImageCompType.TabIndex = 1;
-            // 
-            // lblPaletteType
-            // 
-            this.lblPaletteType.AutoSize = true;
-            this.lblPaletteType.Location = new System.Drawing.Point(20, 54);
-            this.lblPaletteType.Margin = new System.Windows.Forms.Padding(0);
-            this.lblPaletteType.Name = "lblPaletteType";
-            this.lblPaletteType.Size = new System.Drawing.Size(118, 15);
-            this.lblPaletteType.TabIndex = 0;
-            this.lblPaletteType.Text = "パレット読み込み設定 :";
-            // 
-            // cmbPaletteType
-            // 
-            this.cmbPaletteType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbPaletteType.FormattingEnabled = true;
-            this.cmbPaletteType.Location = new System.Drawing.Point(148, 50);
-            this.cmbPaletteType.Margin = new System.Windows.Forms.Padding(0);
-            this.cmbPaletteType.Name = "cmbPaletteType";
-            this.cmbPaletteType.Size = new System.Drawing.Size(120, 23);
-            this.cmbPaletteType.TabIndex = 1;
-            // 
-            // lblImageOffset
-            // 
-            this.lblImageOffset.AutoSize = true;
-            this.lblImageOffset.Location = new System.Drawing.Point(20, 84);
-            this.lblImageOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.lblImageOffset.Name = "lblImageOffset";
-            this.lblImageOffset.Size = new System.Drawing.Size(72, 15);
-            this.lblImageOffset.TabIndex = 0;
-            this.lblImageOffset.Text = "画像アドレス :";
-            // 
-            // lblPaletteOffset
-            // 
-            this.lblPaletteOffset.AutoSize = true;
-            this.lblPaletteOffset.Location = new System.Drawing.Point(20, 114);
-            this.lblPaletteOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.lblPaletteOffset.Name = "lblPaletteOffset";
-            this.lblPaletteOffset.Size = new System.Drawing.Size(83, 15);
-            this.lblPaletteOffset.TabIndex = 0;
-            this.lblPaletteOffset.Text = "パレットアドレス :";
-            // 
-            // txtImageOffset
-            // 
-            this.txtImageOffset.Location = new System.Drawing.Point(148, 80);
-            this.txtImageOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.txtImageOffset.Name = "txtImageOffset";
-            this.txtImageOffset.Size = new System.Drawing.Size(120, 23);
-            this.txtImageOffset.TabIndex = 2;
-            // 
-            // txtPaletteOffset
-            // 
-            this.txtPaletteOffset.Location = new System.Drawing.Point(148, 110);
-            this.txtPaletteOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.txtPaletteOffset.Name = "txtPaletteOffset";
-            this.txtPaletteOffset.Size = new System.Drawing.Size(120, 23);
-            this.txtPaletteOffset.TabIndex = 2;
-            // 
-            // lblBlockDataTableOffset
-            // 
-            this.lblBlockDataTableOffset.AutoSize = true;
-            this.lblBlockDataTableOffset.Location = new System.Drawing.Point(20, 144);
-            this.lblBlockDataTableOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.lblBlockDataTableOffset.Name = "lblBlockDataTableOffset";
-            this.lblBlockDataTableOffset.Size = new System.Drawing.Size(110, 15);
-            this.lblBlockDataTableOffset.TabIndex = 0;
-            this.lblBlockDataTableOffset.Text = "ブロックデータテーブル :";
-            // 
-            // lblAnimHeaderOffset
-            // 
-            this.lblAnimHeaderOffset.AutoSize = true;
-            this.lblAnimHeaderOffset.Location = new System.Drawing.Point(20, 174);
-            this.lblAnimHeaderOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.lblAnimHeaderOffset.Name = "lblAnimHeaderOffset";
-            this.lblAnimHeaderOffset.Size = new System.Drawing.Size(109, 15);
-            this.lblAnimHeaderOffset.TabIndex = 0;
-            this.lblAnimHeaderOffset.Text = "アニメヘッダーアドレス :";
-            // 
-            // txtBlockDataTableOffset
-            // 
-            this.txtBlockDataTableOffset.Location = new System.Drawing.Point(148, 140);
-            this.txtBlockDataTableOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.txtBlockDataTableOffset.Name = "txtBlockDataTableOffset";
-            this.txtBlockDataTableOffset.Size = new System.Drawing.Size(120, 23);
-            this.txtBlockDataTableOffset.TabIndex = 2;
-            // 
-            // txtAnimHeaderOffset
-            // 
-            this.txtAnimHeaderOffset.Location = new System.Drawing.Point(148, 170);
-            this.txtAnimHeaderOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.txtAnimHeaderOffset.Name = "txtAnimHeaderOffset";
-            this.txtAnimHeaderOffset.Size = new System.Drawing.Size(120, 23);
-            this.txtAnimHeaderOffset.TabIndex = 2;
-            // 
-            // lblBlockAttrTableOffset
-            // 
-            this.lblBlockAttrTableOffset.AutoSize = true;
-            this.lblBlockAttrTableOffset.Location = new System.Drawing.Point(20, 204);
-            this.lblBlockAttrTableOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.lblBlockAttrTableOffset.Name = "lblBlockAttrTableOffset";
-            this.lblBlockAttrTableOffset.Size = new System.Drawing.Size(108, 15);
-            this.lblBlockAttrTableOffset.TabIndex = 0;
-            this.lblBlockAttrTableOffset.Text = "ブロック属性テーブル :";
-            // 
-            // txtBlockAttrTableOffset
-            // 
-            this.txtBlockAttrTableOffset.Location = new System.Drawing.Point(148, 200);
-            this.txtBlockAttrTableOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.txtBlockAttrTableOffset.Name = "txtBlockAttrTableOffset";
-            this.txtBlockAttrTableOffset.Size = new System.Drawing.Size(120, 23);
-            this.txtBlockAttrTableOffset.TabIndex = 2;
-            // 
             // grpTilesetView
             // 
             this.grpTilesetView.Controls.Add(this.cmbSelectedPalette);
@@ -294,39 +157,58 @@ namespace PochiPochiEditor2.Forms
             this.grpTilesetView.Margin = new System.Windows.Forms.Padding(0);
             this.grpTilesetView.Name = "grpTilesetView";
             this.grpTilesetView.Padding = new System.Windows.Forms.Padding(0);
-            this.grpTilesetView.Size = new System.Drawing.Size(298, 425);
+            this.grpTilesetView.Size = new System.Drawing.Size(298, 424);
             this.grpTilesetView.TabIndex = 3;
             this.grpTilesetView.TabStop = false;
             this.grpTilesetView.Text = "閲覧用";
             // 
-            // lblTileIndex
+            // cmbSelectedPalette
             // 
-            this.lblTileIndex.AutoSize = true;
-            this.lblTileIndex.Location = new System.Drawing.Point(20, 32);
-            this.lblTileIndex.Margin = new System.Windows.Forms.Padding(0);
-            this.lblTileIndex.Name = "lblTileIndex";
-            this.lblTileIndex.Size = new System.Drawing.Size(65, 15);
-            this.lblTileIndex.TabIndex = 0;
-            this.lblTileIndex.Text = "タイル番号 :";
+            this.cmbSelectedPalette.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSelectedPalette.FormattingEnabled = true;
+            this.cmbSelectedPalette.Location = new System.Drawing.Point(106, 384);
+            this.cmbSelectedPalette.Margin = new System.Windows.Forms.Padding(0);
+            this.cmbSelectedPalette.Name = "cmbSelectedPalette";
+            this.cmbSelectedPalette.Size = new System.Drawing.Size(104, 23);
+            this.cmbSelectedPalette.TabIndex = 6;
             // 
-            // nudTileIndex
+            // lblSelectedPalette
             // 
-            this.nudTileIndex.Increment = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.nudTileIndex.Location = new System.Drawing.Point(106, 28);
-            this.nudTileIndex.Margin = new System.Windows.Forms.Padding(0);
-            this.nudTileIndex.Maximum = new decimal(new int[] {
-            1023,
-            0,
-            0,
-            0});
-            this.nudTileIndex.Name = "nudTileIndex";
-            this.nudTileIndex.ReadOnly = true;
-            this.nudTileIndex.Size = new System.Drawing.Size(72, 23);
-            this.nudTileIndex.TabIndex = 1;
+            this.lblSelectedPalette.AutoSize = true;
+            this.lblSelectedPalette.Location = new System.Drawing.Point(20, 388);
+            this.lblSelectedPalette.Margin = new System.Windows.Forms.Padding(0);
+            this.lblSelectedPalette.Name = "lblSelectedPalette";
+            this.lblSelectedPalette.Size = new System.Drawing.Size(72, 15);
+            this.lblSelectedPalette.TabIndex = 5;
+            this.lblSelectedPalette.Text = "選択パレット :";
+            // 
+            // pnlTilesetImage
+            // 
+            this.pnlTilesetImage.Location = new System.Drawing.Point(20, 96);
+            this.pnlTilesetImage.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlTilesetImage.Name = "pnlTilesetImage";
+            this.pnlTilesetImage.Size = new System.Drawing.Size(256, 276);
+            this.pnlTilesetImage.TabIndex = 4;
+            // 
+            // btnSelectTilePlus
+            // 
+            this.btnSelectTilePlus.Location = new System.Drawing.Point(226, 58);
+            this.btnSelectTilePlus.Margin = new System.Windows.Forms.Padding(0);
+            this.btnSelectTilePlus.Name = "btnSelectTilePlus";
+            this.btnSelectTilePlus.Size = new System.Drawing.Size(34, 23);
+            this.btnSelectTilePlus.TabIndex = 3;
+            this.btnSelectTilePlus.Text = "+";
+            this.btnSelectTilePlus.UseVisualStyleBackColor = true;
+            // 
+            // btnSelectTileMinus
+            // 
+            this.btnSelectTileMinus.Location = new System.Drawing.Point(188, 58);
+            this.btnSelectTileMinus.Margin = new System.Windows.Forms.Padding(0);
+            this.btnSelectTileMinus.Name = "btnSelectTileMinus";
+            this.btnSelectTileMinus.Size = new System.Drawing.Size(34, 23);
+            this.btnSelectTileMinus.TabIndex = 3;
+            this.btnSelectTileMinus.Text = "-";
+            this.btnSelectTileMinus.UseVisualStyleBackColor = true;
             // 
             // txtTileIndex
             // 
@@ -336,16 +218,6 @@ namespace PochiPochiEditor2.Forms
             this.txtTileIndex.ReadOnly = true;
             this.txtTileIndex.Size = new System.Drawing.Size(72, 23);
             this.txtTileIndex.TabIndex = 2;
-            // 
-            // lblSelectedTileCount
-            // 
-            this.lblSelectedTileCount.AutoSize = true;
-            this.lblSelectedTileCount.Location = new System.Drawing.Point(20, 62);
-            this.lblSelectedTileCount.Margin = new System.Windows.Forms.Padding(0);
-            this.lblSelectedTileCount.Name = "lblSelectedTileCount";
-            this.lblSelectedTileCount.Size = new System.Drawing.Size(77, 15);
-            this.lblSelectedTileCount.TabIndex = 0;
-            this.lblSelectedTileCount.Text = "選択タイル数 :";
             // 
             // nudSelectedTileCount
             // 
@@ -376,59 +248,212 @@ namespace PochiPochiEditor2.Forms
             0,
             0});
             // 
-            // btnSelectTileMinus
+            // nudTileIndex
             // 
-            this.btnSelectTileMinus.Location = new System.Drawing.Point(188, 58);
-            this.btnSelectTileMinus.Margin = new System.Windows.Forms.Padding(0);
-            this.btnSelectTileMinus.Name = "btnSelectTileMinus";
-            this.btnSelectTileMinus.Size = new System.Drawing.Size(34, 23);
-            this.btnSelectTileMinus.TabIndex = 3;
-            this.btnSelectTileMinus.Text = "-";
-            this.btnSelectTileMinus.UseVisualStyleBackColor = true;
+            this.nudTileIndex.Increment = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.nudTileIndex.Location = new System.Drawing.Point(106, 28);
+            this.nudTileIndex.Margin = new System.Windows.Forms.Padding(0);
+            this.nudTileIndex.Maximum = new decimal(new int[] {
+            1023,
+            0,
+            0,
+            0});
+            this.nudTileIndex.Name = "nudTileIndex";
+            this.nudTileIndex.ReadOnly = true;
+            this.nudTileIndex.Size = new System.Drawing.Size(72, 23);
+            this.nudTileIndex.TabIndex = 1;
             // 
-            // btnSelectTilePlus
+            // lblSelectedTileCount
             // 
-            this.btnSelectTilePlus.Location = new System.Drawing.Point(226, 58);
-            this.btnSelectTilePlus.Margin = new System.Windows.Forms.Padding(0);
-            this.btnSelectTilePlus.Name = "btnSelectTilePlus";
-            this.btnSelectTilePlus.Size = new System.Drawing.Size(34, 23);
-            this.btnSelectTilePlus.TabIndex = 3;
-            this.btnSelectTilePlus.Text = "+";
-            this.btnSelectTilePlus.UseVisualStyleBackColor = true;
+            this.lblSelectedTileCount.AutoSize = true;
+            this.lblSelectedTileCount.Location = new System.Drawing.Point(20, 62);
+            this.lblSelectedTileCount.Margin = new System.Windows.Forms.Padding(0);
+            this.lblSelectedTileCount.Name = "lblSelectedTileCount";
+            this.lblSelectedTileCount.Size = new System.Drawing.Size(77, 15);
+            this.lblSelectedTileCount.TabIndex = 0;
+            this.lblSelectedTileCount.Text = "選択タイル数 :";
             // 
-            // pnlTilesetImage
+            // lblTileIndex
             // 
-            this.pnlTilesetImage.Location = new System.Drawing.Point(20, 96);
-            this.pnlTilesetImage.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlTilesetImage.Name = "pnlTilesetImage";
-            this.pnlTilesetImage.Size = new System.Drawing.Size(256, 276);
-            this.pnlTilesetImage.TabIndex = 4;
+            this.lblTileIndex.AutoSize = true;
+            this.lblTileIndex.Location = new System.Drawing.Point(20, 32);
+            this.lblTileIndex.Margin = new System.Windows.Forms.Padding(0);
+            this.lblTileIndex.Name = "lblTileIndex";
+            this.lblTileIndex.Size = new System.Drawing.Size(65, 15);
+            this.lblTileIndex.TabIndex = 0;
+            this.lblTileIndex.Text = "タイル番号 :";
             // 
-            // cmbSelectedPalette
+            // txtBlockAttrTableOffset
             // 
-            this.cmbSelectedPalette.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSelectedPalette.FormattingEnabled = true;
-            this.cmbSelectedPalette.Location = new System.Drawing.Point(106, 384);
-            this.cmbSelectedPalette.Margin = new System.Windows.Forms.Padding(0);
-            this.cmbSelectedPalette.Name = "cmbSelectedPalette";
-            this.cmbSelectedPalette.Size = new System.Drawing.Size(104, 23);
-            this.cmbSelectedPalette.TabIndex = 6;
+            this.txtBlockAttrTableOffset.Location = new System.Drawing.Point(148, 200);
+            this.txtBlockAttrTableOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.txtBlockAttrTableOffset.Name = "txtBlockAttrTableOffset";
+            this.txtBlockAttrTableOffset.Size = new System.Drawing.Size(120, 23);
+            this.txtBlockAttrTableOffset.TabIndex = 2;
             // 
-            // lblSelectedPalette
+            // txtAnimHeaderOffset
             // 
-            this.lblSelectedPalette.AutoSize = true;
-            this.lblSelectedPalette.Location = new System.Drawing.Point(20, 388);
-            this.lblSelectedPalette.Margin = new System.Windows.Forms.Padding(0);
-            this.lblSelectedPalette.Name = "lblSelectedPalette";
-            this.lblSelectedPalette.Size = new System.Drawing.Size(72, 15);
-            this.lblSelectedPalette.TabIndex = 5;
-            this.lblSelectedPalette.Text = "選択パレット :";
+            this.txtAnimHeaderOffset.Location = new System.Drawing.Point(148, 170);
+            this.txtAnimHeaderOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.txtAnimHeaderOffset.Name = "txtAnimHeaderOffset";
+            this.txtAnimHeaderOffset.Size = new System.Drawing.Size(120, 23);
+            this.txtAnimHeaderOffset.TabIndex = 2;
+            // 
+            // txtPaletteOffset
+            // 
+            this.txtPaletteOffset.Location = new System.Drawing.Point(148, 110);
+            this.txtPaletteOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.txtPaletteOffset.Name = "txtPaletteOffset";
+            this.txtPaletteOffset.Size = new System.Drawing.Size(120, 23);
+            this.txtPaletteOffset.TabIndex = 2;
+            // 
+            // txtBlockDataTableOffset
+            // 
+            this.txtBlockDataTableOffset.Location = new System.Drawing.Point(148, 140);
+            this.txtBlockDataTableOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.txtBlockDataTableOffset.Name = "txtBlockDataTableOffset";
+            this.txtBlockDataTableOffset.Size = new System.Drawing.Size(120, 23);
+            this.txtBlockDataTableOffset.TabIndex = 2;
+            // 
+            // txtImageOffset
+            // 
+            this.txtImageOffset.Location = new System.Drawing.Point(148, 80);
+            this.txtImageOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.txtImageOffset.Name = "txtImageOffset";
+            this.txtImageOffset.Size = new System.Drawing.Size(120, 23);
+            this.txtImageOffset.TabIndex = 2;
+            // 
+            // cmbPaletteType
+            // 
+            this.cmbPaletteType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPaletteType.FormattingEnabled = true;
+            this.cmbPaletteType.Location = new System.Drawing.Point(148, 50);
+            this.cmbPaletteType.Margin = new System.Windows.Forms.Padding(0);
+            this.cmbPaletteType.Name = "cmbPaletteType";
+            this.cmbPaletteType.Size = new System.Drawing.Size(120, 23);
+            this.cmbPaletteType.TabIndex = 1;
+            // 
+            // cmbImageCompType
+            // 
+            this.cmbImageCompType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbImageCompType.FormattingEnabled = true;
+            this.cmbImageCompType.Location = new System.Drawing.Point(148, 20);
+            this.cmbImageCompType.Margin = new System.Windows.Forms.Padding(0);
+            this.cmbImageCompType.Name = "cmbImageCompType";
+            this.cmbImageCompType.Size = new System.Drawing.Size(120, 23);
+            this.cmbImageCompType.TabIndex = 1;
+            // 
+            // lblBlockAttrTableOffset
+            // 
+            this.lblBlockAttrTableOffset.AutoSize = true;
+            this.lblBlockAttrTableOffset.Location = new System.Drawing.Point(20, 204);
+            this.lblBlockAttrTableOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.lblBlockAttrTableOffset.Name = "lblBlockAttrTableOffset";
+            this.lblBlockAttrTableOffset.Size = new System.Drawing.Size(108, 15);
+            this.lblBlockAttrTableOffset.TabIndex = 0;
+            this.lblBlockAttrTableOffset.Text = "ブロック属性テーブル :";
+            // 
+            // lblAnimHeaderOffset
+            // 
+            this.lblAnimHeaderOffset.AutoSize = true;
+            this.lblAnimHeaderOffset.Location = new System.Drawing.Point(20, 174);
+            this.lblAnimHeaderOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.lblAnimHeaderOffset.Name = "lblAnimHeaderOffset";
+            this.lblAnimHeaderOffset.Size = new System.Drawing.Size(109, 15);
+            this.lblAnimHeaderOffset.TabIndex = 0;
+            this.lblAnimHeaderOffset.Text = "アニメヘッダーアドレス :";
+            // 
+            // lblPaletteOffset
+            // 
+            this.lblPaletteOffset.AutoSize = true;
+            this.lblPaletteOffset.Location = new System.Drawing.Point(20, 114);
+            this.lblPaletteOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.lblPaletteOffset.Name = "lblPaletteOffset";
+            this.lblPaletteOffset.Size = new System.Drawing.Size(83, 15);
+            this.lblPaletteOffset.TabIndex = 0;
+            this.lblPaletteOffset.Text = "パレットアドレス :";
+            // 
+            // lblPaletteType
+            // 
+            this.lblPaletteType.AutoSize = true;
+            this.lblPaletteType.Location = new System.Drawing.Point(20, 54);
+            this.lblPaletteType.Margin = new System.Windows.Forms.Padding(0);
+            this.lblPaletteType.Name = "lblPaletteType";
+            this.lblPaletteType.Size = new System.Drawing.Size(118, 15);
+            this.lblPaletteType.TabIndex = 0;
+            this.lblPaletteType.Text = "パレット読み込み設定 :";
+            // 
+            // lblBlockDataTableOffset
+            // 
+            this.lblBlockDataTableOffset.AutoSize = true;
+            this.lblBlockDataTableOffset.Location = new System.Drawing.Point(20, 144);
+            this.lblBlockDataTableOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.lblBlockDataTableOffset.Name = "lblBlockDataTableOffset";
+            this.lblBlockDataTableOffset.Size = new System.Drawing.Size(110, 15);
+            this.lblBlockDataTableOffset.TabIndex = 0;
+            this.lblBlockDataTableOffset.Text = "ブロックデータテーブル :";
+            // 
+            // lblImageOffset
+            // 
+            this.lblImageOffset.AutoSize = true;
+            this.lblImageOffset.Location = new System.Drawing.Point(20, 84);
+            this.lblImageOffset.Margin = new System.Windows.Forms.Padding(0);
+            this.lblImageOffset.Name = "lblImageOffset";
+            this.lblImageOffset.Size = new System.Drawing.Size(72, 15);
+            this.lblImageOffset.TabIndex = 0;
+            this.lblImageOffset.Text = "画像アドレス :";
+            // 
+            // lblImageCompType
+            // 
+            this.lblImageCompType.AutoSize = true;
+            this.lblImageCompType.Location = new System.Drawing.Point(20, 24);
+            this.lblImageCompType.Margin = new System.Windows.Forms.Padding(0);
+            this.lblImageCompType.Name = "lblImageCompType";
+            this.lblImageCompType.Size = new System.Drawing.Size(85, 15);
+            this.lblImageCompType.TabIndex = 0;
+            this.lblImageCompType.Text = "画像圧縮設定 :";
+            // 
+            // tbpAnim
+            // 
+            this.tbpAnim.Location = new System.Drawing.Point(4, 24);
+            this.tbpAnim.Margin = new System.Windows.Forms.Padding(0);
+            this.tbpAnim.Name = "tbpAnim";
+            this.tbpAnim.Size = new System.Drawing.Size(610, 460);
+            this.tbpAnim.TabIndex = 1;
+            this.tbpAnim.Text = "タイルアニメ";
+            this.tbpAnim.UseVisualStyleBackColor = true;
+            // 
+            // btnCreateNewTileset
+            // 
+            this.btnCreateNewTileset.Location = new System.Drawing.Point(364, 16);
+            this.btnCreateNewTileset.Margin = new System.Windows.Forms.Padding(0);
+            this.btnCreateNewTileset.Name = "btnCreateNewTileset";
+            this.btnCreateNewTileset.Size = new System.Drawing.Size(144, 23);
+            this.btnCreateNewTileset.TabIndex = 4;
+            this.btnCreateNewTileset.Text = "新規タイルセットを作成";
+            this.btnCreateNewTileset.UseVisualStyleBackColor = true;
+            // 
+            // grpPaletteData
+            // 
+            this.grpPaletteData.Location = new System.Drawing.Point(20, 238);
+            this.grpPaletteData.Margin = new System.Windows.Forms.Padding(0);
+            this.grpPaletteData.Name = "grpPaletteData";
+            this.grpPaletteData.Padding = new System.Windows.Forms.Padding(0);
+            this.grpPaletteData.Size = new System.Drawing.Size(248, 202);
+            this.grpPaletteData.TabIndex = 4;
+            this.grpPaletteData.TabStop = false;
+            this.grpPaletteData.Text = "パレットデータ";
             // 
             // TilesetEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(656, 559);
+            this.Controls.Add(this.btnCreateNewTileset);
             this.Controls.Add(this.tncMain);
             this.Controls.Add(this.btnLoadTileset);
             this.Controls.Add(this.nudTilesetNo);
@@ -445,8 +470,8 @@ namespace PochiPochiEditor2.Forms
             this.tbpHeader.PerformLayout();
             this.grpTilesetView.ResumeLayout(false);
             this.grpTilesetView.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTileIndex)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSelectedTileCount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTileIndex)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -485,5 +510,7 @@ namespace PochiPochiEditor2.Forms
         private System.Windows.Forms.ComboBox cmbSelectedPalette;
         private System.Windows.Forms.Label lblSelectedPalette;
         private System.Windows.Forms.Panel pnlTilesetImage;
+        private System.Windows.Forms.Button btnCreateNewTileset;
+        private System.Windows.Forms.GroupBox grpPaletteData;
     }
 }
