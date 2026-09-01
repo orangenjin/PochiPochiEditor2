@@ -69,6 +69,33 @@ namespace PochiPochiEditor2.Forms
 
         private void InitializePipelines()
         {
+            _imageCompTypePipeline = BuildCmbPipeline(
+                TilesetManager.FieldKey.ImageCompType,
+                lblImageCompType.Text);
+            _paletteTypePipeline = BuildCmbPipeline(
+                TilesetManager.FieldKey.PaletteType,
+                lblPaletteType.Text);
+            // ヘルパー
+            PipelineBuilder BuildCmbPipeline(TilesetManager.FieldKey fieldKey, string label)
+            {
+                return new PipelineBuilder()
+                    // 入力値を取得
+                    .Then(ctx =>
+                    {
+                        ctx.Set((ComboBox)ctx.Sender); // コンボボックス
+                        ctx.Set((byte)ctx.Get<ComboBox>().SelectedValue); // 選択されたインデックスの値
+                    })
+                    // データを更新
+                    .Then(ctx =>
+                    {
+                        var value = ctx.Get<byte>();
+                        var desc = $"[{this.Text}]{label}(ID:{_currentTilesetNo:D8})";
+
+                        _tilesetManager.HeaderEntry[fieldKey]
+                            .UpdateData(_undoManager, value, desc);
+                    });
+            }
+
             _imageOffsetPipeline = BuildOffsetPipeline(
                 TilesetManager.FieldKey.ImageOffset,
                 lblImageOffset.Text);
@@ -97,11 +124,11 @@ namespace PochiPochiEditor2.Forms
                     // データを更新
                     .Then(ctx =>
                     {
-                        var parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
+                        var value = CalcHelper.ParseStringToInt(ctx.Get<string>());
                         var desc = $"[{this.Text}]{label}(ID:{_currentTilesetNo:D8})";
 
                         _tilesetManager.HeaderEntry[fieldKey]
-                            .UpdateData(_undoManager, parsedValue, desc);
+                            .UpdateData(_undoManager, value, desc);
                     });
             }
         }
@@ -133,6 +160,22 @@ namespace PochiPochiEditor2.Forms
                     LoadDataToUI(_currentTilesetNo);
                 });
 
+            // 画像圧縮設定
+            _eventBinder.BindCtrl(
+                h => cmbImageCompType.SelectionChangeCommitted += h,
+                h => cmbImageCompType.SelectionChangeCommitted -= h,
+                (sender, e) =>
+                {
+                    _imageCompTypePipeline.Execute(new Context(sender, e));
+                });
+            // パレット読み込み設定
+            _eventBinder.BindCtrl(
+                h => cmbPaletteType.SelectionChangeCommitted += h,
+                h => cmbPaletteType.SelectionChangeCommitted -= h,
+                (sender, e) =>
+                {
+                    _paletteTypePipeline.Execute(new Context(sender, e));
+                });
             // 画像アドレス
             _eventBinder.BindCtrl(
                 h => txtImageOffset.Validated += h,
@@ -194,6 +237,8 @@ namespace PochiPochiEditor2.Forms
             UpdateTabPageState(true);
 
             // UIに反映
+            cmbImageCompType.SelectedValue = GetHeaderData<byte>(TilesetManager.FieldKey.ImageCompType);
+            cmbPaletteType.SelectedValue = GetHeaderData<byte>(TilesetManager.FieldKey.PaletteType);
             txtImageOffset.Text = GetHeaderData<int>(TilesetManager.FieldKey.ImageOffset).ParseIntToString();
             txtPaletteOffset.Text = GetHeaderData<int>(TilesetManager.FieldKey.PaletteOffset).ParseIntToString();
             txtBlockDataTableOffset.Text = GetHeaderData<int>(TilesetManager.FieldKey.BlockDataTableOffset).ParseIntToString();
