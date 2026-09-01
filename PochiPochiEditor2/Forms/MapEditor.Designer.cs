@@ -31,6 +31,10 @@ namespace PochiPochiEditor2.Forms
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
             this.grpMapHeader = new System.Windows.Forms.GroupBox();
+            this.btnEditConnHeader = new System.Windows.Forms.Button();
+            this.btnEditLevelScript = new System.Windows.Forms.Button();
+            this.btnEditEventScriptHeader = new System.Windows.Forms.Button();
+            this.btnEditMapFooter = new System.Windows.Forms.Button();
             this.nudBgmIndex = new System.Windows.Forms.NumericUpDown();
             this.lblBgmIndex = new System.Windows.Forms.Label();
             this.cmbMapNameType = new System.Windows.Forms.ComboBox();
@@ -64,14 +68,10 @@ namespace PochiPochiEditor2.Forms
             this.pnlMapDraw = new System.Windows.Forms.Panel();
             this.tbpOther = new System.Windows.Forms.TabPage();
             this.grpMapSelector = new System.Windows.Forms.GroupBox();
-            this.rbOrderByAsc = new System.Windows.Forms.RadioButton();
-            this.rbOrderByName = new System.Windows.Forms.RadioButton();
-            this.chkOrderByTerrain = new System.Windows.Forms.CheckBox();
             this.tvwMapSelector = new System.Windows.Forms.TreeView();
-            this.btnEditMapFooter = new System.Windows.Forms.Button();
-            this.btnEditEventScriptHeader = new System.Windows.Forms.Button();
-            this.btnEditLevelScript = new System.Windows.Forms.Button();
-            this.btnEditConnHeader = new System.Windows.Forms.Button();
+            this.chkOrderByTerrain = new System.Windows.Forms.CheckBox();
+            this.rbOrderByName = new System.Windows.Forms.RadioButton();
+            this.rbOrderByAsc = new System.Windows.Forms.RadioButton();
             this.grpMapHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudBgmIndex)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMapRelLayer)).BeginInit();
@@ -123,6 +123,46 @@ namespace PochiPochiEditor2.Forms
             this.grpMapHeader.TabIndex = 0;
             this.grpMapHeader.TabStop = false;
             this.grpMapHeader.Text = "マップヘッダー";
+            // 
+            // btnEditConnHeader
+            // 
+            this.btnEditConnHeader.Location = new System.Drawing.Point(244, 118);
+            this.btnEditConnHeader.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditConnHeader.Name = "btnEditConnHeader";
+            this.btnEditConnHeader.Size = new System.Drawing.Size(60, 23);
+            this.btnEditConnHeader.TabIndex = 20;
+            this.btnEditConnHeader.Text = "編集";
+            this.btnEditConnHeader.UseVisualStyleBackColor = true;
+            // 
+            // btnEditLevelScript
+            // 
+            this.btnEditLevelScript.Location = new System.Drawing.Point(244, 88);
+            this.btnEditLevelScript.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditLevelScript.Name = "btnEditLevelScript";
+            this.btnEditLevelScript.Size = new System.Drawing.Size(60, 23);
+            this.btnEditLevelScript.TabIndex = 20;
+            this.btnEditLevelScript.Text = "編集";
+            this.btnEditLevelScript.UseVisualStyleBackColor = true;
+            // 
+            // btnEditEventScriptHeader
+            // 
+            this.btnEditEventScriptHeader.Location = new System.Drawing.Point(244, 58);
+            this.btnEditEventScriptHeader.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditEventScriptHeader.Name = "btnEditEventScriptHeader";
+            this.btnEditEventScriptHeader.Size = new System.Drawing.Size(60, 23);
+            this.btnEditEventScriptHeader.TabIndex = 20;
+            this.btnEditEventScriptHeader.Text = "編集";
+            this.btnEditEventScriptHeader.UseVisualStyleBackColor = true;
+            // 
+            // btnEditMapFooter
+            // 
+            this.btnEditMapFooter.Location = new System.Drawing.Point(244, 28);
+            this.btnEditMapFooter.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEditMapFooter.Name = "btnEditMapFooter";
+            this.btnEditMapFooter.Size = new System.Drawing.Size(60, 23);
+            this.btnEditMapFooter.TabIndex = 20;
+            this.btnEditMapFooter.Text = "編集";
+            this.btnEditMapFooter.UseVisualStyleBackColor = true;
             // 
             // nudBgmIndex
             // 
@@ -464,6 +504,36 @@ namespace PochiPochiEditor2.Forms
             this.grpMapSelector.TabStop = false;
             this.grpMapSelector.Text = "マップを選択";
             // 
+            // tvwMapSelector
+            // 
+            this.tvwMapSelector.Location = new System.Drawing.Point(22, 56);
+            this.tvwMapSelector.Margin = new System.Windows.Forms.Padding(0);
+            this.tvwMapSelector.Name = "tvwMapSelector";
+            this.tvwMapSelector.Size = new System.Drawing.Size(284, 186);
+            this.tvwMapSelector.TabIndex = 4;
+            // 
+            // chkOrderByTerrain
+            // 
+            this.chkOrderByTerrain.AutoSize = true;
+            this.chkOrderByTerrain.Location = new System.Drawing.Point(174, 28);
+            this.chkOrderByTerrain.Margin = new System.Windows.Forms.Padding(0);
+            this.chkOrderByTerrain.Name = "chkOrderByTerrain";
+            this.chkOrderByTerrain.Size = new System.Drawing.Size(99, 19);
+            this.chkOrderByTerrain.TabIndex = 3;
+            this.chkOrderByTerrain.Text = "マップ地形ID順";
+            this.chkOrderByTerrain.UseVisualStyleBackColor = true;
+            // 
+            // rbOrderByName
+            // 
+            this.rbOrderByName.AutoSize = true;
+            this.rbOrderByName.Location = new System.Drawing.Point(90, 28);
+            this.rbOrderByName.Margin = new System.Windows.Forms.Padding(0);
+            this.rbOrderByName.Name = "rbOrderByName";
+            this.rbOrderByName.Size = new System.Drawing.Size(75, 19);
+            this.rbOrderByName.TabIndex = 2;
+            this.rbOrderByName.Text = "マップ名順";
+            this.rbOrderByName.UseVisualStyleBackColor = true;
+            // 
             // rbOrderByAsc
             // 
             this.rbOrderByAsc.AutoSize = true;
@@ -474,76 +544,6 @@ namespace PochiPochiEditor2.Forms
             this.rbOrderByAsc.TabIndex = 1;
             this.rbOrderByAsc.Text = "番号順";
             this.rbOrderByAsc.UseVisualStyleBackColor = true;
-            // 
-            // rbOrderByName
-            // 
-            this.rbOrderByName.AutoSize = true;
-            this.rbOrderByName.Location = new System.Drawing.Point(90, 28);
-            this.rbOrderByName.Margin = new System.Windows.Forms.Padding(0);
-            this.rbOrderByName.Name = "rbOrderByName";
-            this.rbOrderByName.Size = new System.Drawing.Size(63, 19);
-            this.rbOrderByName.TabIndex = 2;
-            this.rbOrderByName.Text = "マップ順";
-            this.rbOrderByName.UseVisualStyleBackColor = true;
-            // 
-            // chkOrderByTerrain
-            // 
-            this.chkOrderByTerrain.AutoSize = true;
-            this.chkOrderByTerrain.Location = new System.Drawing.Point(158, 28);
-            this.chkOrderByTerrain.Margin = new System.Windows.Forms.Padding(0);
-            this.chkOrderByTerrain.Name = "chkOrderByTerrain";
-            this.chkOrderByTerrain.Size = new System.Drawing.Size(87, 19);
-            this.chkOrderByTerrain.TabIndex = 3;
-            this.chkOrderByTerrain.Text = "マップ地形ID";
-            this.chkOrderByTerrain.UseVisualStyleBackColor = true;
-            // 
-            // tvwMapSelector
-            // 
-            this.tvwMapSelector.Location = new System.Drawing.Point(22, 56);
-            this.tvwMapSelector.Margin = new System.Windows.Forms.Padding(0);
-            this.tvwMapSelector.Name = "tvwMapSelector";
-            this.tvwMapSelector.Size = new System.Drawing.Size(284, 186);
-            this.tvwMapSelector.TabIndex = 4;
-            // 
-            // btnEditMapFooter
-            // 
-            this.btnEditMapFooter.Location = new System.Drawing.Point(244, 28);
-            this.btnEditMapFooter.Margin = new System.Windows.Forms.Padding(0);
-            this.btnEditMapFooter.Name = "btnEditMapFooter";
-            this.btnEditMapFooter.Size = new System.Drawing.Size(60, 23);
-            this.btnEditMapFooter.TabIndex = 20;
-            this.btnEditMapFooter.Text = "編集";
-            this.btnEditMapFooter.UseVisualStyleBackColor = true;
-            // 
-            // btnEditEventScriptHeader
-            // 
-            this.btnEditEventScriptHeader.Location = new System.Drawing.Point(244, 58);
-            this.btnEditEventScriptHeader.Margin = new System.Windows.Forms.Padding(0);
-            this.btnEditEventScriptHeader.Name = "btnEditEventScriptHeader";
-            this.btnEditEventScriptHeader.Size = new System.Drawing.Size(60, 23);
-            this.btnEditEventScriptHeader.TabIndex = 20;
-            this.btnEditEventScriptHeader.Text = "編集";
-            this.btnEditEventScriptHeader.UseVisualStyleBackColor = true;
-            // 
-            // btnEditLevelScript
-            // 
-            this.btnEditLevelScript.Location = new System.Drawing.Point(244, 88);
-            this.btnEditLevelScript.Margin = new System.Windows.Forms.Padding(0);
-            this.btnEditLevelScript.Name = "btnEditLevelScript";
-            this.btnEditLevelScript.Size = new System.Drawing.Size(60, 23);
-            this.btnEditLevelScript.TabIndex = 20;
-            this.btnEditLevelScript.Text = "編集";
-            this.btnEditLevelScript.UseVisualStyleBackColor = true;
-            // 
-            // btnEditConnHeader
-            // 
-            this.btnEditConnHeader.Location = new System.Drawing.Point(244, 118);
-            this.btnEditConnHeader.Margin = new System.Windows.Forms.Padding(0);
-            this.btnEditConnHeader.Name = "btnEditConnHeader";
-            this.btnEditConnHeader.Size = new System.Drawing.Size(60, 23);
-            this.btnEditConnHeader.TabIndex = 20;
-            this.btnEditConnHeader.Text = "編集";
-            this.btnEditConnHeader.UseVisualStyleBackColor = true;
             // 
             // MapEditor
             // 

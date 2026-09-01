@@ -17,7 +17,7 @@ using PochiPochiEditor2.Utilities.Tokens;
 
 namespace PochiPochiEditor2.Managers.Tilesets
 {
-    public class TilesetData
+    public class TilesetHeader
     {
         public byte[] Image { get; set; }
         public bool IsCompress { get; set; }
@@ -93,7 +93,7 @@ namespace PochiPochiEditor2.Managers.Tilesets
             public static string TilesetHeaderBaseOffset = nameof(TilesetHeaderBaseOffset);
         }
 
-        public TilesetData(SharedData shareData)
+        public TilesetHeader(SharedData shareData)
         {
             // 共有データを保持
             _sharedData = shareData;
@@ -125,7 +125,7 @@ namespace PochiPochiEditor2.Managers.Tilesets
         /// <summary>
         /// タイルセットデータを直で返す。
         /// </summary>
-        public TilesetData Create(int headerOffset)
+        public TilesetHeader Create(int headerOffset)
         {
             // 単一エントリーとして作成
             var entry = new Entry(
@@ -241,6 +241,5 @@ namespace PochiPochiEditor2.Managers.Tilesets
         }
 
         public int GetEntryLength() => _headerFields.Sum(f => f.EntryLength);
-
     }
 }

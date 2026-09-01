@@ -16,7 +16,7 @@ namespace PochiPochiEditor2.Managers
         // 共有データ用
         private SharedData _sharedData = null;
         // タイルセットデータのコンテナ
-        private TilesetData _tilesetData = null;
+        private TilesetHeader _tilesetData = null;
         // タイルセット番号管理するため
         private int _baseOffset = default;
         private int _entryLength = default;
@@ -29,7 +29,7 @@ namespace PochiPochiEditor2.Managers
         public TilesetManager(SharedData sharedData)
         {
             _sharedData = sharedData;
-            _tilesetData = new TilesetData(_sharedData);
+            _tilesetData = new TilesetHeader(_sharedData);
             _baseOffset = _sharedData.Config.ReadInt(IniKey.TilesetHeaderBaseOffset);
             _entryLength = _tilesetData.GetEntryLength();
 
