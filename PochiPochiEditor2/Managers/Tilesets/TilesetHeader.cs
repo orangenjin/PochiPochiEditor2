@@ -19,20 +19,68 @@ namespace PochiPochiEditor2.Managers.Tilesets
 {
     public class TilesetHeader
     {
-        public byte[] Image { get; set; }
-        public bool IsCompress { get; set; }
-        public PaletteKind PaletteType { get; set; }
-        public List<byte[]> Palettes { get; set; }
+        public bool IsCompress
+        {
+            get => Convert.ToBoolean(_headerEntry[FieldKey.ImageCompType].GetData<int>());
+            set
+            {
+                // 記述必要
+            }
+        }
+        public int ImageOffset
+        {
+            get => _headerEntry[FieldKey.ImageOffset].GetData<int>();
+            set
+            {
+                // 記述必要
+            }
+        }
+        public byte[] ImageData { get; set; }
+        public PaletteKind PaletteType
+        {
+            get => (PaletteKind)_headerEntry[FieldKey.PaletteType].GetData<int>();
+            set
+            {
+                // 記述必要
+            }
+        }
+        public int PaletteOffset
+        {
+            get => _headerEntry[FieldKey.PaletteOffset].GetData<int>();
+            set
+            {
+                // 記述必要
+            }
+        }
+        public List<byte[]> PaletteData { get; set; }
+        public int BlockDataTableOffset
+        {
+            get => _headerEntry[FieldKey.BlockDataTableOffset].GetData<int>();
+            set
+            {
+                // 記述必要
+            }
+        }
         public List<BlockData> Blocks { get; set; }
         public int BlockCount { get; set; }
-        public List<BlockAttrData> Attrs { get; set; }
-        public int AnimHeaderOffset { get; set; }
-
-        public enum PaletteKind
-        { 
-            Pal0to6,
-            Pal7to12
+        public int BlockAttrTableOffset
+        {
+            get => _headerEntry[FieldKey.BlockAttrTableOffset].GetData<int>();
+            set
+            {
+                // 記述必要
+            }
         }
+        public List<BlockAttrData> Attrs { get; set; }
+        public int AnimHeaderOffset
+        {
+            get => _headerEntry[FieldKey.AnimHeaderOffset].GetData<int>();
+            set
+            {
+                // 記述必要
+            }
+        }
+        public List<AnimData> Anims { get; set; }
 
         // 共有データ用
         private SharedData _sharedData = null;
@@ -40,6 +88,8 @@ namespace PochiPochiEditor2.Managers.Tilesets
         private List<FieldValue> _headerFields = null;
         private List<FieldValue> _blockFields = null;
         private List<FieldValue> _attrFields = null;
+        // 読み書き用
+        private Entry _headerEntry = null;
 
         // 計算用
         private const int TilesetImageWidth = 128;
@@ -49,10 +99,11 @@ namespace PochiPochiEditor2.Managers.Tilesets
         private const int Tileset2BlockMaxAmount = Tileset2ImageMaxHeight * Constants.PixelsPerByte4Bpp;
         private const int PaletteCount = 16;
 
-
-
-
-
+        public enum PaletteKind
+        {
+            Pal0to6,
+            Pal7to12
+        }
 
         private enum FieldKey
         {
@@ -88,11 +139,6 @@ namespace PochiPochiEditor2.Managers.Tilesets
             public static string AttrDataEntry = nameof(AttrDataEntry);
         }
 
-        private static class IniKey
-        {
-            public static string TilesetHeaderBaseOffset = nameof(TilesetHeaderBaseOffset);
-        }
-
         public TilesetHeader(SharedData shareData)
         {
             // 共有データを保持
@@ -122,42 +168,35 @@ namespace PochiPochiEditor2.Managers.Tilesets
             }
         }
 
-        /// <summary>
-        /// タイルセットデータを直で返す。
-        /// </summary>
-        public TilesetHeader Create(int headerOffset)
+        public void Create(int headerOffset)
         {
             // 単一エントリーとして作成
-            var entry = new Entry(
+            _headerEntry = new Entry(
                 headerOffset,
                 Constants.DefaultIndex,
                 _headerFields);
 
             // まずパレットタイプからブロック数を特定
-            PaletteType = (PaletteKind)entry[FieldKey.PaletteType].GetData<int>();
             if (PaletteType == PaletteKind.Pal0to6)
             {
                 BlockCount = Tileset1BlockAmount;
             }
             else
             {
-                var blockDataTableOffset = entry[FieldKey.BlockDataTableOffset].GetData<int>();
-                var blockAttrTableOffset = entry[FieldKey.BlockAttrTableOffset].GetData<int>();
-                var expectedCount = (blockAttrTableOffset - blockDataTableOffset) / _blockFields.Sum(f => f.EntryLength);
+                var expectedCount = (BlockAttrTableOffset - BlockDataTableOffset) / _blockFields.Sum(f => f.EntryLength);
                 BlockCount = Math.Min(expectedCount, Tileset2BlockMaxAmount);
             }
 
-            // 画像読み込み
-            Image = LoadImage(entry);
-            // パレット読み込み
-            Palettes = LoadPalettes(entry);
+            // 画像データ読み込み
+            ImageData = LoadImage(_headerEntry);
+            // パレットデータ読み込み
+            PaletteData = LoadPalettes(_headerEntry);
             // ブロックデータ読み込み
 
             // ブロック属性読み込み
 
             // アニメデータ読み込み（別途）
 
-            return this;
         }
 
         private byte[] LoadImage(Entry entry)
@@ -165,27 +204,20 @@ namespace PochiPochiEditor2.Managers.Tilesets
             // 戻り値用
             byte[] imageData = null;
 
-            var imagePointerOffset = entry[FieldKey.ImageOffset].GetData<int>();
-            if (IoHelper.TryReadPtr(_sharedData.RomData, imagePointerOffset, out int imageOffset))
+            // 圧縮形式に応じて格納
+            if (IsCompress)
             {
-                // 圧縮形式を判定
-                IsCompress = Convert.ToBoolean(entry[FieldKey.ImageCompType].GetData<int>());
+                imageData = ImageHelper.DecompressLZ77(_sharedData.RomData, ImageOffset);
+            }
+            else
+            {
+                var maxheight = (PaletteType == PaletteKind.Pal0to6)
+                    ? Tileset1ImageHeight
+                    : Tileset2ImageMaxHeight;
 
-                // 圧縮形式に応じて格納
-                if (IsCompress)
-                {
-                    imageData = ImageHelper.DecompressLZ77(_sharedData.RomData, imageOffset);
-                }
-                else
-                {
-                    var maxheight = (PaletteType == PaletteKind.Pal0to6)
-                        ? Tileset1ImageHeight
-                        : Tileset2ImageMaxHeight;
-
-                    var maxSize = (TilesetImageWidth * maxheight) / Constants.PixelsPerByte4Bpp;
-                    imageData = new byte[maxSize];
-                    Array.Copy(_sharedData.RomData, imageOffset, imageData, Constants.DefaultIndex, maxSize);
-                }
+                var maxSize = (TilesetImageWidth * maxheight) / Constants.PixelsPerByte4Bpp;
+                imageData = new byte[maxSize];
+                Array.Copy(_sharedData.RomData, ImageOffset, imageData, Constants.DefaultIndex, maxSize);
             }
 
             return imageData;
@@ -197,12 +229,11 @@ namespace PochiPochiEditor2.Managers.Tilesets
             var paletteDataList = new List<byte[]>();
 
             // 計算用
-            var palettePointerOffset = entry[FieldKey.PaletteOffset].GetData<int>();
             var paletteDataLength = Constants.PalColorCount * Constants.BytesPerColor;
 
             for (int i = 0; i < PaletteCount - 1; i++)
             {
-                var currentPos = palettePointerOffset + i * paletteDataLength;
+                var currentPos = PaletteOffset + i * paletteDataLength;
 
                 var paletteData = ImageHelper.DecompressPalette(
                     _sharedData.RomData, 
@@ -231,13 +262,12 @@ namespace PochiPochiEditor2.Managers.Tilesets
         /// </summary>
         public void Clear()
         {
-            Image = null;
-            IsCompress = default;
-            PaletteType = default;
-            Palettes = null;
+            ImageData = null;
+            PaletteData = null;
             Blocks = null;
+            BlockCount = default;
             Attrs = null;
-            AnimHeaderOffset = default;
+            Anims = null;
         }
 
         public int GetEntryLength() => _headerFields.Sum(f => f.EntryLength);

@@ -19,15 +19,28 @@ namespace PochiPochiEditor2.Forms
         private SharedData _sharedData = null;
         // 変更履歴用
         private UndoManager _undoManager = null;
+        // 各テーブル用
+        private TilesetManager _tilesetManager = null;
 
         public TilesetEditor(SharedData sharedData, UndoManager undoManager)
         {
             InitializeComponent();
-
             _sharedData = sharedData;
             _undoManager = undoManager;
         }
 
+
+
+
+        private void LoadDataToUI(int tilsetNo)
+        {
+            _tilesetManager = new TilesetManager(_sharedData);
+            _tilesetManager.ReadHeader(tilsetNo);
+
+            // UIに反映
+
+            txtImageOffset.Text = _tilesetManager.TilesetData.ImageOffset.ParseIntToString();
+        }
 
 
 
