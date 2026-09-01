@@ -110,7 +110,7 @@ namespace PochiPochiEditor2.Forms
             this.tncMain.Margin = new System.Windows.Forms.Padding(0);
             this.tncMain.Name = "tncMain";
             this.tncMain.SelectedIndex = 0;
-            this.tncMain.Size = new System.Drawing.Size(618, 490);
+            this.tncMain.Size = new System.Drawing.Size(618, 488);
             this.tncMain.TabIndex = 3;
             // 
             // tbpHeader
@@ -133,7 +133,7 @@ namespace PochiPochiEditor2.Forms
             this.tbpHeader.Location = new System.Drawing.Point(4, 24);
             this.tbpHeader.Margin = new System.Windows.Forms.Padding(0);
             this.tbpHeader.Name = "tbpHeader";
-            this.tbpHeader.Size = new System.Drawing.Size(610, 462);
+            this.tbpHeader.Size = new System.Drawing.Size(610, 460);
             this.tbpHeader.TabIndex = 0;
             this.tbpHeader.Text = "ヘッダー";
             this.tbpHeader.UseVisualStyleBackColor = true;
@@ -143,7 +143,7 @@ namespace PochiPochiEditor2.Forms
             this.tbpAnim.Location = new System.Drawing.Point(4, 24);
             this.tbpAnim.Margin = new System.Windows.Forms.Padding(0);
             this.tbpAnim.Name = "tbpAnim";
-            this.tbpAnim.Size = new System.Drawing.Size(756, 397);
+            this.tbpAnim.Size = new System.Drawing.Size(610, 462);
             this.tbpAnim.TabIndex = 1;
             this.tbpAnim.Text = "タイルアニメ";
             this.tbpAnim.UseVisualStyleBackColor = true;
@@ -411,7 +411,7 @@ namespace PochiPochiEditor2.Forms
             this.cmbSelectedPalette.Location = new System.Drawing.Point(106, 384);
             this.cmbSelectedPalette.Margin = new System.Windows.Forms.Padding(0);
             this.cmbSelectedPalette.Name = "cmbSelectedPalette";
-            this.cmbSelectedPalette.Size = new System.Drawing.Size(96, 23);
+            this.cmbSelectedPalette.Size = new System.Drawing.Size(104, 23);
             this.cmbSelectedPalette.TabIndex = 6;
             // 
             // lblSelectedPalette
@@ -428,7 +428,7 @@ namespace PochiPochiEditor2.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(656, 557);
+            this.ClientSize = new System.Drawing.Size(656, 559);
             this.Controls.Add(this.tncMain);
             this.Controls.Add(this.btnLoadTileset);
             this.Controls.Add(this.nudTilesetNo);

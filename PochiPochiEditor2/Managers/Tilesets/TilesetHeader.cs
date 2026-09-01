@@ -19,9 +19,9 @@ namespace PochiPochiEditor2.Managers.Tilesets
 {
     public class TilesetHeader
     {
-        public bool IsCompress
+        public int ImageCompType
         {
-            get => Convert.ToBoolean(_headerEntry[FieldKey.ImageCompType].GetData<int>());
+            get => _headerEntry[FieldKey.ImageCompType].GetData<int>();
             set
             {
                 // 記述必要
@@ -63,15 +63,6 @@ namespace PochiPochiEditor2.Managers.Tilesets
         }
         public List<BlockData> Blocks { get; set; }
         public int BlockCount { get; set; }
-        public int BlockAttrTableOffset
-        {
-            get => _headerEntry[FieldKey.BlockAttrTableOffset].GetData<int>();
-            set
-            {
-                // 記述必要
-            }
-        }
-        public List<BlockAttrData> Attrs { get; set; }
         public int AnimHeaderOffset
         {
             get => _headerEntry[FieldKey.AnimHeaderOffset].GetData<int>();
@@ -81,6 +72,15 @@ namespace PochiPochiEditor2.Managers.Tilesets
             }
         }
         public List<AnimData> Anims { get; set; }
+        public int BlockAttrTableOffset
+        {
+            get => _headerEntry[FieldKey.BlockAttrTableOffset].GetData<int>();
+            set
+            {
+                // 記述必要
+            }
+        }
+        public List<BlockAttrData> Attrs { get; set; }
 
         // 共有データ用
         private SharedData _sharedData = null;
@@ -188,9 +188,9 @@ namespace PochiPochiEditor2.Managers.Tilesets
             }
 
             // 画像データ読み込み
-            ImageData = LoadImage(_headerEntry);
+            ImageData = LoadImage();
             // パレットデータ読み込み
-            PaletteData = LoadPalettes(_headerEntry);
+            PaletteData = LoadPalettes();
             // ブロックデータ読み込み
 
             // ブロック属性読み込み
@@ -199,13 +199,13 @@ namespace PochiPochiEditor2.Managers.Tilesets
 
         }
 
-        private byte[] LoadImage(Entry entry)
+        private byte[] LoadImage()
         {
             // 戻り値用
-            byte[] imageData = null;
+            byte[] imageData;
 
             // 圧縮形式に応じて格納
-            if (IsCompress)
+            if (Convert.ToBoolean(ImageCompType))
             {
                 imageData = ImageHelper.DecompressLZ77(_sharedData.RomData, ImageOffset);
             }
@@ -223,7 +223,7 @@ namespace PochiPochiEditor2.Managers.Tilesets
             return imageData;
         }
 
-        private List<byte[]> LoadPalettes(Entry entry)
+        private List<byte[]> LoadPalettes()
         {
             // 戻り値用
             var paletteDataList = new List<byte[]>();

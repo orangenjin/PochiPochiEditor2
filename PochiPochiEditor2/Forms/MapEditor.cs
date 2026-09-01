@@ -373,7 +373,7 @@ namespace PochiPochiEditor2.Forms
                     tvwMapSelector.Nodes.Add(bankNode);
                 }
             }
-            // マップ順
+            // マップ名順
             else if (rbOrderByName.Checked)
             {
                 var nameGroupNodes = new Dictionary<int, TreeNode>();

@@ -208,7 +208,6 @@ namespace PochiPochiEditor2.Forms
                 (sender, e) =>
                 {
                     _imageOffsetPipeline.Execute(new Context(sender, e));
-                    
                 });
             // パレットアドレス
             _eventBinder.BindCtrl(
@@ -217,7 +216,6 @@ namespace PochiPochiEditor2.Forms
                 (sender, e) =>
                 {
                     _paletteOffsetPipeline.Execute(new Context(sender, e));
-
                 });
             // Y座標位置
             _eventBinder.BindCtrl(
@@ -226,7 +224,6 @@ namespace PochiPochiEditor2.Forms
                 (sender, e) =>
                 {
                     _yPosValuePipeline.Execute(new Context(sender, e));
-
                 });
 
             // 画像インデックスnud
