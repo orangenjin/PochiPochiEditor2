@@ -128,6 +128,7 @@ namespace PochiPochiEditor2.Managers
     {
 
         Map,
+        Tileset,
 
         TrainerClass,
         TrainerSprite
