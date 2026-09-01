@@ -22,6 +22,8 @@ namespace PochiPochiEditor2.Forms
         // 各テーブル用
         private TilesetManager _tilesetManager = null;
         // パイプライン用
+        private PipelineBuilder _imageCompTypePipeline = null;
+        private PipelineBuilder _paletteTypePipeline = null;
         private PipelineBuilder _imageOffsetPipeline = null;
         private PipelineBuilder _paletteOffsetPipeline = null;
         private PipelineBuilder _blockDataOffsetPipeline = null;
@@ -39,6 +41,8 @@ namespace PochiPochiEditor2.Forms
             InitializeControls();
             InitializePipelines();
             InitializeEventHandlers();
+
+            _tilesetManager = new TilesetManager(_sharedData);
         }
 
         private void InitializeControls()
@@ -58,33 +62,48 @@ namespace PochiPochiEditor2.Forms
             // pnlのクリア処理が必要
             //
 
-            // tbpHeader
-            CtrlHelper.SetControlsEnabled(tbpHeader, state);
-            CtrlHelper.ResetControls(tbpHeader);
-
-            // tbpAnim
-            CtrlHelper.SetControlsEnabled(tbpAnim, state);
-            CtrlHelper.ResetControls(tbpAnim);
+            // tncMain
+            CtrlHelper.SetControlsEnabled(tncMain, state);
+            CtrlHelper.ResetControls(tncMain);
         }
 
         private void InitializePipelines()
         {
-            // txtImageOffset
-            _imageOffsetPipeline = new PipelineBuilder()
-                // 入力値を取得
-                .Then(ctx =>
-                {
-                    ctx.Set((TextBox)ctx.Sender); // テキストボックス
-                    ctx.Set(ctx.Get<TextBox>().Text); // 入力されたテキスト
-                })
-                // データを更新
-                .Then(ctx =>
-                {
-                    var parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
-                    var desc = $"[{this.Text}]画像アドレス(ID:{_currentTilesetNo:D8})";
+            _imageOffsetPipeline = BuildOffsetPipeline(
+                TilesetManager.FieldKey.ImageOffset,
+                lblImageOffset.Text);
+            _paletteOffsetPipeline = BuildOffsetPipeline(
+                TilesetManager.FieldKey.PaletteOffset,
+                lblPaletteOffset.Text);
+            _blockDataOffsetPipeline = BuildOffsetPipeline(
+                TilesetManager.FieldKey.BlockDataTableOffset,
+                lblBlockDataTableOffset.Text);
+            _animOffsetPipeline = BuildOffsetPipeline(
+                TilesetManager.FieldKey.AnimHeaderOffset,
+                lblAnimHeaderOffset.Text);
+            _blockAttrOffsetPipeline = BuildOffsetPipeline(
+                TilesetManager.FieldKey.BlockAttrTableOffset,
+                lblBlockAttrTableOffset.Text);
+            // ヘルパー
+            PipelineBuilder BuildOffsetPipeline(TilesetManager.FieldKey fieldKey, string label)
+            {
+                return new PipelineBuilder()
+                    // 入力値を取得
+                    .Then(ctx =>
+                    {
+                        ctx.Set((TextBox)ctx.Sender); // テキストボックス
+                        ctx.Set(ctx.Get<TextBox>().Text); // 入力されたテキスト
+                    })
+                    // データを更新
+                    .Then(ctx =>
+                    {
+                        var parsedValue = CalcHelper.ParseStringToInt(ctx.Get<string>());
+                        var desc = $"[{this.Text}]{label}(ID:{_currentTilesetNo:D8})";
 
-                    _tilesetManager.TilesetData.UpdateData(_undoManager, parsedValue, desc);
-                });
+                        _tilesetManager.HeaderEntry[fieldKey]
+                            .UpdateData(_undoManager, parsedValue, desc);
+                    });
+            }
         }
 
         private void InitializeEventHandlers()
@@ -114,6 +133,52 @@ namespace PochiPochiEditor2.Forms
                     LoadDataToUI(_currentTilesetNo);
                 });
 
+            // 画像アドレス
+            _eventBinder.BindCtrl(
+                h => txtImageOffset.Validated += h,
+                h => txtImageOffset.Validated -= h,
+                (sender, e) =>
+                {
+                    _imageOffsetPipeline.Execute(new Context(sender, e));
+                });
+            // パレットアドレス
+            _eventBinder.BindCtrl(
+                h => txtPaletteOffset.Validated += h,
+                h => txtPaletteOffset.Validated -= h,
+                (sender, e) =>
+                {
+                    _paletteOffsetPipeline.Execute(new Context(sender, e));
+                });
+            // ブロックデータテーブル
+            _eventBinder.BindCtrl(
+                h => txtBlockDataTableOffset.Validated += h,
+                h => txtBlockDataTableOffset.Validated -= h,
+                (sender, e) =>
+                {
+                    _blockDataOffsetPipeline.Execute(new Context(sender, e));
+                });
+            // アニメヘッダーアドレス
+            _eventBinder.BindCtrl(
+                h => txtAnimHeaderOffset.Validated += h,
+                h => txtAnimHeaderOffset.Validated -= h,
+                (sender, e) =>
+                {
+                    _animOffsetPipeline.Execute(new Context(sender, e));
+                });
+            // ブロック属性テーブル
+            _eventBinder.BindCtrl(
+                h => txtBlockAttrTableOffset.Validated += h,
+                h => txtBlockAttrTableOffset.Validated -= h,
+                (sender, e) =>
+                {
+                    _blockAttrOffsetPipeline.Execute(new Context(sender, e));
+                });
+
+
+
+
+
+
             // 解除タイミング指定
             _eventBinder.BindCtrl(
                 h => this.Disposed += h,
@@ -122,19 +187,23 @@ namespace PochiPochiEditor2.Forms
 
         private void LoadDataToUI(int tilsetNo)
         {
-            _tilesetManager = new TilesetManager(_sharedData);
-            _tilesetManager.ReadHeader(tilsetNo);
+            // ヘッダーを再読み込み
+            _tilesetManager.ReadHeader(tilsetNo, _sharedData);
 
             // UIを有効化
             UpdateTabPageState(true);
+
             // UIに反映
-            cmbImageCompType.SelectedIndex = _tilesetManager.TilesetData.ImageCompType;
-            cmbPaletteType.SelectedIndex = (int)_tilesetManager.TilesetData.PaletteType;
-            txtImageOffset.Text = _tilesetManager.TilesetData.ImageOffset.ParseIntToString();
-            txtPaletteOffset.Text = _tilesetManager.TilesetData.PaletteOffset.ParseIntToString();
-            txtBlockDataTableOffset.Text = _tilesetManager.TilesetData.BlockDataTableOffset.ParseIntToString();
-            txtAnimHeaderOffset.Text = _tilesetManager.TilesetData.AnimHeaderOffset.ParseIntToString();
-            txtBlockAttrTableOffset.Text = _tilesetManager.TilesetData.BlockAttrTableOffset.ParseIntToString();
+            txtImageOffset.Text = GetHeaderData<int>(TilesetManager.FieldKey.ImageOffset).ParseIntToString();
+            txtPaletteOffset.Text = GetHeaderData<int>(TilesetManager.FieldKey.PaletteOffset).ParseIntToString();
+            txtBlockDataTableOffset.Text = GetHeaderData<int>(TilesetManager.FieldKey.BlockDataTableOffset).ParseIntToString();
+            txtAnimHeaderOffset.Text = GetHeaderData<int>(TilesetManager.FieldKey.AnimHeaderOffset).ParseIntToString();
+            txtBlockAttrTableOffset.Text = GetHeaderData<int>(TilesetManager.FieldKey.BlockAttrTableOffset).ParseIntToString();
+            // ヘルパー
+            T GetHeaderData<T>(TilesetManager.FieldKey key) => _tilesetManager.HeaderEntry[key].GetData<T>();
+
+
+
         }
         
 
